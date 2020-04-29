@@ -13,6 +13,7 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('locations', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name')->unique();

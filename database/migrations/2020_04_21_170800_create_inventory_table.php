@@ -13,6 +13,7 @@ class CreateInventoryTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('inventory_categories', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name');
@@ -58,6 +59,7 @@ class CreateInventoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('inventory_categories');
+        Schema::dropIfExists('inventory_items');
     }
 }

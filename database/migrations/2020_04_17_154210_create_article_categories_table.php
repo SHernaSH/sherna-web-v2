@@ -13,6 +13,7 @@ class CreateArticleCategoriesTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('article_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
@@ -59,5 +60,7 @@ class CreateArticleCategoriesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('article_categories');
+        Schema::dropIfExists('article_categories_details');
+        Schema::dropIfExists('article_category');
     }
 }

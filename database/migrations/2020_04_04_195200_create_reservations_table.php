@@ -13,6 +13,7 @@ class CreateReservationsTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('reservations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('location_id');

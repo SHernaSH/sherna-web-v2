@@ -13,6 +13,7 @@ class CreateConsolesTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('console_types', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
