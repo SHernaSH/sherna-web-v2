@@ -41,7 +41,8 @@ class CreateConsolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('console_types');
         Schema::dropIfExists('consoles');
+        Schema::dropIfExists('console_types');
+
     }
 }

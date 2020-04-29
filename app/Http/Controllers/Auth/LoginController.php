@@ -34,7 +34,8 @@ class LoginController extends Controller
          * Create a new instance of the URI class with the current URI, stripping the query string
          */
 //        Auth::attempt(['uid' => '30542', 'email' => 'admin@localhost']);
-        $callBack = redirect()->back()->getTargetUrl();
+        $callBack = url()->previous();
+        $_SESSION['callback'] = $callBack;
         list($currentUri, $service) = $this->getISService($callBack);
 
         $url = $service->getAuthorizationUri();
@@ -115,7 +116,7 @@ class LoginController extends Controller
     /**
      * @return array
      */
-    private function getISService(string $callBack)
+    private function getISService()
     {
         /**
          * Create a new instance of the URI class with the current URI, stripping the query string
@@ -128,7 +129,7 @@ class LoginController extends Controller
         $credentials = new Credentials(
             env('IS_OAUTH_ID'), //Application ID
             env('IS_OAUTH_SECRET'), // SECRET
-            route('oauth', ['callBack' => $callBack])
+            route('oauth')
         );
 
         // Session storage
@@ -148,10 +149,10 @@ class LoginController extends Controller
      * @param string $callBack  url of the last previous site before trying to login
      * @return RedirectResponse redirect to the last previous site before login
      */
-    public function oAuthCallback(string $callBack)
+    public function oAuthCallback()
     {
         if (empty($_GET['code'])) {
-            list($currentUri, $service) = $this->getISService($callBack);
+            list($currentUri, $service) = $this->getISService();
             // This was a callback request from is, get the token
             $service->requestAccessToken($_GET['code']);
 
@@ -164,8 +165,10 @@ class LoginController extends Controller
             ];
 
             $this->controlLoginUser($result);
-
-            return redirect()->to($callBack);
+            if(!isset($_SESSION['callback'])) {
+                $_SESSION['callback'] = url('/');
+            }
+            return redirect()->to($_SESSION['callback']);
         }
     }
 

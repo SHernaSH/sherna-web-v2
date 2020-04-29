@@ -35,7 +35,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'home',
             'name'   => 'Domov',
             'language_id' => 1,
-            'order' => 2,
+            'order' => 100,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'home'
@@ -45,7 +45,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'home',
             'name'   => 'Home',
             'language_id' => 2,
-            'order' => 2,
+            'order' => 100,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'home'
@@ -56,7 +56,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'reservation',
             'name'   => 'Rezervace',
             'language_id' => 1,
-            'order' => 3,
+            'order' => 2,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'reservation'
@@ -66,7 +66,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'reservation',
             'name'   => 'Reservation',
             'language_id' => 2,
-            'order' => 3,
+            'order' => 2,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'reservation'
@@ -77,7 +77,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'inventory',
             'name'   => 'Vybaveni',
             'language_id' => 1,
-            'order' => 4,
+            'order' => 3,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'inventory'
@@ -87,7 +87,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'inventory',
             'name'   => 'Inventory',
             'language_id' => 2,
-            'order' => 4,
+            'order' => 3,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'inventory'

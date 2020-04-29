@@ -78,6 +78,10 @@ class PageController extends Controller
             flash('Editation not allowed')->error();
             return redirect()->back();
         }
+        if($this->pageService->isSpecialPage($page)) {
+            return redirect()->route('page.standalone');
+
+        }
         return view('admin.pages.edit', ['page' => $page, 'type' => $type]);
 
     }

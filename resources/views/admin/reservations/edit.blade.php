@@ -14,7 +14,7 @@
 					<div class="x_title">
 						<h2>Edit reservation</h2>
 						<div class="pull-right">
-                            @if(isset($reservation->deleted_at))
+                            @if(!isset($reservation->deleted_at) && !$reservation->end_at->isPast())
 							    <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i></button>
                             @endif
 							<a href="{{ route('admin.reservation.index') }}" class="btn btn-primary"><i

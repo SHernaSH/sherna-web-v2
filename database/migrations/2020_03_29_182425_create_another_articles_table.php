@@ -52,7 +52,8 @@ class CreateAnotherArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
         Schema::dropIfExists('articles_text');
+        Schema::dropIfExists('articles');
+
     }
 }

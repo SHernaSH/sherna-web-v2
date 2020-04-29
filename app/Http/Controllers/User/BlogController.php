@@ -42,7 +42,7 @@ class BlogController extends Controller
         if (!Page::where('special_code', 'blog')->firstOrFail()->public) {
             abort(404);
         }
-        $articles = Article::latest()->paginate();
+        $articles = Article::latest()->public()->paginate();
         return view('client.blog.index', ['articles' => $articles]);
     }
 
