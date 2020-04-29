@@ -95,9 +95,11 @@ class CreateNavPagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nav_pages');
-        Schema::dropIfExists('nav_subpages');
         Schema::dropIfExists('nav_subpages_text');
         Schema::dropIfExists('nav_pages_text');
+        Schema::dropIfExists('nav_subpages');
+        Schema::dropIfExists('nav_pages');
+
+
     }
 }

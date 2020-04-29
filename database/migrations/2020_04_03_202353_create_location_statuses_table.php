@@ -13,6 +13,7 @@ class CreateLocationStatusesTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('location_statuses', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name')->unique();

@@ -193,7 +193,7 @@ class ArticleController extends Controller
             if($check) {
                 $result[] = $check->category_id;
             } else {
-                $result[] = $this->createCategory($tag);
+                $result[] = $this->createCategory($tag)->id;
             }
         }
         return $result;

@@ -13,6 +13,7 @@ class CreateCommentsTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('user_id');

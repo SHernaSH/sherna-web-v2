@@ -59,7 +59,7 @@
                                         @method('DELETE')
                                         <a href="{{ route('admin.reservation.edit',['reservation' => $reservation->id])}}"
                                            class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                        @if(isset($reservation->deleted_at))
+                                        @if(!isset($reservation->deleted_at) && !$reservation->end_at->isPast())
                                             <a href=""
                                                class="btn btn-warning"><i class="fa fa-times"></i></a>
                                             <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></button>

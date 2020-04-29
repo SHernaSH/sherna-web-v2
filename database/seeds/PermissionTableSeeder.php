@@ -15,6 +15,7 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         $permission_ids_for_guest = [2, 3, 6, 33, 34, 36, 37, 44, 45, 46, 47];
+        $permission_ids_for_user = [2, 3, 6, 33, 34, 36, 37, 44, 45, 46, 47];
         $permission_ids = []; // an empty array of stored permission IDs
         // iterate though all routes
         foreach (Route::getRoutes()->getRoutes() as $key => $route) {
