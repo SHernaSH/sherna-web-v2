@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Users;
 
 use App\Models\Reservations\Reservation;
 use App\Models\Roles\Role;

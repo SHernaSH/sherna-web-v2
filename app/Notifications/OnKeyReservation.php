@@ -4,7 +4,7 @@ namespace App\Notifications;
 
 use App\Mail\OnKeyUser;
 use App\Models\Reservations\Reservation;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;

@@ -7,7 +7,7 @@ use App\Models\Locations\Location;
 use App\Models\Permissions\Permission;
 use App\Models\Reservations\Reservation;
 use App\Models\Settings\Setting;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Request;

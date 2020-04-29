@@ -3,7 +3,7 @@
 namespace App\Models\Comments;
 
 
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

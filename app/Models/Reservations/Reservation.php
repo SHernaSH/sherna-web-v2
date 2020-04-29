@@ -5,7 +5,7 @@ namespace App\Models\Reservations;
 use App\Mail\OnKeyAdmin;
 use App\Mail\VRRequest;
 use App\Models\Locations\Location;
-use App\User;
+use \App\Models\Users\User;
 use App\Notifications\OnKeyReservation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

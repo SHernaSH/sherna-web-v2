@@ -4,7 +4,7 @@ namespace App\Models\Articles;
 
 use App\Http\Scopes\LanguageScope;
 use App\Models\Comments\Comment;
-use App\User;
+use \App\Models\Users\User;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

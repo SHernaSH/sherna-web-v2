@@ -3,7 +3,7 @@
 namespace App\Models\Roles;
 
 use App\Models\Permissions\Permission;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
