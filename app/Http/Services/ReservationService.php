@@ -7,7 +7,7 @@ use App\Models\Locations\Location;
 use App\Models\Permissions\Permission;
 use App\Models\Reservations\Reservation;
 use App\Models\Settings\Setting;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Request;
@@ -23,7 +23,7 @@ class ReservationService
      */
     public function getReservation(int $perPage = 15)
     {
-        return Reservation::latest()->paginate($perPage);
+        return Reservation::orderBy('start_at', 'desc')->paginate($perPage);
     }
 
     /**
@@ -34,7 +34,7 @@ class ReservationService
      */
     public function getAllReservation(int $perPage = 15)
     {
-        return Reservation::withTrashed()->latest()->paginate($perPage);
+        return Reservation::withTrashed()->orderBy('start_at', 'desc')->paginate($perPage);
     }
 
     /**

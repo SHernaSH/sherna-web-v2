@@ -104,14 +104,14 @@ class ArticleController extends Controller
     {
         //First get the difference between existing categories and the categories that the updated article should
         //contain
-        $categories = $this->getCategories($request->get('tags'));
+        $categories = $this->getCategories($request->get('tags', '') ?? '');
         $originalCategories = $article->categories()->pluck('id')->toArray();
         $article->categories()->detach(array_diff($originalCategories, $categories));
         $article->categories()->attach(array_diff($categories, $originalCategories));
 
         foreach (Language::all() as $lang) {
             $article->public = $request->get('public') ? 1 : 0;
-            $text = $article->text->ofLang($lang)->first();
+            $text = $article->text()->ofLang($lang)->first();
             $text->title = $request->input('name-' . $lang->id);
             $text->description = $request->input('description-' . $lang->id);
             $text->content = $request->input('content-' . $lang->id);
@@ -167,7 +167,7 @@ class ArticleController extends Controller
         $article = new Article();
         $article->url = $request->input('url');
         $article->public = $request->get('public') ? 1 : 0;
-        $categories = $this->getCategories($request->get('tags'));
+        $categories = $this->getCategories($request->get('tags', '') ?? '');
         $article->user()->associate(Auth::user());
         $article->save();
         $article->categories()->attach($categories);
