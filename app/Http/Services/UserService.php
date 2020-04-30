@@ -4,7 +4,7 @@
 namespace App\Http\Services;
 
 use App\Models\Roles\Role;
-use App\User;
+use \App\Models\Users\User;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;

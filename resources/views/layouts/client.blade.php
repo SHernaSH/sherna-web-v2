@@ -81,9 +81,9 @@
 
 <script type="text/javascript">
     @if( Auth::check() && Auth::user()->isAdmin() )
-        var reservationarea              =  "9999999";
-        var durationforedit              =  "9999999";
-        var maxeventduration             =  "9999999";
+        var reservationarea              =  "99999";
+        var durationforedit              =  "99999";
+        var maxeventduration             =  "99999";
     @else
         var reservationarea              =  "{{\App\Models\Settings\Setting::where('name', 'Reservation Area')->first()->value}}";
         var durationforedit              = "{{\App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}";

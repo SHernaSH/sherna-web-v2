@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 
 use App\Http\Controllers\Controller;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Uri\UriFactory;
@@ -38,7 +39,7 @@ class LoginController extends Controller
 //            Auth::attempt(['id' => '30542', 'email' => 'admin@localhost']);
         } else if($type == 'user') {
             $check = User::find(2);
-            if(!$check) {
+            if (!$check) {
                 $user = new User();
                 $user->id = 2;
                 $user->name = 'user';
@@ -51,14 +52,6 @@ class LoginController extends Controller
 //            Auth::attempt(['id' => '2', 'email' => 'user@localhost']);
 
         }
-//        $callBack = str_replace(url('/'), '', url()->previous());
-//        $callBack = ltrim($callBack, '/');
-//
-//        list($currentUri, $service) = $this->getISService($callBack);
-//
-//        $url = $service->getAuthorizationUri();
-
-//        return redirect()->to($url->getAbsoluteUri());
         return redirect()->back();
     }
 

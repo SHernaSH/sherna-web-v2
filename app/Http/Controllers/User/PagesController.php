@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Navigation\Page;
-use App\User;
+use \App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
