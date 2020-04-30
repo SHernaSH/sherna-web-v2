@@ -47,7 +47,7 @@
                         <div id="myTabContent" class="tab-content">
                             @foreach(\App\Models\Language\Language::all() as $language)
                                 @php
-                                    $text = $article->text->ofLang($language)->first();
+                                    $text = $article->text()->ofLang($language)->first();
                                 @endphp
                                 <div class="tab-pane fade {{$language->id==$article->text->language->id ? "active":""}} in" id="{{$language->id}}">
                                     <div class="form-group">

@@ -23,7 +23,7 @@ class ReservationService
      */
     public function getReservation(int $perPage = 15)
     {
-        return Reservation::latest()->paginate($perPage);
+        return Reservation::orderBy('start_at', 'desc')->paginate($perPage);
     }
 
     /**
@@ -34,7 +34,7 @@ class ReservationService
      */
     public function getAllReservation(int $perPage = 15)
     {
-        return Reservation::withTrashed()->latest()->paginate($perPage);
+        return Reservation::withTrashed()->orderBy('start_at', 'desc')->paginate($perPage);
     }
 
     /**

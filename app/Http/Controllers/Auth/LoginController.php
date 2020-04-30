@@ -8,6 +8,7 @@ use \App\Models\Users\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Uri\UriFactory;
@@ -40,6 +41,7 @@ class LoginController extends Controller
         $url = $service->getAuthorizationUri();
 
         return redirect()->to($url->getAbsoluteUri());
+        \Illuminate\Support\Facades\Log::alert();
     }
 
     /**
