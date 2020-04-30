@@ -7,6 +7,7 @@
         var myReservationBorderColor     = '{{config('calendar.my-reservation.border-color')}}';
         var myReservationBackgroundColor = '{{config('calendar.my-reservation.background-color')}}';
         var admin                        = {{(\Auth::check() && \Auth::user()->isAdmin()) ? 1 : 0}};
+        var format = "DD.MM.YYYY - HH:mm";
         $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
@@ -20,8 +21,8 @@
         });
 
         function createEvent(start, end) {
-            $('.form_datetime').val(start.format('DD.MM.YYYY HH:mm:00'));
-            $('.to_datetime').val(end.format('DD.MM.YYYY HH:mm:00'));
+            $('.form_datetime').val(start.format(format));
+            $('.to_datetime').val(end.format(format));
             $('#location_id').val($('[name="location"]:checked').val());
             $('#note').val('');
             $('#visitors_count').val('1');
@@ -56,8 +57,8 @@
 
         function update(event, revertFunc) {
             $("#updateReservationForm").attr("action", "{{ route('reservation.index') }}/" + event.id);
-            $('#u_from_date').val(event.start.format('DD.MM.YYYY HH:mm:00'));
-            $('#u_to_date').val(event.end.format('DD.MM.YYYY HH:mm:00'));
+            $('#u_from_date').val(event.start.format(format));
+            $('#u_to_date').val(event.end.format(format));
             $('#u_visitors_count').val(event.visitors_count);
             $('#u_note').val(event.note);
             $('#u_location_id').val(event.location_id);
@@ -192,10 +193,10 @@
                     $('#deleteReservation').addClass('hidden');
                     $('#deleteReservation').unbind();
                         $('#showReservationModalLabel').text(event.title);
-                        $('#start').text(event.start.format("DD.MM.YYYY HH:mm"));
-                        $('#end').text(event.end.format("DD.MM.YYYY HH:mm"));
+                        $('#start').text(event.start.format("DD.MM.YYYY - HH:mm"));
+                        $('#end').text(event.end.format("DD.MM.YYYY - HH:mm"));
 
-                        if (event.editable) {
+                        if (event.edit) {
                             $('#deleteReservation').removeClass('hidden');
                             $("#deleteReservationForm").attr("action", "{{ route('reservation.index') }}/" + event.id);
                             $('#deleteReservation').unbind();
@@ -229,11 +230,26 @@
                     var future_date_today = moment(now).add(durationforedit, 'm');
                     var future_date       = moment(now).add(reservationarea, 'days');
 
-                    //gmt fix
+                    var resize = dropLocation.start.format('YYYY-MM-DD HH:mm') == draggedEvent.start.format('YYYY-MM-DD HH:mm');
+
+                    if(draggedEvent.start.isBefore(now) && !resize) {
+                        return false;
+                    }
+
+                        //gmt fix
                     var dropStart = dropLocation.start;
                     dropStart     = dropStart.subtract(2, 'h');
+                    var dropEnd = dropLocation.end;
+                    dropEnd     = dropEnd.subtract(2, 'h');
 
-                    return (admin && dropStart.isAfter(now.add(10, 'm').format('YYYY-MM-DD HH:mm'))) ||  dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm')) && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
+                    if(!resize) {
+                        return (admin && dropStart.isAfter(now.add(10, 'm').format('YYYY-MM-DD HH:mm')))
+                            || dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm'))
+                            && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
+                    }
+                    return dropEnd.isAfter(
+                        now.add('{{App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}', 'm')
+                            .format('YYYY-MM-DD HH:mm'));
                 }
             });
 
@@ -256,7 +272,7 @@
     </script>
 
 @endpush
-@include('admin.assets.datetimepicker')
+@include('client.assets.datepicker')
 
 @push('styles')
     <link href="{{asset('assets_client/datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">

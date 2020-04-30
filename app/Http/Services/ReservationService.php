@@ -107,8 +107,8 @@ class ReservationService
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         $reservation->location()->associate($location);
         $reservation->visitors_count = $request->get('visitors_count', 1);
-        $reservation->start_at = Carbon::createFromFormat('d.m.Y  H:i:s', $request->get('from_date'));
-        $reservation->end_at = Carbon::createFromFormat('d.m.Y  H:i:s', $request->get('to_date'));
+        $reservation->start_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('from_date'));
+        $reservation->end_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('to_date'));
         $reservation->vr = $request->get('vr', false) ? 1 : 0;
         return $reservation;
     }
@@ -117,13 +117,13 @@ class ReservationService
     {
         $permission = Permission::where('name', 'Reservation Manager')->firstOrFail();
         if ($user->role->hasPermission($permission)) {
-            return $this->validateForAdmin($reservation);
+            return $this->validateForAdmin($reservation, $update);
         } else {
             return $update ? $this->validateUpdate($user, $reservation) : $this->validateForUser($user, $reservation);
         }
     }
 
-    private function validateForAdmin(Reservation $reservation)
+    private function validateForAdmin(Reservation $reservation, $update = false)
     {
         if ($reservation->duration() <= 0) {
             return trans('reservations.too_short');
@@ -131,7 +131,7 @@ class ReservationService
             return trans('reservations.overlap');
         } else if ($reservation->visitors_count < 0) {
             return trans('reservations.minimal_visitor');
-        } else if ($reservation->start_at->isBefore(Carbon::now()
+        } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()
             ->addMinutes(Setting::where('name', 'Time for edit')->first()->value))) {
             return trans('reservations.in_past');
         }
@@ -175,11 +175,11 @@ class ReservationService
     private function validateUpdate(User $user, Reservation $reservation)
     {
 
-        $validation = $this->validateForUser($user, $reservation);
+        $validation = $this->validateForUser($user, $reservation, true);
         if (is_string($validation)) {
             return $validation;
         }
-        if ($reservation->getOriginal('start_at')->addMinutes(-15)->isPast()) {
+        if ($reservation->getOriginal('start_at')->isPast()) {
             if ($reservation->start_at != $reservation->getOriginal('start')) {
                 return trans('reservations.change_start');
             }
@@ -190,7 +190,7 @@ class ReservationService
         return true;
     }
 
-    private function validateForUser($user, Reservation $reservation)
+    private function validateForUser($user, Reservation $reservation, $update = false)
     {
         $maxReservations = $reservation->exists ? 1 : 0;
         if ($user->reservations()->futureReservations()->count() > $maxReservations) {
@@ -208,7 +208,7 @@ class ReservationService
             if (!$user->role->hasPermission($permission))
                 return trans('reservations.vr');
         } else {
-            return $this->validateForAdmin($reservation);
+            return $this->validateForAdmin($reservation, $update);
         }
         return true;
     }

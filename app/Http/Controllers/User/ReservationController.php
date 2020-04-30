@@ -56,7 +56,8 @@ class ReservationController extends Controller
             $reservation->end = $reservation->end_at->format('Y-m-d H:i');
 
             if (Auth::check() && ($owner->id == Auth::user()->id || Auth::user()->role->hasPermissionByName('Reservation Manager'))) {
-                $reservation->editable = !$reservation->end_at->addMinutes((-1) * Setting::where('name', 'Time for edit')->first()->value)->isPast();
+                $reservation->editable = !$reservation->start_at->isPast();
+                $reservation->edit = !$reservation->end_at->addMinutes((-1) * Setting::where('name', 'Time for edit')->first()->value)->isPast();
                 $reservation->own = $owner->id == Auth::user()->id;
             }
         }
