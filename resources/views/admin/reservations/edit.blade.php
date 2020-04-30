@@ -54,9 +54,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="visitors_count"
+								<label for="location"
 									   class="control-label">Location</label>
-								<select name="location" id="" class="form-control">
+								<select name="location_id" id="location" class="form-control">
 									@foreach(\App\Models\Locations\Location::get() as $location)
 										<option value="{{$location->id}}" {{old('location',$reservation->location_id)==$location->id ? 'selected':''}}>{{ $location->name }}</option>
 									@endforeach
