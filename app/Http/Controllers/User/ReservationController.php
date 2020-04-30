@@ -37,9 +37,10 @@ class ReservationController extends Controller
 
     /**
      * Getting all the reservations in the json format for fullcalendar to render
-     * Entity contains editable filed, which controls whether user can update/destroy that reservation
+     * Entity contains editable filed, which controls whether it can be drag and dropped in the calendar,
+     * edit field that determines if user can update/destroy that reservation
      * (if its his own reservation, or user is reservation manager),
-     * owner field, which determine whether the user is the owner of the reservation,
+     * owner field, which determines whether the user is the owner of the reservation,
      * and start and end of the reservation in specified format,
      *
      * @param Request $request  request with location for which the reservations should be shown
