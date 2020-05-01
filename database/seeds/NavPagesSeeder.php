@@ -35,7 +35,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'home',
             'name'   => 'Domov',
             'language_id' => 1,
-            'order' => 100,
+            'order' => 0,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'home'
@@ -45,7 +45,7 @@ class NavPagesSeeder extends Seeder
             'url'   => 'home',
             'name'   => 'Home',
             'language_id' => 2,
-            'order' => 100,
+            'order' => 0,
             'public' => true,
             'dropdown' => false,
             'special_code' => 'home'
