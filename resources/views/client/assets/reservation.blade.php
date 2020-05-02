@@ -154,6 +154,8 @@
                 selectHelper: true,
                 select         : function (start, end) {
 
+                    start = start.clone().subtract(2, 'h');
+                    end = end.clone().subtract(2, 'h');
                     var correct = controlEventTimes(start, end);
                     if (!correct) {
                         return;
@@ -231,26 +233,30 @@
                     var future_date_today = moment(now).add(durationforedit, 'm');
                     var future_date       = moment(now).add(reservationarea, 'days');
 
-                    var resize = dropLocation.start.format('YYYY-MM-DD HH:mm') == draggedEvent.start.format('YYYY-MM-DD HH:mm');
-
-                    if(draggedEvent.start.isBefore(now) && !resize) {
-                        return false;
-                    }
-
-                        //gmt fix
+                    //gmt fix dragged event and drop is two hours ahead caused by localization
                     var dropStart = dropLocation.start;
                     dropStart     = dropStart.subtract(2, 'h');
                     var dropEnd = dropLocation.end;
                     dropEnd     = dropEnd.subtract(2, 'h');
+                    var eventStart = draggedEvent.start.clone().subtract(2, 'h');
+                    var eventEnd = draggedEvent.end.clone().subtract(2, 'h');
+
+                    var resize = eventStart.isSame(dropStart);
+
+                    if(eventStart.isBefore(now) && !resize) {
+                        return false;
+                    }
+
 
                     if(!resize) {
                         return (admin && dropStart.isAfter(now.add(10, 'm').format('YYYY-MM-DD HH:mm')))
                             || dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm'))
                             && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
                     }
-                    var allowedTimeUpdate = draggedEvent.end.clone().subtract(durationforedit, 'm');
-                    var isInTimeToProlong = now.isAfter(allowedTimeUpdate) || now.isBefore(draggedEvent.start);
-                    return (admin || isInTimeToProlong) && dropEnd.isAfter(
+                    var allowedTimeUpdate = eventEnd.clone().subtract(durationforedit, 'm');
+                    var isInTimeToProlong = now.isAfter(allowedTimeUpdate) || now.isBefore(eventStart);
+                    var isInPast = eventEnd.isBefore(now);
+                    return !isInPast && (admin || isInTimeToProlong) && dropEnd.isAfter(
                         now.add('{{App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}', 'm')
                             .format('YYYY-MM-DD HH:mm'));
                 }
