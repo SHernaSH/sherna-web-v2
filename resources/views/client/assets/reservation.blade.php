@@ -30,13 +30,14 @@
 
         }
 
-        function controlEventTimes(start, end) {
+        function controlEventTimes(start, end, isResize = false) {
             // if (Math.abs(start.diff(end, 'days')) !== 0) {
             //     $('#calendar').fullCalendar('unselect');
             //     alert('Make 2 separate reservations for this operation.');
             //     return false;
             // }
-            if (Math.abs(start.diff(end, 'hours')) > maxeventduration) {
+            var max = isResize ? maxeventduration * 2 : maxeventduration;
+            if (Math.abs(start.diff(end, 'hours')) > max) {
                 $('#calendar').fullCalendar('unselect');
                 App.helpers.alert.info('Maximum duration exceeded', 'Max duration of reservation can be ' + maxeventduration + ' hours.');
                 return false;
@@ -66,11 +67,11 @@
 
 
 
-        function updateEvent(event, revertFunc) {
+        function updateEvent(event, revertFunc, isResize = false) {
             var start = event.start;
             var end   = event.end;
 
-            var correct = controlEventTimes(start, end);
+            var correct = controlEventTimes(start, end, isResize);
             if (!correct) {
                 revertFunc();
                 return;
@@ -108,7 +109,7 @@
         }
 
         function initCalendar() {
-            var canCreate=  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned && Auth::user()->reservations()->futureReservations()->count() == 0) ? 'true' : 'false' }};
+            var canCreate=  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned && Auth::user()->reservations()->futureActiveReservations()->count() == 0) ? 'true' : 'false' }};
             var canEditDuration =  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned)  ? 'true' : 'false' }};
             var calendar = $('#calendar').fullCalendar({
                 header         : {
@@ -220,7 +221,7 @@
                 }
                 ,
                 eventResize    : function (event, delta, revertFunc) {
-                    updateEvent(event, revertFunc);
+                    updateEvent(event, revertFunc, true);
                 },
                 eventDrop      : function (event, delta, revertFunc) {
                     updateEvent(event, revertFunc);
@@ -247,7 +248,9 @@
                             || dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm'))
                             && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
                     }
-                    return dropEnd.isAfter(
+                    var allowedTimeUpdate = draggedEvent.end.clone().subtract(durationforedit, 'm');
+                    var isInTimeToProlong = now.isAfter(allowedTimeUpdate) || now.isBefore(draggedEvent.start);
+                    return (admin || isInTimeToProlong) && dropEnd.isAfter(
                         now.add('{{App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}', 'm')
                             .format('YYYY-MM-DD HH:mm'));
                 }

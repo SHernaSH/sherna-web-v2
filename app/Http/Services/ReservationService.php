@@ -134,6 +134,8 @@ class ReservationService
         } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()
             ->addMinutes(Setting::where('name', 'Time for edit')->first()->value))) {
             return trans('reservations.in_past');
+        } else if($update && $reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
+            return trans('reservations.late_update');
         }
         return true;
     }
@@ -180,11 +182,19 @@ class ReservationService
             return $validation;
         }
         if ($reservation->getOriginal('start_at')->isPast()) {
-            if ($reservation->start_at != $reservation->getOriginal('start')) {
+            if ($reservation->start_at != $reservation->getOriginal('start_at')) {
                 return trans('reservations.change_start');
+            }
+            if ($reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
+                return trans('reservations.late_update');
             }
             if ($reservation->location_id != $reservation->getOriginal('location_id')) {
                 return trans('reservations.change_location');
+            }
+            $timeForEdit = $reservation->getOriginal('end_at')
+                ->addMinutes((-1) * Setting::where('name', 'Time for edit')->first()->value);
+            if($timeForEdit->isAfter(Carbon::now())) {
+                return trans('reservations.early_update');
             }
         }
         return true;
@@ -192,12 +202,17 @@ class ReservationService
 
     private function validateForUser($user, Reservation $reservation, $update = false)
     {
-        $maxReservations = $reservation->exists ? 1 : 0;
-        if ($user->reservations()->futureReservations()->count() > $maxReservations) {
+        $maxDuration = Setting::where('name', 'Maximal Duration')->first()->value;
+        $maxReservations = $update ? 1 : 0;
+        if ($user->reservations()->futureActiveReservations()->count() > $maxReservations) {
             return trans('reservations.too_many');
-        } else if ($reservation->duration() > Setting::where('name', 'Maximal Duration')->first()->value) {
+        } else if (!$update && $reservation->duration() > $maxDuration) {
             return trans('reservations.too_long');
-        } else if ($reservation->start_at->isAfter(Carbon::now()->addDays(Setting::where('name', 'Reservation Area')->first()->value))) {
+        } else if ($update &&
+            $reservation->end_at->floatDiffInHours($reservation->getOriginal('end_at')) > $maxDuration) {
+            return trans('reservations.too_long');
+        }
+        else if ($reservation->start_at->isAfter(Carbon::now()->addDays(Setting::where('name', 'Reservation Area')->first()->value))) {
             return trans('reservations.too_far');
         } else if (!$reservation->location->status->opened) {
             return trans('reservations.closed');
