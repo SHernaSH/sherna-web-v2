@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $language_id
  * @property-read \App\Models\Language\Language $language
  * @property-read \App\Models\Navigation\Page $page
- * @property-read \App\Models\Navigation\SubPageText|null $text
+ * @property \App\Models\Navigation\SubPageText $text
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Navigation\SubPage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Navigation\SubPage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Extensions\LanguageModel ofLang(\App\Models\Language\Language $lang)
@@ -50,6 +50,9 @@ class SubPage extends LanguageModel
      */
     protected $table = 'nav_subpages';
     protected $primaryKey = ['id', 'language_id'];
+    /**
+     * @var SubPageText|null
+     */
 
     /**
      * Text of the subpage page of the current language

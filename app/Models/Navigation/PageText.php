@@ -39,7 +39,7 @@ class PageText extends LanguageModel
      *
      * @var string
      */
-    protected $table = 'nav_pages_text';
+    protected $table = 'nav_pages_texts';
 
     /**
      * Navigation Page to which text belongs

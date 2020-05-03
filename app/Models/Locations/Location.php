@@ -48,6 +48,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Locations\Location withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Locations\Location withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\Language\Language $language
  */
 class Location extends LanguageModel
 {

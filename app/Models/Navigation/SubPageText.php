@@ -39,7 +39,7 @@ class SubPageText extends LanguageModel
      *
      * @var string
      */
-    protected $table = 'nav_subpages_text';
+    protected $table = 'nav_subpages_texts';
 
     /**
      * SupPage to which text belongs
