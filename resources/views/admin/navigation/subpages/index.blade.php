@@ -27,6 +27,8 @@
                 <a class="btn btn-warning click-modal" href="#" data-toggle="modal" data-target="#view-modal"
                    data-url="{{ route('subnavigation.edit', ['subnavigation' => $sub->url])}}"><i
                         class="fa fa-pencil"></i></a>
+                <a href="{{ route('subnavigation.public', ['subnavigation' => $sub->url]) }}" class="btn btn-{{$sub->public ? "danger" : "primary"}} primary"><i
+                        class="fa {{$sub->public ? "fa-eye-slash" : "fa-eye"}} "></i></a>
                 <a href="#" class="delete btn btn-danger" data-url="{{route('subnavigation.destroy', ['subnavigation' => $sub->url]) }}"><i class="fa fa-trash"></i></a>
 
             </td>
