@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Inventory\InventoryCategory withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Inventory\InventoryCategory withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\Language\Language $language
  */
 class InventoryCategory extends LanguageModel
 {

@@ -36,6 +36,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Locations\LocationStatus withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Locations\LocationStatus withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Locations\Location[] $allLocations
+ * @property-read int|null $all_locations_count
+ * @property-read \App\Models\Language\Language $language
  */
 class LocationStatus extends LanguageModel
 {

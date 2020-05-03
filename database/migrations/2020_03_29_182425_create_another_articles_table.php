@@ -27,7 +27,7 @@ class CreateAnotherArticlesTable extends Migration
                 ->on('users');
         });
 
-        Schema::create('articles_text', function (Blueprint $table) {
+        Schema::create('articles_texts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('article_id');
             $table->string('title');
@@ -53,7 +53,7 @@ class CreateAnotherArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles_text');
+        Schema::dropIfExists('articles_texts');
         Schema::dropIfExists('articles');
 
     }

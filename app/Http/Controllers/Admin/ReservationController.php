@@ -60,7 +60,12 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        $this->reservationService->makeReservation($request, Auth::user());
+        $validation = $this->reservationService->makeReservation($request, Auth::user());
+        if (!is_string($validation)) {
+            flash(trans('reservations.success_added'))->success();
+        } else {
+            flash(trans($validation))->error();
+        }
 
         return redirect()->route('admin.reservation.index');
     }
@@ -78,15 +83,21 @@ class ReservationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in database if it contains valid data.
+     * Setting notifications for success/error
      *
-     * @param Request $request
-     * @param Reservation $reservation
-     * @return Response
+     * @param Request $request request with all the data from edition form for reservation
+     * @param Reservation $reservation specified Reservation to be updated
+     * @return RedirectResponse redirect to the index page
      */
     public function update(Request $request, Reservation $reservation)
     {
-        $this->reservationService->updateReservation($request, $reservation, Auth::user());
+        $validation = $this->reservationService->updateReservation($request, $reservation, Auth::user());
+        if (!is_string($validation)) {
+            flash(trans('reservations.success_updated'))->success();
+        } else {
+            flash(trans($validation))->error();
+        }
         return redirect()->route('admin.reservation.index');
 
     }

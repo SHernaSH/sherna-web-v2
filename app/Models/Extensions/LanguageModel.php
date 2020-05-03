@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Extensions\LanguageModel
- *
+ * 
  * Class that represents models which have to have translation. Adding global scope to them, which makes sure
  * all the result will be with the correct current language
  *
