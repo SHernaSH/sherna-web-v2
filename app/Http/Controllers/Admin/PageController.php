@@ -78,10 +78,7 @@ class PageController extends Controller
             flash('Editation not allowed')->error();
             return redirect()->back();
         }
-        if($this->pageService->isSpecialPage($page)) {
-            return redirect()->route('page.standalone');
 
-        }
         return view('admin.pages.edit', ['page' => $page, 'type' => $type]);
 
     }
@@ -102,6 +99,11 @@ class PageController extends Controller
             $page = SubPage::where('id', $id)->firstOrFail();
         }
         $this->pageService->storeText($request, $page);
+
+        if($this->pageService->isSpecialPage($page)) {
+            return redirect()->route('page.standalone');
+
+        }
 
         return redirect()->route('page.' . ($type == 'page' ? 'navigation' : 'subnavigation'));
 

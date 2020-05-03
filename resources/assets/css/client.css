@@ -6,6 +6,7 @@ body {
   padding-top: 30px;
 }
 #body-container {
+  min-height: 100%;
   position: relative;
 }
 .comment-radius {
@@ -18,6 +19,7 @@ body {
 @media (min-width: 768px) {
   #navbar.navbar-collapse.collapse {
     display: inline-block !important;
+    vertical-align: top;
   }
 }
 footer {

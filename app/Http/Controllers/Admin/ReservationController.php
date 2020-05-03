@@ -37,7 +37,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = $this->reservationService->getAllReservation();
+        $reservations = $this->reservationService->getAllReservation(5);
         return view('admin.reservations.index', ['reservations' => $reservations]);
 
     }

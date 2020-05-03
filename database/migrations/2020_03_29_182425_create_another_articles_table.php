@@ -19,6 +19,7 @@ class CreateAnotherArticlesTable extends Migration
             $table->string('url')->unique();
             $table->uuid('user_id');
             $table->boolean('public')->default(false);
+            $table->boolean('comments_enabled')->default(true);
             $table->nullableTimestamps();
             $table->softDeletes();
 

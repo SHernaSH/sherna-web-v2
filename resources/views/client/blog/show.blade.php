@@ -34,7 +34,8 @@
         <div class="row">
                <div class="col-md-10 col-md-offset-1 col-xs-10">
                     <h4>{{ trans('comment.comments') }}</h4>
-                    @forelse($article->comments as $comment)
+                   @if($article->comments_enabled)
+                   @forelse($article->comments as $comment)
                     <div class="display-comment">
                         <div class="grid grid-pad">
                             <div class="col-md-2 col-xs-2">
@@ -73,7 +74,10 @@
                             <h4>{{ trans('comment.login') }}</h4>
                         </div>
                     @endauth
-                </div>
+                   @else
+                       <h3>{{ trans('comment.disabled') }}</h3>
+                   @endif
+               </div>
         </div>
     </div>
 @endsection
