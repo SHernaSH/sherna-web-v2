@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Navigation\Page\UpdateRequest;
 use App\Http\Requests\Reservations\StoreRequest;
+use App\Http\Requests\Reservations\UpdateRequest;
 use App\Http\Services\ReservationService;
 use App\Models\Reservations\Reservation;
 use App\Models\Settings\Setting;
