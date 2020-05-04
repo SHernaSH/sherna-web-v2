@@ -71,7 +71,7 @@
                                aria-expanded="false">{{Auth::user()->name}} {{Auth::user()->surname}}</a>
                             <ul class="dropdown-menu">
                                 <li class="{{url()->current() == route('contact.show') ? 'active' : ''}}">
-                                    <a href="{{('Client\ClientController@getReservations')}}">{{trans('navbar.my_reservations')}}</a>
+                                    <a href="{{ route('user.reservations') }}">{{trans('navbar.my_reservations')}}</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('logout')  }}">{{trans('navbar.logout')}}</a>

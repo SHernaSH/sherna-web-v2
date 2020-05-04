@@ -14,8 +14,9 @@ return [
         'category'   => 'Add new category',
     ],
     'empty'   => [
-        'article' => 'No articles yet',
-        'category'=> 'No categories yet',
+        'article'    => 'No articles yet',
+        'category'   => 'No categories yet',
+        'reservation'=> 'No reservations yet',
     ],
 	'banner'  => [
 		'title' => 'Welcome on webpage of SHerna',

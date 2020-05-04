@@ -24,6 +24,15 @@ Route::group([], function () {
         'index', 'store', 'update', 'destroy'
     ]]);
 
+    Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
+        Route::get('/reservations', 'Client\UserReservationController@getReservations')
+            ->name('user.reservations');
+        Route::get('/reservations/{reservation}', 'Client\UserReservationController@getReservationICS')
+            ->name('user.ics');
+        Route::delete('/reservations/{reservation}', 'Client\UserReservationController@delete')
+            ->name('user.reservations.delete');
+    });
+
     Route::group(['prefix' => 'comment', 'middleware' => 'auth'], function () {
         Route::post('/{article}', 'Client\CommentController@store')->name('comment.store');
         Route::put('/{comment}', 'Client\CommentController@update')->name('comment.update');
