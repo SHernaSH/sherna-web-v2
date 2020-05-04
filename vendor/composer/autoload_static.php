@@ -112,6 +112,7 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         ),
         'M' => 
         array (
+            'Mpociot\\LaravelTestFactoryHelper\\' => 33,
             'Monolog\\' => 8,
         ),
         'L' => 
@@ -123,6 +124,7 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'J' => 
         array (
             'JsonSchema\\' => 11,
+            'JMac\\Testing\\' => 13,
         ),
         'I' => 
         array (
@@ -370,6 +372,10 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
         ),
+        'Mpociot\\LaravelTestFactoryHelper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpociot/laravel-test-factory-helper/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -389,6 +395,10 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'JsonSchema\\' => 
         array (
             0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
+        'JMac\\Testing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jasonmccreary/laravel-test-assertions/src',
         ),
         'Illuminate\\' => 
         array (
@@ -3109,6 +3119,8 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'Illuminate\\View\\ViewName' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewName.php',
         'Illuminate\\View\\ViewServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewServiceProvider.php',
         'InventorySeeder' => __DIR__ . '/../..' . '/database/seeds/InventorySeeder.php',
+        'JMac\\Testing\\LaravelMatchers' => __DIR__ . '/..' . '/jasonmccreary/laravel-test-assertions/src/LaravelMatchers.php',
+        'JMac\\Testing\\Traits\\AdditionalAssertions' => __DIR__ . '/..' . '/jasonmccreary/laravel-test-assertions/src/Traits/AdditionalAssertions.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'JsonSchema\\Constraints\\BaseConstraint' => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema/Constraints/BaseConstraint.php',
         'JsonSchema\\Constraints\\CollectionConstraint' => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema/Constraints/CollectionConstraint.php',
@@ -3590,6 +3602,9 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'Monolog\\SignalHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'Monolog\\Test\\TestCase' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Test/TestCase.php',
         'Monolog\\Utils' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Utils.php',
+        'Mpociot\\LaravelTestFactoryHelper\\Console\\GenerateCommand' => __DIR__ . '/..' . '/mpociot/laravel-test-factory-helper/src/Console/GenerateCommand.php',
+        'Mpociot\\LaravelTestFactoryHelper\\TestFactoryHelperServiceProvider' => __DIR__ . '/..' . '/mpociot/laravel-test-factory-helper/src/TestFactoryHelperServiceProvider.php',
+        'Mpociot\\LaravelTestFactoryHelper\\Types\\EnumType' => __DIR__ . '/..' . '/mpociot/laravel-test-factory-helper/src/Types/EnumType.php',
         'NavPagesSeeder' => __DIR__ . '/../..' . '/database/seeds/NavPagesSeeder.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/CollisionServiceProvider.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\Commands\\TestCommand' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/Commands/TestCommand.php',
