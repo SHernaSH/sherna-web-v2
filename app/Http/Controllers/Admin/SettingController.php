@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\UpdateRequest;
 use App\Models\Settings\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,10 +33,10 @@ class SettingController extends Controller
     /**
      * Update the all the Settings in storage.
      *
-     * @param Request $request  request containing all the data for the update
+     * @param UpdateRequest $request  request containing all the data for the update
      * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request)
+    public function update(UpdateRequest $request)
     {
         foreach (Setting::all() as $setting) {
             $setting->value = $request->get('value-' . $setting->id);

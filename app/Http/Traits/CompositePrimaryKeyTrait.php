@@ -2,9 +2,9 @@
 
 namespace App\Http\Traits;
 
+use App\Http\Collections\CompositeCollection;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -15,6 +15,17 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  */
 trait CompositePrimaryKeyTrait
 {
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new CompositeCollection($models);
+    }
 
     /**
      * Get the value indicating whether the IDs are incrementing.

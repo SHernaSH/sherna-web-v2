@@ -3,6 +3,8 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\Reservations\StoreRequest;
+use App\Http\Requests\Reservations\UpdateRequest;
 use App\Models\Locations\Location;
 use App\Models\Permissions\Permission;
 use App\Models\Reservations\Reservation;
@@ -40,11 +42,11 @@ class ReservationService
     /**
      * Create a new reservation if it contains valid data
      *
-     * @param $request Request     request with all the data from creation form
+     * @param $request StoreRequest     request with all the data from creation form
      * @param $user User    actually logged in user
      * @return bool|string  return true if successful, error message otherwise
      */
-    public function makeReservation($request, $user)
+    public function makeReservation(StoreRequest $request, $user)
     {
         $reservation = $this->createReservation($request, $user);
         $validation = $this->validate($user, $reservation);
@@ -59,12 +61,12 @@ class ReservationService
     /**
      * Update already existing specified reservation, if it contains valid data
      *
-     * @param $request Request     request with all the data from creation form
+     * @param UpdateRequest $request     request with all the data from creation form
      * @param Reservation $reservation specified reservation to be updated
      * @param $user User    actually logged in user
      * @return bool|string  return true if successful, error message otherwise
      */
-    public function updateReservation($request, Reservation $reservation, User $user)
+    public function updateReservation(UpdateRequest $request, Reservation $reservation, User $user)
     {
         $this->update($request, $reservation);
         $validation = $this->validate($user, $reservation, true);
@@ -107,9 +109,10 @@ class ReservationService
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         $reservation->location()->associate($location);
         $reservation->visitors_count = $request->get('visitors_count', 1);
-        $reservation->start_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('from_date'));
-        $reservation->end_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('to_date'));
+        $reservation->start_at = Carbon::createFromFormat('d.m.Y H:i', $request->get('from_date'));
+        $reservation->end_at = Carbon::createFromFormat('d.m.Y H:i', $request->get('to_date'));
         $reservation->vr = $request->get('vr', false) ? 1 : 0;
+        $reservation->note = $request->get('note');
         return $reservation;
     }
 
@@ -125,13 +128,13 @@ class ReservationService
 
     private function validateForAdmin(Reservation $reservation, $update = false)
     {
-        if ($reservation->duration() <= 0) {
+        if ($reservation->end_at->isBefore($reservation->start_at)) {
             return trans('reservations.too_short');
         } else if ($this->overlap($reservation) > 0) {
             return trans('reservations.overlap');
         } else if ($reservation->visitors_count < 0) {
             return trans('reservations.minimal_visitor');
-        } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()
+        } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()->setSeconds(0)
             ->addMinutes(Setting::where('name', 'Time for edit')->first()->value))) {
             return trans('reservations.in_past');
         } else if($update && $reservation->getOriginal('end_at')->isBefore(Carbon::now())) {

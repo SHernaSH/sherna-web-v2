@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Locations\StoreRequest;
+use App\Http\Requests\Locations\UpdateRequest;
 use App\Models\Language\Language;
 use App\Models\Locations\Location;
 use App\Models\Locations\LocationStatus;
@@ -48,10 +50,10 @@ class LocationController extends Controller
     /**
      * Store a newly created Location in database.
      *
-     * @param Request $request  request with all the data from creation form
+     * @param StoreRequest $request  request with all the data from creation form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $next_id = DB::table('locations')->max('id') + 1;
         $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
@@ -88,11 +90,11 @@ class LocationController extends Controller
     /**
      * Update the specified Location in storage.
      *
-     * @param Request $request  request with all the data from edition form
+     * @param UpdateRequest $request  request with all the data from edition form
      * @param int $id           id of the specified Location to be updated
      * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateRequest $request, int $id)
     {
         $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
         $uid = $request->input('location_id');

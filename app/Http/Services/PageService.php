@@ -199,6 +199,7 @@ class PageService
     {
         $subpages = Session::get('subpages-' . $lang->id);
         $origSubpages = $page->subpages()->ofLang($lang)->get();
+        $r = $origSubpages->diff($origSubpages);
         foreach ($origSubpages->diff($subpages) as $toDelete) {
             $toDelete->delete();
         }
@@ -258,6 +259,8 @@ class PageService
             return false;
 
         }
+//        $page->name = $request->get('name-' . $lang->id);
+        $text->title = $request->get('name-' . $lang->id); //$page->name;
         $text->content = $request->get('content-' . $lang->id);
         $text->save();
     }

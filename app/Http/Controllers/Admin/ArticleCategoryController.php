@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\JSON\AutocompleteModel;
+use App\Http\Requests\Article\ArticleCategory\StoreRequest;
+use App\Http\Requests\Article\ArticleCategory\UpdateRequest;
 use App\Models\Articles\ArticleCategory;
 use App\Models\Articles\ArticleCategoryDetail;
 use App\Models\Language\Language;
@@ -48,10 +50,10 @@ class ArticleCategoryController extends Controller
      * Create a new main entry ArticleCategory, then create the details for all the languages
      * and associate it with language and the category
      *
-     * @param Request $request  request from the create form
+     * @param StoreRequest $request  request from the create form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $category = new ArticleCategory();
         $category->save();
@@ -82,11 +84,11 @@ class ArticleCategoryController extends Controller
     /**
      * Update the ArticleCategory in database.
      *
-     * @param Request $request          request with the data from edit form
+     * @param UpdateRequest $request          request with the data from edit form
      * @param ArticleCategory $category category which shoudl be updated
      * @return RedirectResponse         redirect to index page
      */
-    public function update(Request $request, ArticleCategory $category)
+    public function update(UpdateRequest $request, ArticleCategory $category)
     {
         foreach (Language::all() as $language) {
             $detail = $category->detail()->ofLang($language)->get()->first();

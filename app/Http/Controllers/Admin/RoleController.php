@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Roles\StoreRequest;
+use App\Http\Requests\Roles\UpdateRequest;
 use App\Models\Permissions\Permission;
 use App\Models\Roles\Role;
 use Illuminate\Http\RedirectResponse;
@@ -42,10 +44,10 @@ class RoleController extends Controller
     /**
      * Store a newly created Role in database.
      *
-     * @param Request $request  request containing all data from creation form
+     * @param StoreRequest $request  request containing all data from creation form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $role = new Role();
         $role->name = $request->get('name');
@@ -75,16 +77,16 @@ class RoleController extends Controller
     /**
      * Update the specified Role in storage.
      *
-     * @param Request $request  request with all the data from edition form
+     * @param UpdateRequest $request  request with all the data from edition form
      * @param Role $role        specified Role to be updated
      * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRequest $request, Role $role)
     {
         $role->name = $request->get('name');
         $role->description = $request->get('description');
 
-        $ids = $request->get('permissions');
+        $ids = $request->get('permissions', []);
         $newPermissions = Permission::whereIn('id', $ids)->pluck('id')->toArray();
         $rolePermissions = $role->permissions()->pluck('id')->toArray();
         $role->permissions()->detach(array_diff($rolePermissions, $newPermissions));

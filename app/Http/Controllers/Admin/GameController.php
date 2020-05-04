@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Games\StoreRequest;
+use App\Http\Requests\Games\UpdateRequest;
 use App\Models\Games\Game;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,17 +56,12 @@ class GameController extends Controller
     /**
      * Store a newly created Game in database.
      *
-     * @param Request $request          request with data from creation form
+     * @param StoreRequest $request          request with data from creation form
      * @return RedirectResponse         redirect to index page
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'possible_players' => 'required|numeric',
-            'console_id' => 'required',
-        ]);
 
         Game::create($request->all());
         flash()->success('Game successfully created');
@@ -76,20 +73,14 @@ class GameController extends Controller
     /**
      * Update the chosen Game in database.
      *
-     * @param Request $request   request containing all the data from the edition form
+     * @param UpdateRequest $request   request containing all the data from the edition form
      * @param Game $game         Game to be edited
      * @return RedirectResponse  return index view of games
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Game $game, Request $request)
+    public function update(Game $game, UpdateRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'possible_players' => 'required|numeric',
-            'console_type_id' => 'required',
-        ]);
-
-        $game->update($request->except('location_id'));
+        $game->update($request->all());
         flash()->success('Game successfully updated');
 
         return redirect()->route('game.index');

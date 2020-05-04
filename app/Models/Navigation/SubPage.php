@@ -43,6 +43,7 @@ class SubPage extends LanguageModel
 
     use CompositePrimaryKeyTrait;
 
+
     /**
      * The table associated with the model.
      *

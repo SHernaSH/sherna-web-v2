@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Consoles\Type\StoreRequest;
+use App\Http\Requests\Consoles\Type\UpdateRequest;
 use App\Models\Consoles\ConsoleType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,14 +27,11 @@ class ConsoleTypeController extends Controller
     /**
      * Store a newly created Console Type in database.
      *
-     * @param Request $request  request containing data from creation form
+     * @param StoreRequest $request  request containing data from creation form
      * @return RedirectResponse return index view of console and console types
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-        ]);
 
         ConsoleType::create($request->all());
         flash()->success('Console type successfully created');
@@ -56,11 +55,11 @@ class ConsoleTypeController extends Controller
     /**
      * Update the specified Console Type in database.
      *
-     * @param Request $request  request containing all the data from edition form
+     * @param UpdateRequest $request  request containing all the data from edition form
      * @param ConsoleType $type Console type to be updated
      * @return RedirectResponse return index view with consoles and console types
      */
-    public function update(Request $request, ConsoleType $type)
+    public function update(UpdateRequest $request, ConsoleType $type)
     {
 
         $type->update($request->all());
@@ -77,7 +76,12 @@ class ConsoleTypeController extends Controller
      */
     public function destroy(ConsoleType $type)
     {
-        $type->delete();
+        try {
+            $type->delete();
+            flash()->success('Console type successfully deleted');
+        } catch (\Exception $ex) {
+            flash()->error('Console type was not deleted');
+        }
         return redirect()->route('console.index');
     }
 }
