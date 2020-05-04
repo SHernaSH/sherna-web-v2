@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Reservations\StoreRequest;
+use App\Http\Requests\Reservations\UpdateRequest;
 use App\Http\Services\ReservationService;
 use App\Models\Reservations\Reservation;
 use Illuminate\Http\RedirectResponse;
@@ -55,10 +57,10 @@ class ReservationController extends Controller
     /**
      * Store a newly created Reservation in database.
      *
-     * @param Request $request  request with all the dta from creation form
+     * @param StoreRequest $request  request with all the dta from creation form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $validation = $this->reservationService->makeReservation($request, Auth::user());
         if (!is_string($validation)) {
@@ -90,7 +92,7 @@ class ReservationController extends Controller
      * @param Reservation $reservation specified Reservation to be updated
      * @return RedirectResponse redirect to the index page
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(UpdateRequest $request, Reservation $reservation)
     {
         $validation = $this->reservationService->updateReservation($request, $reservation, Auth::user());
         if (!is_string($validation)) {

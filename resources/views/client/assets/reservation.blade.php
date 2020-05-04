@@ -7,7 +7,7 @@
         var myReservationBorderColor     = '{{config('calendar.my-reservation.border-color')}}';
         var myReservationBackgroundColor = '{{config('calendar.my-reservation.background-color')}}';
         var admin                        = {{(\Auth::check() && \Auth::user()->isAdmin()) ? 1 : 0}};
-        var format = "DD.MM.YYYY - HH:mm";
+        var format = "DD.MM.YYYY HH:mm";
         $(document).ready(function () {
             $.ajaxSetup({
                 headers: {

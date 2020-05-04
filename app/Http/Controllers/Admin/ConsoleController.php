@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Article\StoreRequest;
+use App\Http\Requests\Consoles\StoreRequest;
+use App\Http\Requests\Consoles\UpdateRequest;
 use App\Models\Consoles\Console;
 use App\Models\Consoles\ConsoleType;
 use Illuminate\Http\RedirectResponse;
@@ -56,18 +57,11 @@ class ConsoleController extends Controller
     /**
      * Store a newly created Console in database.
      *
-     * @param Request $request          request with data from creation form
+     * @param StoreRequest $request          request with data from creation form
      * @return RedirectResponse         redirect to index page
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'console_type_id' => 'required',
-            'location_id' => 'required',
-        ]);
-
         Console::create($request->all());
         flash()->success('Console successfully created');
 
@@ -77,19 +71,12 @@ class ConsoleController extends Controller
     /**
      * Update the Console in database.
      *
-     * @param Request $request
+     * @param UpdateRequest $request
      * @param Console $console
      * @return RedirectResponse  return index view of consoles
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Console $console, Request $request)
+    public function update(Console $console, UpdateRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-            'console_type_id' => 'required',
-            'location_id' => 'required',
-        ]);
-
         $console->update($request->all());
         flash()->success('Console successfully updated');
 

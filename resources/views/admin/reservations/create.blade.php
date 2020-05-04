@@ -63,7 +63,7 @@
 								<label for="visitors_count"
 									   class="control-label">Count of visitors</label>
 								<input type="number" class="form-control" name="visitors_count"
-									   id="visitors_count" min="0"  value="{{old('visitors_count')}}">
+									   id="visitors_count" min="0" value="{{old('visitors_count', 1)}}">
 							</div>
 
 							<div class="form-group">

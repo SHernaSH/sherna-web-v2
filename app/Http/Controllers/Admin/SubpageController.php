@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Navigation\Subpage\StoreRequest;
+use App\Http\Requests\Navigation\Subpage\UpdateRequest;
 use App\Models\Language\Language;
 use App\Models\Navigation\SubPage;
 use App\Models\Navigation\SubPageText;
@@ -62,7 +64,7 @@ class SubpageController extends Controller
      * @param Request $request
      * @return RedirectResponse redirect back to Page creation page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $next_order = DB::table('nav_subpages')->max('order') + 1;
 
@@ -121,11 +123,11 @@ class SubpageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request request containing all the data from edition form + the edition form for Page
+     * @param UpdateRequest $request request containing all the data from edition form + the edition form for Page
      * @param string $url  url of the specified Subpage to be editted
      * @return RedirectResponse  redirect back to Page creation page
      */
-    public function update(Request $request, string $url)
+    public function update(UpdateRequest $request, string $url)
     {
         foreach (Language::all() as $language) {
             foreach (Session::get('subpages-' . $language->id, collect()) as &$sub) {

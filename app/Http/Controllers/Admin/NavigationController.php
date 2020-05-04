@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Navigation\Page\StoreRequest;
+use App\Http\Requests\Navigation\Page\UpdateRequest;
 use App\Http\Scopes\LanguageScope;
 use App\Http\Services\PageService;
 use App\Models\Language\Language;
@@ -68,10 +70,10 @@ class NavigationController extends Controller
      * Store a newly created Page in storage.
      * Stroing the subpages from Session.
      *
-     * @param Request $request  request with all the data from creation form
+     * @param StoreRequest $request  request with all the data from creation form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $this->pageService->storeWholePage($request);
         return redirect()->route('navigation.index');
@@ -122,11 +124,11 @@ class NavigationController extends Controller
     /**
      * Update the specified navigation Page in database.
      *
-     * @param Request $request  request with all the data from edition form
+     * @param UpdateRequest $request  request with all the data from edition form
      * @param int $id           id of the specified navigation Page to be updated
      * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $this->pageService->storeWholePage($request, $id);
 

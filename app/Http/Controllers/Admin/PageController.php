@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Pages\UpdateRequest;
 use App\Http\Services\PageService;
 use App\Models\Navigation\Page;
 use App\Models\Navigation\SubPage;
@@ -86,12 +87,12 @@ class PageController extends Controller
     /**
      * Update the specified Page/Supbage in storage.
      *
-     * @param Request $request request with all the data from edition form
+     * @param UpdateRequest $request request with all the data from edition form
      * @param int $id id of the specified Page/Subpage to be updated
      * @param string $type type of the page, whether it is Page or Subpage
      * @return View|RedirectResponse return view of edition form, or redirect back to index page if edition is forbidden
      */
-    public function update(Request $request, $id, $type)
+    public function update(UpdateRequest $request, $id, $type)
     {
         if ($type == 'page') {
             $page = Page::where('id', $id)->firstOrFail();

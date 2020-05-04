@@ -21,7 +21,8 @@ class CommentController extends Controller
     /**
      * Store a newly created top level Comment in storage.
      *
-     * @param Request $request  request with the comment data
+     * @param Request $request request with the comment data
+     * @param Article $article
      * @return RedirectResponse redirect back to the article page
      */
     public function store(Request $request, Article $article)

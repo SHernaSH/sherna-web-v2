@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Permissions\UpdateRequest;
 use App\Models\Permissions\Permission;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -39,11 +40,11 @@ class PermissionController extends Controller
     /**
      * Update the specified Permission in storage.
      *
-     * @param Request $request       request with all the data from edition form
+     * @param UpdateRequest $request       request with all the data from edition form
      * @param Permission $permission permission to be edited
      * @return Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(UpdateRequest $request, Permission $permission)
     {
         $permission->name = $request->get('name');
         $permission->description = $request->get('description');
