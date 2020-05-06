@@ -8,7 +8,7 @@ $factory->define(App\Models\Articles\ArticleCategoryDetail::class, function (Fak
     return [
         'category_id' => factory(App\Models\Articles\ArticleCategory::class),
         'name' => $faker->name,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
         'deleted_at' => $faker->dateTime(),
     ];
 });

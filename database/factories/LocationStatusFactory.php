@@ -6,9 +6,9 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Locations\LocationStatus::class, function (Faker $faker) {
     return [
-        'id' => $faker->randomNumber(),
+        'id' => $faker->randomNumber() + 10,
         'name' => $faker->name,
         'opened' => $faker->boolean,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });

@@ -39,10 +39,10 @@ class CreateInventoryTable extends Migration
             $table->unsignedInteger('language_id')->default('1');
 
 
-            $table->foreign('location_id')->references('id')->on('inventory_categories')
+            $table->foreign('location_id')->references('id')->on('locations')
                 ->onDelete('cascade');
 
-            $table->foreign('category_id')->references('id')->on('locations')
+            $table->foreign('category_id')->references('id')->on('inventory_categories')
                 ->onDelete('cascade');
 
             $table->foreign('language_id')->references('id')->on('languages')

@@ -48,7 +48,8 @@ class ReservationService
      */
     public function makeReservation(StoreRequest $request, $user)
     {
-        $reservation = $this->createReservation($request, $user);
+        $userToReservate = User::find($request->get('tenant_uid'));
+        $reservation = $this->createReservation($request, $userToReservate ?? $user );
         $validation = $this->validate($user, $reservation);
         if (!is_string($validation)) {
             $reservation->save();

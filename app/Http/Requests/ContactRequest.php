@@ -16,7 +16,7 @@ class ContactRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email'],
-            'message' => ['required', 'min:100'],
+            'message' => ['required', 'string', 'min:50'],
             'year' => [
                 'required',
                 Rule::in(date('Y')),

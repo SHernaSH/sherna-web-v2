@@ -17,6 +17,5 @@ $factory->define(App\Models\Games\Game::class, function (Faker $faker) {
         'kinect' => $faker->boolean,
         'game_pad' => $faker->boolean,
         'guitar' => $faker->boolean,
-        'deleted_at' => $faker->dateTime(),
     ];
 });

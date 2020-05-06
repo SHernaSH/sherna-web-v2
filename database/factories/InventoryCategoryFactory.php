@@ -6,8 +6,8 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Inventory\InventoryCategory::class, function (Faker $faker) {
     return [
-        'id' => $faker->randomNumber(),
+        'id' => $faker->randomNumber() + 5,
         'name' => $faker->name,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });

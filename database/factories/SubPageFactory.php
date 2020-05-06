@@ -6,12 +6,12 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Navigation\SubPage::class, function (Faker $faker) {
     return [
-        'id' => $faker->randomNumber(),
+        'id' => $faker->randomNumber() + 10,
         'nav_page_id' => factory(App\Models\Navigation\Page::class),
         'order' => $faker->randomNumber(),
         'public' => $faker->boolean,
-        'url' => $faker->url,
+        'url' => $faker->word . $faker->word,
         'name' => $faker->name,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });

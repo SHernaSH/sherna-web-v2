@@ -10,6 +10,6 @@ $factory->define(App\Models\Articles\ArticleText::class, function (Faker $faker)
         'title' => $faker->word,
         'description' => $faker->text,
         'content' => $faker->text,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });

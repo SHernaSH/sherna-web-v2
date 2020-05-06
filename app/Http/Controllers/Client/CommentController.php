@@ -75,9 +75,12 @@ class CommentController extends Controller
      * @param Comment $comment
      * @return Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $comment)
     {
-        //
+        $comment = Comment::find($comment);
+        $comment->body = $request->get('comment_body');
+        $comment->save();
+        return redirect()->back();
     }
 
     /**
@@ -88,6 +91,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+        return redirect()->back();
     }
 }

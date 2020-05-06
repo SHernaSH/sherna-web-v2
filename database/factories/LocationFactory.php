@@ -6,11 +6,11 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\Locations\Location::class, function (Faker $faker) {
     return [
-        'id' => $faker->randomNumber(),
+        'id' => $faker->randomNumber() + 10,
         'name' => $faker->name,
-        'status_id' => factory(App\Models\Locations\LocationStatus::class),
+        'status_id' => factory(App\Models\Locations\LocationStatus::class)->create()->id,
         'reader_uid' => $faker->word,
         'location_uid' => $faker->word,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });

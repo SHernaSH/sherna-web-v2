@@ -36,7 +36,7 @@ Route::group([], function () {
     Route::group(['prefix' => 'comment', 'middleware' => 'auth'], function () {
         Route::post('/{article}', 'Client\CommentController@store')->name('comment.store');
         Route::put('/{comment}', 'Client\CommentController@update')->name('comment.update');
-        Route::put('/{comment}', 'Client\CommentController@destroy')->name('comment.destroy');
+        Route::delete('/{comment}', 'Client\CommentController@destroy')->name('comment.destroy');
         Route::put('/{comment}/edit', 'Client\CommentController@edit')->name('comment.edit');
         Route::post('/reply/store', 'Client\CommentController@replyStore')->name('comment.reply');
     });

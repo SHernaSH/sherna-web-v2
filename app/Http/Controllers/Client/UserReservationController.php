@@ -47,6 +47,6 @@ class UserReservationController
         } else {
             flash(trans('general.unsuccessful'))->error();
         }
-        return redirect()->back();
+        return redirect()->route('user.reservations');
     }
 }

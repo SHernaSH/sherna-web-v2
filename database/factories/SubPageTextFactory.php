@@ -9,6 +9,6 @@ $factory->define(App\Models\Navigation\SubPageText::class, function (Faker $fake
         'nav_subpage_id' => factory(App\Models\Navigation\SubPage::class),
         'title' => $faker->word,
         'content' => $faker->text,
-        'language_id' => factory(App\Models\Language\Language::class),
+        'language_id' => 1,
     ];
 });
