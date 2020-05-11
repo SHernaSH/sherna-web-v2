@@ -6,6 +6,7 @@ body {
   padding-top: 30px;
 }
 #body-container {
+  min-height: 100%;
   position: relative;
 }
 .comment-radius {
@@ -14,6 +15,12 @@ body {
 .comment {
   padding: 10px 20px 10px 5px;
   background: #d2ffcf;
+}
+@media (min-width: 768px) {
+  #navbar.navbar-collapse.collapse {
+    display: inline-block !important;
+    vertical-align: top;
+  }
 }
 footer {
   background-color: #65d26e;

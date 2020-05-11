@@ -69,13 +69,13 @@
 							</tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="7">No reservations yet</td>
+                                <td class="text-center" colspan="9">No reservations yet</td>
                             </tr>
 						@endforelse
 						</tbody>
                     @if($reservations->hasPages())
                         <tr>
-                            <td class="text-center" colspan="7">{{ $reservations->links() }}</td>
+                            <td class="text-center" colspan="9">{{ $reservations->links() }}</td>
                         </tr>
                     @endif
                     </table>

@@ -1,6 +1,6 @@
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="">
+	<div class="text-center">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 					aria-expanded="false" aria-controls="navbar">
@@ -71,7 +71,7 @@
                                aria-expanded="false">{{Auth::user()->name}} {{Auth::user()->surname}}</a>
                             <ul class="dropdown-menu">
                                 <li class="{{url()->current() == route('contact.show') ? 'active' : ''}}">
-                                    <a href="{{('Client\ClientController@getReservations')}}">{{trans('navbar.my_reservations')}}</a>
+                                    <a href="{{ route('user.reservations') }}">{{trans('navbar.my_reservations')}}</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('logout')  }}">{{trans('navbar.logout')}}</a>

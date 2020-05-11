@@ -42,14 +42,14 @@
 											   class="control-label">From<span
 													class="text-danger">*</span></label>
 										<input name="from_date" class="form-control form_datetime" id="from_date"
-											   type="text" value="{{old('from_date', $reservation->start_at->format('d.m.Y - h:i:s'))}}">
+											   type="text" value="{{old('from_date', $reservation->start_at->format('d.m.Y h:i'))}}">
 									</div>
 									<div class="col-md-6">
 										<label for="to_date"
 											   class="control-label">To<span
 													class="text-danger">*</span></label>
 										<input name="to_date" class="form-control to_datetime" id="to_date"
-											   type="text" value="{{old('to_date',$reservation->end_at->format('d.m.Y - h:i:s'))}}">
+											   type="text" value="{{old('to_date',$reservation->end_at->format('d.m.Y h:i'))}}">
 									</div>
 								</div>
 							</div>

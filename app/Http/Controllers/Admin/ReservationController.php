@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Reservations\StoreRequest;
+use App\Http\Requests\Reservations\UpdateRequest;
 use App\Http\Services\ReservationService;
 use App\Models\Reservations\Reservation;
 use Illuminate\Http\RedirectResponse;
@@ -37,7 +39,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = $this->reservationService->getAllReservation();
+        $reservations = $this->reservationService->getAllReservation(5);
         return view('admin.reservations.index', ['reservations' => $reservations]);
 
     }
@@ -55,12 +57,17 @@ class ReservationController extends Controller
     /**
      * Store a newly created Reservation in database.
      *
-     * @param Request $request  request with all the dta from creation form
+     * @param StoreRequest $request  request with all the dta from creation form
      * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->reservationService->makeReservation($request, Auth::user());
+        $validation = $this->reservationService->makeReservation($request, Auth::user());
+        if (!is_string($validation)) {
+            flash(trans('reservations.success_added'))->success();
+        } else {
+            flash(trans($validation))->error();
+        }
 
         return redirect()->route('admin.reservation.index');
     }
@@ -78,15 +85,21 @@ class ReservationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in database if it contains valid data.
+     * Setting notifications for success/error
      *
-     * @param Request $request
-     * @param Reservation $reservation
-     * @return Response
+     * @param Request $request request with all the data from edition form for reservation
+     * @param Reservation $reservation specified Reservation to be updated
+     * @return RedirectResponse redirect to the index page
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(UpdateRequest $request, Reservation $reservation)
     {
-        $this->reservationService->updateReservation($request, $reservation, Auth::user());
+        $validation = $this->reservationService->updateReservation($request, $reservation, Auth::user());
+        if (!is_string($validation)) {
+            flash(trans('reservations.success_updated'))->success();
+        } else {
+            flash(trans($validation))->error();
+        }
         return redirect()->route('admin.reservation.index');
 
     }

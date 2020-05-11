@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Inventory\Category\StoreRequest;
+use App\Http\Requests\Inventory\Category\UpdateRequest;
 use App\Models\Inventory\InventoryCategory;
 use App\Models\Language\Language;
 use Illuminate\Http\RedirectResponse;
@@ -57,17 +59,11 @@ class InventoryCategoryController extends Controller
     /**
      * Store a newly created Inventory Category in database.
      *
-     * @param Request $request          request with data from creation form
+     * @param StoreRequest $request          request with data from creation form
      * @return RedirectResponse         redirect to index page
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $rules = [];
-        foreach (Language::all() as $language) {
-            $rules['name-' . $language->id] = 'required|string|max:255';
-        }
-        $this->validate($request, $rules);
         $next_id = DB::table('inventory_categories')->max('id') + 1;
         foreach (Language::all() as $language) {
             $category = new InventoryCategory();
@@ -86,18 +82,11 @@ class InventoryCategoryController extends Controller
      * Updating the chosen Invnetory Category
      *
      * @param int $id           id of the Inventory Category that will be updated
-     * @param Request $request  request with all the data from edition form
+     * @param UpdateRequest $request  request with all the data from edition form
      * @return RedirectResponse index view of all the Inventory Categories
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateRequest $request)
     {
-        $rules = [];
-        foreach (Language::all() as $language) {
-            $rules['name-' . $language->id] = 'required|string|max:255';
-        }
-        $this->validate($request, $rules);
-
         foreach (Language::all() as $language) {
             $category = InventoryCategory::where('id', $id)->ofLang($language)->first();
             $category->name = $request->get('name-' . $language->id);
@@ -120,7 +109,7 @@ class InventoryCategoryController extends Controller
     {
         try {
             foreach (Language::all() as $language) {
-                $inventoryCategory = InventoryCategory::ofLang($language)->where('id', $id)->first();
+                $inventoryCategory = InventoryCategory::ofLang($language)->where('id', $id)->firstOrFail();
                 $inventoryCategory->delete();
             }
             flash()->success('Inventory category successfully deleted');

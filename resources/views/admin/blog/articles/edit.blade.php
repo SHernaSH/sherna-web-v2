@@ -31,11 +31,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="url">Make public:</label>
+                            <label class="col-sm-2 control-label" for="comments">Enable comments:</label>
                             <div class="col-sm-10">
-                                <input type="checkbox" {{$article->public ? "checked" : ""}} class="js-switch" />
+                                <input type="checkbox" {{$article->comments_enabled ? "checked" : ""}} id="comments" name="comments" class="js-switch" />
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="public">Make public:</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" {{$article->public ? "checked" : ""}} name="public" id="public" class="js-switch" />
+                            </div>
+                        </div>
+
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
                             @foreach(\App\Models\Language\Language::all() as $language)

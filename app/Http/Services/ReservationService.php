@@ -3,6 +3,8 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\Reservations\StoreRequest;
+use App\Http\Requests\Reservations\UpdateRequest;
 use App\Models\Locations\Location;
 use App\Models\Permissions\Permission;
 use App\Models\Reservations\Reservation;
@@ -40,13 +42,14 @@ class ReservationService
     /**
      * Create a new reservation if it contains valid data
      *
-     * @param $request Request     request with all the data from creation form
+     * @param $request StoreRequest     request with all the data from creation form
      * @param $user User    actually logged in user
      * @return bool|string  return true if successful, error message otherwise
      */
-    public function makeReservation($request, $user)
+    public function makeReservation(StoreRequest $request, $user)
     {
-        $reservation = $this->createReservation($request, $user);
+        $userToReservate = User::find($request->get('tenant_uid'));
+        $reservation = $this->createReservation($request, $userToReservate ?? $user );
         $validation = $this->validate($user, $reservation);
         if (!is_string($validation)) {
             $reservation->save();
@@ -59,12 +62,12 @@ class ReservationService
     /**
      * Update already existing specified reservation, if it contains valid data
      *
-     * @param $request Request     request with all the data from creation form
+     * @param UpdateRequest $request     request with all the data from creation form
      * @param Reservation $reservation specified reservation to be updated
      * @param $user User    actually logged in user
      * @return bool|string  return true if successful, error message otherwise
      */
-    public function updateReservation($request, Reservation $reservation, User $user)
+    public function updateReservation(UpdateRequest $request, Reservation $reservation, User $user)
     {
         $this->update($request, $reservation);
         $validation = $this->validate($user, $reservation, true);
@@ -107,9 +110,10 @@ class ReservationService
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         $reservation->location()->associate($location);
         $reservation->visitors_count = $request->get('visitors_count', 1);
-        $reservation->start_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('from_date'));
-        $reservation->end_at = Carbon::createFromFormat('d.m.Y - H:i', $request->get('to_date'));
+        $reservation->start_at = Carbon::createFromFormat('d.m.Y H:i', $request->get('from_date'));
+        $reservation->end_at = Carbon::createFromFormat('d.m.Y H:i', $request->get('to_date'));
         $reservation->vr = $request->get('vr', false) ? 1 : 0;
+        $reservation->note = $request->get('note');
         return $reservation;
     }
 
@@ -125,15 +129,17 @@ class ReservationService
 
     private function validateForAdmin(Reservation $reservation, $update = false)
     {
-        if ($reservation->duration() <= 0) {
+        if ($reservation->end_at->isBefore($reservation->start_at)) {
             return trans('reservations.too_short');
         } else if ($this->overlap($reservation) > 0) {
             return trans('reservations.overlap');
         } else if ($reservation->visitors_count < 0) {
             return trans('reservations.minimal_visitor');
-        } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()
+        } else if (!$update &&  $reservation->start_at->isBefore(Carbon::now()->setSeconds(0)
             ->addMinutes(Setting::where('name', 'Time for edit')->first()->value))) {
             return trans('reservations.in_past');
+        } else if($update && $reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
+            return trans('reservations.late_update');
         }
         return true;
     }
@@ -180,11 +186,19 @@ class ReservationService
             return $validation;
         }
         if ($reservation->getOriginal('start_at')->isPast()) {
-            if ($reservation->start_at != $reservation->getOriginal('start')) {
+            if ($reservation->start_at != $reservation->getOriginal('start_at')) {
                 return trans('reservations.change_start');
+            }
+            if ($reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
+                return trans('reservations.late_update');
             }
             if ($reservation->location_id != $reservation->getOriginal('location_id')) {
                 return trans('reservations.change_location');
+            }
+            $timeForEdit = $reservation->getOriginal('end_at')
+                ->addMinutes((-1) * Setting::where('name', 'Time for edit')->first()->value);
+            if($timeForEdit->isAfter(Carbon::now())) {
+                return trans('reservations.early_update');
             }
         }
         return true;
@@ -192,12 +206,17 @@ class ReservationService
 
     private function validateForUser($user, Reservation $reservation, $update = false)
     {
-        $maxReservations = $reservation->exists ? 1 : 0;
-        if ($user->reservations()->futureReservations()->count() > $maxReservations) {
+        $maxDuration = Setting::where('name', 'Maximal Duration')->first()->value;
+        $maxReservations = $update ? 1 : 0;
+        if ($user->reservations()->futureActiveReservations()->count() > $maxReservations) {
             return trans('reservations.too_many');
-        } else if ($reservation->duration() > Setting::where('name', 'Maximal Duration')->first()->value) {
+        } else if (!$update && $reservation->duration() > $maxDuration) {
             return trans('reservations.too_long');
-        } else if ($reservation->start_at->isAfter(Carbon::now()->addDays(Setting::where('name', 'Reservation Area')->first()->value))) {
+        } else if ($update &&
+            $reservation->end_at->floatDiffInHours($reservation->getOriginal('end_at')) > $maxDuration) {
+            return trans('reservations.too_long');
+        }
+        else if ($reservation->start_at->isAfter(Carbon::now()->addDays(Setting::where('name', 'Reservation Area')->first()->value))) {
             return trans('reservations.too_far');
         } else if (!$reservation->location->status->opened) {
             return trans('reservations.closed');

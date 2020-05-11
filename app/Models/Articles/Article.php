@@ -48,6 +48,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Articles\Article withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Articles\Article withoutTrashed()
  * @mixin \Eloquent
+ * @property int $comments_enabled
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Articles\Article whereCommentsEnabled($value)
  */
 class Article extends Model
 {

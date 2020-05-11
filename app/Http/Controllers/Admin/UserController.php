@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Services\UserService;
 use App\Models\Roles\Role;
 use \App\Models\Users\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
@@ -53,13 +55,13 @@ class UserController extends Controller
      *
      * @return View view showing all the users with specified filters
      */
-    public function indexFilter()
+    public function indexFilter(Request $request)
     {
         $filters = [
-            'name' => request()->get('name'),
-            'surname' => request()->get('surname'),
-            'email' => request()->get('email'),
-            'role_id' => request()->get('role_id')
+            'name' => $request->get('name'),
+            'surname' => $request->get('surname'),
+            'email' => $request->get('email'),
+            'role_id' => $request->get('role_id')
         ];
 
         $users = $this->userService->getUsersFiltered($filters);
@@ -81,25 +83,26 @@ class UserController extends Controller
             flash('Action was not completed.')->error();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index');
     }
 
     /**
      * Change the role of the specified User
      *
-     * @param User $user         specified User to be updated
+     * @param User $user specified User to be updated
+     * @param UpdateRequest $request
      * @return RedirectResponse  redirect back to index page - with or without filters
      */
-    public function updateRole(User $user)
+    public function updateRole(User $user, UpdateRequest $request)
     {
-        $role = Role::find(request()->get('role'));
+        $role = Role::find($request->get('role'));
         if ($this->userService->changeUserRole($user, $role)) {
             flash('User role was successfully changed.')->success();
         } else {
             flash('Action was not completed.')->error();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index');
     }
 
     /**
@@ -109,7 +112,7 @@ class UserController extends Controller
      */
     public function auto()
     {
-        return $this->autocomplete($_GET['term']);
+        return $this->autocomplete($_GET['term'] ?? '');
     }
 
     /**

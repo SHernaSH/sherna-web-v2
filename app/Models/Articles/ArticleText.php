@@ -48,7 +48,7 @@ class ArticleText extends LanguageModel
      *
      * @var string
      */
-    protected $table = 'articles_text';
+    protected $table = 'articles_texts';
 
     /**
      * Page associated with this text

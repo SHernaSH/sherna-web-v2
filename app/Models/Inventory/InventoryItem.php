@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Inventory\InventoryItem withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Inventory\InventoryItem withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\Language\Language $language
  */
 class InventoryItem extends LanguageModel
 {

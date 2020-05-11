@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Locations\Status\StoreRequest;
+use App\Http\Requests\Locations\Status\UpdateRequest;
 use App\Models\Language\Language;
 use App\Models\Locations\LocationStatus;
 use Illuminate\Http\RedirectResponse;
@@ -33,18 +35,11 @@ class LocationStatusController extends Controller
     /**
      * Store a newly created Location Status in database.
      *
-     * @param Request $request request with all the data from creation form
+     * @param StoreRequest $request request with all the data from creation form
      * @return RedirectResponse redirect to index page
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name-1' => 'required|string|max:255',
-            'name-2' => 'required|string|max:255',
-            'opened' => 'required',
-        ]);
-
         $next_id = DB::table('location_statuses')->max('id') + 1;
         $opened = $request->input('opened');
         foreach (Language::all() as $lang) {
@@ -79,15 +74,9 @@ class LocationStatusController extends Controller
      * @param Request $request request with all the data from edition form
      * @param int $id id of the specified Location Status to be updated
      * @return RedirectResponse redirect to index page
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateRequest $request, int $id)
     {
-        $this->validate($request, [
-            'name-1' => 'required|string|max:255',
-            'name-2' => 'required|string|max:255',
-            'opened' => 'required',
-        ]);
         $opened = $request->input('opened');
 
         foreach (Language::all() as $lang) {

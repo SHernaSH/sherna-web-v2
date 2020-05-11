@@ -10,6 +10,7 @@ use App\Notifications\OnKeyReservation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -108,7 +109,15 @@ class Reservation extends Model
     public function duration()
     {
 
-        return $this->end_at->floatDiffInHours($this->start_at);
+        return $this->end_at->floatDiffInHours($this->start_at, false);
+    }
+
+    public function isActive() {
+        return !isset($this->deleted_at) && $this->end_at->isAfter(Carbon::now()) && $this->start_at->isBefore(Carbon::now());
+    }
+
+    public function isFuture() {
+        return !isset($this->deleted_at) && $this->start_at->isAfter(Carbon::now());
     }
 
     /**

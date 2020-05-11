@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Inventory\StoreRequest;
+use App\Http\Requests\Inventory\UpdateRequest;
 use App\Models\Inventory\InventoryCategory;
 use App\Models\Inventory\InventoryItem;
 use App\Models\Language\Language;
@@ -60,18 +62,9 @@ class InventoryController extends Controller
      *
      * @param Request $request          request with data from creation form
      * @return RedirectResponse         redirect to index page
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name-1' => 'required|string|max:255',
-            'category_id' => 'required',
-            'serial_id' => '',
-            'inventory_id' => '',
-            'location_id' => 'required',
-        ]);
-
         $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         $next_id = DB::table('inventory_items')->max('id') + 1;
@@ -97,20 +90,12 @@ class InventoryController extends Controller
      * Updating the chosen Invnetory Item
      *
      * @param int $id           id of the Inventory Item that will be updated
-     * @param Request $request  request with all the data from edition form
+     * @param UpdateRequest $request  request with all the data from edition form
      * @return RedirectResponse index view of all the Inventory Items
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateRequest $request)
     {
 
-        $this->validate($request, [
-            'name-1' => 'required|string|max:255',
-            'category_id' => 'required',
-            'serial_id' => '',
-            'inventory_id' => '',
-            'location_id' => 'required',
-        ]);
         $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         foreach (Language::all() as $language) {

@@ -108,9 +108,10 @@ class ArticleController extends Controller
         $originalCategories = $article->categories()->pluck('id')->toArray();
         $article->categories()->detach(array_diff($originalCategories, $categories));
         $article->categories()->attach(array_diff($categories, $originalCategories));
+        $article->public = $request->get('public') ? 1 : 0;
+//        $article->comments_enabled = $request->get('comments') ? 1 : 0;
 
         foreach (Language::all() as $lang) {
-            $article->public = $request->get('public') ? 1 : 0;
             $text = $article->text()->ofLang($lang)->first();
             $text->title = $request->input('name-' . $lang->id);
             $text->description = $request->input('description-' . $lang->id);
@@ -167,6 +168,7 @@ class ArticleController extends Controller
         $article = new Article();
         $article->url = $request->input('url');
         $article->public = $request->get('public') ? 1 : 0;
+        $article->comments_enabled = $request->get('comments') ? 1 : 0;
         $categories = $this->getCategories($request->get('tags', '') ?? '');
         $article->user()->associate(Auth::user());
         $article->save();

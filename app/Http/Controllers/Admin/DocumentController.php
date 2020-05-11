@@ -58,10 +58,15 @@ class DocumentController extends Controller
      */
     public function delete(string $path)
     {
-        File::delete(public_path('docs/' . $path));
+        if(File::delete(public_path('docs/' . $path))) {
+            flash()->success('File successfully deleted.');
+            return redirect()->route('document.index');
 
-        flash()->success('File successfully deleted.');
+        } else {
+            flash()->error('File was not deleted.');
+            return redirect()->route('document.index')->setStatusCode(304);
 
-        return redirect()->route('document.index');
+        }
+
     }
 }
