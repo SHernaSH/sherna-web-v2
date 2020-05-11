@@ -26,5 +26,8 @@
     },
     "dependencies": {
         "gentelella": "^1.4.0"
+    },
+    "engines": {
+        "node": "13.11.x"
     }
 }
