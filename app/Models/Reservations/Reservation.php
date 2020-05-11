@@ -109,7 +109,7 @@ class Reservation extends Model
     public function duration()
     {
 
-        return $this->end_at->floatDiffInHours($this->start_at, false);
+        return $this->start_at->floatDiffInHours($this->end_at, false);
     }
 
     public function isActive() {

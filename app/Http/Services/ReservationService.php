@@ -129,7 +129,7 @@ class ReservationService
 
     private function validateForAdmin(Reservation $reservation, $update = false)
     {
-        if ($reservation->end_at->isBefore($reservation->start_at)) {
+        if ($reservation->duration() <= 0) {  //$reservation->end_at->isBefore($reservation->start_at)
             return trans('reservations.too_short');
         } else if ($this->overlap($reservation) > 0) {
             return trans('reservations.overlap');
