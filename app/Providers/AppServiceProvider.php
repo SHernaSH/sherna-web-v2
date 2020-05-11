@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,11 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-//        \View::composer('layouts.client', function ($view) {
-//            //TODO: GET FROM DATABASE
-//            $view->with('nav_pages', Page::all()->sortBy('order'));
-//            $view->with('languages', Language::all());
-//        });
+        URL::forceScheme('https');
+        Builder::defaultStringLength(191);
     }
 }
