@@ -6,6 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-xs-12">
+            @include('client.partials.form_errors')
             <h1>{{ trans('general.navbar.contact') }}</h1>
 
             <form action="{{ route('contact.send') }}" method="POST">

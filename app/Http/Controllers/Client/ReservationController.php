@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Reservations\GetRequest;
 use App\Http\Requests\Reservations\StoreRequest;
 use App\Http\Requests\Reservations\UpdateRequest;
 use App\Http\Services\ReservationService;
@@ -45,10 +46,10 @@ class ReservationController extends Controller
      * owner field, which determines whether the user is the owner of the reservation,
      * and start and end of the reservation in specified format,
      *
-     * @param Request $request  request with location for which the reservations should be shown
+     * @param GetRequest $request  request with location for which the reservations should be shown
      * @return JsonResponse     all the reservations for the specified location in json format with few additional fields
      */
-    public function getReservations(Request $request)
+    public function getReservations(GetRequest $request)
     {
         $reservations = Reservation::where('location_id', $request->get('location'))->get(['id', 'start_at', 'end_at', 'visitors_count', 'location_id', 'note', 'user_id']);
         foreach ($reservations as $reservation) {

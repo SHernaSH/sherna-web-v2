@@ -17,7 +17,9 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'possible_players' => ['required', 'integer', 'min:1'],
-            'console_id' => ['required', 'exists:consoles,id']
+            'console_id' => ['required', 'exists:consoles,id'],
+            'serial_id' => ['required'],
+            'inventory_id' => ['required'],
         ];
     }
 }

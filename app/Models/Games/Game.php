@@ -5,6 +5,7 @@ namespace App\Models\Games;
 use App\Models\Consoles\Console;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Games\Game
@@ -47,6 +48,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Game extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name', 'note', 'console_id', 'possible_players', 'serial_id',
         'inventory_id', 'vr', 'move', 'kinect', 'game_pad', 'guitar'

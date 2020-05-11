@@ -25,7 +25,7 @@
 						</thead>
 						<tbody>
 						<tr>
-                            <form class="form-inline" method="get" action="{{ route('user.filter') }}">
+                            <form class="form-inline" method="post" action="{{ route('user.filter') }}">
                                 @csrf
                                 <td>Search:</td>
                                 <td>

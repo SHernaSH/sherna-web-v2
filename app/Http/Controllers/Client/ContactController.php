@@ -7,6 +7,7 @@ use App\Http\Requests\ContactRequest;
 use App\Mail\ContactMessage;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -37,7 +38,7 @@ class ContactController extends Controller
     public function send(ContactRequest $request)
     {
         Mail::to(env('MAIL_TO'))->send(new ContactMessage($request->input('email'), $request->input('message')));
-
+        flash('Message sent')->success();
         return redirect()->route('contact.show');
     }
 }

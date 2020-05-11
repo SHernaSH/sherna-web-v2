@@ -15,7 +15,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = ['url' => ['required', 'min:3', 'max:80', 'unique:articles,url']];
+        $rules = [];
         foreach (Language::all() as $language) {
             $rules['name-' . $language->id] = ['required', 'min:3', 'max:80'];
             $rules['description-' . $language->id] = ['required', 'min:5', 'max:255'];

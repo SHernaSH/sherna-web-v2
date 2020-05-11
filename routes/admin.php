@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/index', 'Admin\UserController@index')
                 ->name('user.index');
 
-            Route::get('/filter', 'Admin\UserController@indexFilter')
+            Route::post('/filter', 'Admin\UserController@indexFilter')
                 ->name('user.filter');
 
             Route::get('/{user}/ban', 'Admin\UserController@ban')
@@ -121,7 +121,7 @@ Route::middleware('auth')->group(function () {
                 ->name('subnavigation.reorder');
         });
         Route::resource('/subnavigation', 'Admin\SubpageController', ['only' => [
-            'index', 'store', 'create', 'edit', 'update', 'destroy',
+             'store', 'create', 'edit', 'update', 'destroy',
         ]]);
 
         Route::group(['prefix' => 'settings'], function () {

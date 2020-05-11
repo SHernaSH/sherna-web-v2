@@ -89,7 +89,7 @@ class ConsoleController extends Controller
      * @param Console $console  console to be deleted
      * @return RedirectResponse return undex view of consoles
      */
-    public function delete(Console $console)
+    public function destroy(Console $console)
     {
         try {
             $console->delete();

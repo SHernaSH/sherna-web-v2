@@ -126,7 +126,7 @@ class ArticleCategoryController extends Controller
      */
     public function auto()
     {
-        return $this->autocomplete($_GET['term']);
+        return $this->autocomplete($_GET['term'] ?? '');
     }
 
     /**

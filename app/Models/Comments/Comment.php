@@ -3,6 +3,7 @@
 namespace App\Models\Comments;
 
 
+use App\Models\Articles\Article;
 use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +50,10 @@ class Comment extends Model
     use SoftDeletes;
 
     public $timestamps = true;
+
+    public function article() {
+        return $this->belongsTo(Article::class);
+    }
 
     /**
      * User that wrote the comment

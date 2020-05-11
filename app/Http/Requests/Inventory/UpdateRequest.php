@@ -16,7 +16,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'category_id' => 'required',
+            'category_id' => ['required', 'exists:inventory_categories,id'],
             'serial_id' => 'required',
             'inventory_id' => 'required',
             'location_id' => ['required', 'exists:locations,id'],

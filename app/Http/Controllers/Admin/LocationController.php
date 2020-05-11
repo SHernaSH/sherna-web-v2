@@ -97,7 +97,7 @@ class LocationController extends Controller
     public function update(UpdateRequest $request, int $id)
     {
         $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
-        $uid = $request->input('location_id');
+        $uid = $request->input('location_uid');
         $reader = $request->input('reader_uid');
         foreach (Language::all() as $lang) {
             $location = Location::where('id', $id)->ofLang($lang)->firstOrFail();
