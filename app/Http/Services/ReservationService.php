@@ -185,6 +185,7 @@ class ReservationService
         if (is_string($validation)) {
             return $validation;
         }
+        $maxDuration = Setting::where('name', 'Maximal Duration')->first()->value;
         if ($reservation->getOriginal('start_at')->isPast()) {
             if ($reservation->start_at != $reservation->getOriginal('start_at')) {
                 return trans('reservations.change_start');
@@ -199,7 +200,11 @@ class ReservationService
                 ->addMinutes((-1) * Setting::where('name', 'Time for edit')->first()->value);
             if($timeForEdit->isAfter(Carbon::now())) {
                 return trans('reservations.early_update');
+            } else if( $reservation->end_at->floatDiffInHours($reservation->getOriginal('end_at')) > $maxDuration) {
+                return trans('reservations.too_long');
             }
+        } else if($reservation->duration() > $maxDuration) {
+            return trans('reservations.too_long');
         }
         return true;
     }
@@ -211,9 +216,6 @@ class ReservationService
         if ($user->reservations()->futureActiveReservations()->count() > $maxReservations) {
             return trans('reservations.too_many');
         } else if (!$update && $reservation->duration() > $maxDuration) {
-            return trans('reservations.too_long');
-        } else if ($update &&
-            $reservation->end_at->floatDiffInHours($reservation->getOriginal('end_at')) > $maxDuration) {
             return trans('reservations.too_long');
         }
         else if ($reservation->start_at->isAfter(Carbon::now()->addDays(Setting::where('name', 'Reservation Area')->first()->value))) {
