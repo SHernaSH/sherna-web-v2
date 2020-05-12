@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group([], function () {
+Route::group(['middleware' => 'roles'], function () {
 
 
     Route::get('/oauth', 'Auth\LoginController@oAuthCallback')->name('oauth');
