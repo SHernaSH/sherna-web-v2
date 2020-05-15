@@ -41,8 +41,8 @@ class InactiveReservation extends Command
         \Log::info('InactiveReservation job ran');
         $reservations = Reservation::whereNull('entered_at')
             ->whereNull('deleted_at')
-            ->where('start', '<=', date('Y-m-d H:i:s', strtotime('+45 minutes')))
-            ->where('end', '>=', date('Y-m-d H:i:s'))
+            ->where('start_at', '<=', date('Y-m-d H:i:s', strtotime('+45 minutes')))
+            ->where('end_at', '>=', date('Y-m-d H:i:s'))
             ->get();
         foreach ($reservations as $reservation) {
             if(!$reservation->user->isAdmin()) {
