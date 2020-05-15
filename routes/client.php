@@ -45,6 +45,8 @@ Route::group([], function () {
         Route::get('/', 'Client\ContactController@show')->name('contact.show');
         Route::post('/', 'Client\ContactController@send')->name('contact.send');
     });
+    //TODO ADD API CALL
+
 
     Route::group(['prefix' => 'blog'], function () {
         Route::get('/', 'Client\BlogController@index')->name('blog');
