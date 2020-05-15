@@ -45,7 +45,7 @@ class LoginController extends Controller
                 $user->name = 'user';
                 $user->surname = 'user';
                 $user->email = 'user@localhost';
-                $user->role_id = 1;
+                $user->role_id = 2;
                 $user->save();
             }
             Auth::loginUsingId(2);
