@@ -55,22 +55,30 @@ class LocationController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $next_id = DB::table('locations')->max('id') + 1;
-        $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
-        $uid = $request->input('location_id');
-        $reader = $request->input('reader_uid');
-        foreach (Language::all() as $lang) {
-            $loc = new Location();
-            $loc->id = $next_id;
-            $loc->location_uid = $uid;
-            $loc->reader_uid = $reader;
-            $loc->name = $request->input('name-' . $lang->id);
-            $loc->status()->associate($status);
-            $loc->language()->associate($lang);
-            $loc->save();
-        }
+        DB::beginTransaction();
 
-        flash('Location was successfully created')->success();
+        try {
+            $next_id = DB::table('locations')->max('id') + 1;
+            $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
+            $uid = $request->input('location_id');
+            $reader = $request->input('reader_uid');
+            foreach (Language::all() as $lang) {
+                $loc = new Location();
+                $loc->id = $next_id;
+                $loc->location_uid = $uid;
+                $loc->reader_uid = $reader;
+                $loc->name = $request->input('name-' . $lang->id);
+                $loc->status()->associate($status);
+                $loc->language()->associate($lang);
+                $loc->save();
+            }
+
+            DB::commit();
+            flash('Location was successfully created')->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Location creation was unsuccessful');
+        }
         return redirect()->route('location.index');
     }
 
@@ -96,19 +104,27 @@ class LocationController extends Controller
      */
     public function update(UpdateRequest $request, int $id)
     {
-        $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
-        $uid = $request->input('location_uid');
-        $reader = $request->input('reader_uid');
-        foreach (Language::all() as $lang) {
-            $location = Location::where('id', $id)->ofLang($lang)->firstOrFail();
-            $location->name = $request->input('name-' . $lang->id);
-            $location->location_uid = $uid;
-            $location->reader_uid = $reader;
-            $location->status()->associate($status);
-            $location->save();
-        }
+        DB::beginTransaction();
 
-        flash("Successfully updated.")->success();
+        try {
+            $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
+            $uid = $request->input('location_uid');
+            $reader = $request->input('reader_uid');
+            foreach (Language::all() as $lang) {
+                $location = Location::where('id', $id)->ofLang($lang)->firstOrFail();
+                $location->name = $request->input('name-' . $lang->id);
+                $location->location_uid = $uid;
+                $location->reader_uid = $reader;
+                $location->status()->associate($status);
+                $location->save();
+            }
+
+            DB::commit();
+            flash("Successfully updated.")->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Location update was unsuccessful');
+        }
         return redirect()->route('location.index');
     }
 

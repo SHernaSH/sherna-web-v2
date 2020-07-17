@@ -31,26 +31,34 @@ class PageService
     {
         $next_id = DB::table('nav_pages')->max('id') + 1;
         $next_order = DB::table('nav_pages')->max('order') + 1;
-        foreach (Language::all() as $lang) {
-            if (isset($id)) {
-                $page = Page::where('id', $id)->ofLang($lang)->firstOrFail();
-                $request->request->add(['order' => $page->order]);
 
-                if ($this->isSpecialPage($page)) {
-                    return false;
+        DB::beginTransaction();
+        try {
+            foreach (Language::all() as $lang) {
+                if (isset($id)) {
+                    $page = Page::where('id', $id)->ofLang($lang)->firstOrFail();
+                    $request->request->add(['order' => $page->order]);
+
+                    if ($this->isSpecialPage($page)) {
+                        throw new Exception();
+                    }
+                } else {
+                    $request->request->add(['order' => $next_order]);
+                    $page = $this->setNewPage($request, $next_id, $lang);
                 }
-            } else {
-                $request->request->add(['order' => $next_order]);
-                $page = $this->setNewPage($request, $next_id, $lang);
+                $this->storePage($request, $page, $lang);
+                if ($page->dropdown) {
+                    $this->storeSubPage($page, $lang);
+                } else {
+                    $this->savePageText($request, $page, $lang);
+                }
             }
-            $this->storePage($request, $page, $lang);
-            if ($page->dropdown) {
-                $this->storeSubPage($page, $lang);
-            } else {
-                $this->savePageText($request, $page, $lang);
-            }
+            DB::commit();
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
-        return true;
     }
 
     /**
@@ -73,8 +81,18 @@ class PageService
      */
     public function storeText($request, $page)
     {
-        foreach (Language::all() as $language) {
-            $this->setText($request, $page, $language);
+        DB::beginTransaction();
+
+        try {
+            foreach (Language::all() as $language) {
+                $this->setText($request, $page, $language);
+
+                DB::commit();
+                return true;
+            }
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
     }
 
@@ -86,19 +104,26 @@ class PageService
      */
     public function setPagePublic(int $id)
     {
+        DB::beginTransaction();
+        try {
+            foreach (Language::all() as $language) {
+                $page = Page::where('id', $id)->ofLang($language)->firstOrFail();
+                if ($this->isSpecialPage($page) && $page->special_code == 'home') {
+                    throw new Exception();
+                }
+                $page->public = !$page->public;
+                $page->save();
+                foreach ($page->subpages()->ofLang($language)->get() as $subpage) {
+                    $this->changeSubpagePublic($subpage);
+                }
+            }
 
-        foreach (Language::all() as $language) {
-            $page = Page::where('id', $id)->ofLang($language)->firstOrFail();
-            if ($this->isSpecialPage($page) && $page->special_code == 'home') {
-                return false;
-            }
-            $page->public = !$page->public;
-            $page->save();
-            foreach ($page->subpages()->ofLang($language)->get() as $subpage) {
-                $this->changeSubpagePublic($subpage);
-            }
+            DB::commit();
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
-        return true;
     }
 
     /**
@@ -108,9 +133,19 @@ class PageService
      */
     public function setSubpagePublic(int $id)
     {
-        foreach (Language::all() as $language) {
-            $page = SubPage::where('id', $id)->ofLang($language)->firstOrFail();
-            $this->changeSubpagePublic($page);
+        DB::beginTransaction();
+
+        try {
+            foreach (Language::all() as $language) {
+                $page = SubPage::where('id', $id)->ofLang($language)->firstOrFail();
+                $this->changeSubpagePublic($page);
+
+                DB::commit();
+                return true;
+            }
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
     }
 
@@ -122,11 +157,13 @@ class PageService
      */
     public function deletePage(int $id)
     {
-        foreach (Language::all() as $lang) {
-            try {
+        DB::beginTransaction();
+
+        try {
+            foreach (Language::all() as $lang) {
                 $page = Page::where('id', $id)->ofLang($lang)->firstOrFail();
                 if ($this->isSpecialPage($page)) {
-                    return false;
+                    throw new Exception();
                 }
                 $order = $page->order;
                 $page->delete();
@@ -137,11 +174,14 @@ class PageService
                         $pa->save();
                     }
                 }
-            } catch (Exception $exception) {
-                return false;
             }
+
+            DB::commit();
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
-        return true;
     }
 
     /**

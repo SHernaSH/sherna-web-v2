@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -55,18 +56,26 @@ class ArticleCategoryController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $category = new ArticleCategory();
-        $category->save();
+        DB::beginTransaction();
 
-        foreach (Language::all() as $language) {
-            $detail = new ArticleCategoryDetail();
-            $detail->name = $request->get('name-' . $language->id);
-            $detail->language()->associate($language);
-            $detail->category()->associate($category);
-            $detail->save();
+        try {
+            $category = new ArticleCategory();
+            $category->save();
+
+            foreach (Language::all() as $language) {
+                $detail = new ArticleCategoryDetail();
+                $detail->name = $request->get('name-' . $language->id);
+                $detail->language()->associate($language);
+                $detail->category()->associate($category);
+                $detail->save();
+            }
+            DB::commit();
+            flash('Category was successfully created.')->success();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash('Category creation was unsuccessful.')->error();
         }
 
-        flash('Category was successfully created.')->success();
         return redirect()->route('category.index');
     }
 
