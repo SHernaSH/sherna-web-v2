@@ -13,11 +13,14 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "iatstuti/laravel-cascade-soft-deletes": "^3.0",
+        "laravel-notification-channels/facebook-poster": "^3.0",
+        "toolkito/larasap": "*",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "lusitanian/oauth": "^0.8.11",
         "laracasts/flash": "^3.1",
         "arcanedev/log-viewer": "^7.0",
+        "werneckbh/laravel-qr-code": "*",
         "ext-json": "*"
     },
     "require-dev": {

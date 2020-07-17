@@ -42,15 +42,23 @@ class LocationStatusController extends Controller
     {
         $next_id = DB::table('location_statuses')->max('id') + 1;
         $opened = $request->input('opened');
-        foreach (Language::all() as $lang) {
-            $status = new LocationStatus();
-            $status->id = $next_id;
-            $status->name = $request->input('name-' . $lang->id);
-            $status->opened = $opened;
-            $status->language()->associate($lang);
-            $status->save();
+        DB::beginTransaction();
+        try {
+            foreach (Language::all() as $lang) {
+                $status = new LocationStatus();
+                $status->id = $next_id;
+                $status->name = $request->input('name-' . $lang->id);
+                $status->opened = $opened;
+                $status->language()->associate($lang);
+                $status->save();
+            }
+
+            DB::commit();
+            flash()->message('Location status successfully created')->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Location status creation was unsuccessful');
         }
-        flash()->message('Location status successfully created')->success();
         return redirect()->route('location.index');
     }
 
@@ -79,13 +87,22 @@ class LocationStatusController extends Controller
     {
         $opened = $request->input('opened');
 
-        foreach (Language::all() as $lang) {
-            $status = LocationStatus::where('id', $id)->ofLang($lang)->firstOrFail();
-            $status->name = $request->input('name-' . $lang->id);
-            $status->opened = $opened;
-            $status->save();
+        DB::beginTransaction();
+
+        try {
+            foreach (Language::all() as $lang) {
+                $status = LocationStatus::where('id', $id)->ofLang($lang)->firstOrFail();
+                $status->name = $request->input('name-' . $lang->id);
+                $status->opened = $opened;
+                $status->save();
+            }
+
+            DB::commit();
+            flash()->message('Location status successfully updated')->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Location status update was unsuccessful');
         }
-        flash()->message('Location status successfully updated')->success();
 
         return redirect()->route('location.index');
     }

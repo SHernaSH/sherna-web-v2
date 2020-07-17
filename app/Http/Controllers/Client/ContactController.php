@@ -37,7 +37,7 @@ class ContactController extends Controller
      */
     public function send(ContactRequest $request)
     {
-        Mail::to(env('MAIL_TO'))->send(new ContactMessage($request->input('email'), $request->input('message')));
+        Mail::to(env('MAIL_TO') ?: "aa@localhost")->send(new ContactMessage($request->input('email'), $request->input('message')));
         flash('Message sent')->success();
         return redirect()->route('contact.show');
     }
