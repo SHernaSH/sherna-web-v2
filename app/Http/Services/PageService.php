@@ -86,10 +86,10 @@ class PageService
         try {
             foreach (Language::all() as $language) {
                 $this->setText($request, $page, $language);
-
-                DB::commit();
-                return true;
             }
+
+            DB::commit();
+            return true;
         } catch (\Exception $ex) {
             DB::rollBack();
             return false;
@@ -139,10 +139,9 @@ class PageService
             foreach (Language::all() as $language) {
                 $page = SubPage::where('id', $id)->ofLang($language)->firstOrFail();
                 $this->changeSubpagePublic($page);
-
-                DB::commit();
-                return true;
             }
+            DB::commit();
+            return true;
         } catch (\Exception $ex) {
             DB::rollBack();
             return false;
