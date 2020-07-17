@@ -109,7 +109,7 @@
                                     <label for="input2" class="col-sm-2 control-label">Console</label>
                                     <div class="col-sm-8">
                                         <select name="console_id" id="input2" class="form-control">
-                                            @foreach(\App\Console::get() as $console)
+                                            @foreach(\App\Models\Consoles\Console::get() as $console)
                                                 <option value="{{$console->id}}">{{$console->name}}</option>
                                             @endforeach
                                         </select>

@@ -25,7 +25,7 @@
                                 <div class="col-sm-10">
                                     <select name="category_id" id="category_id"
                                             class="form-control">
-                                        @foreach(\App\InventoryCategory::get() as $category)
+                                        @foreach(\App\Models\Inventory\InventoryCategory::get() as $category)
                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                         @endforeach
                                     </select>
@@ -49,21 +49,21 @@
                                 <label for="input2" class="col-sm-2 control-label">Location</label>
                                 <div class="col-sm-10">
                                     <select name="location_id" id="input2" class="form-control">
-                                        @foreach(\App\Location::get() as $location)
+                                        @foreach(\App\Models\Locations\Location::get() as $location)
                                             <option value="{{$location->id}}">{{$location->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                                @foreach(\App\Language::all() as $language)
+                                @foreach(\App\Models\Language\Language::all() as $language)
                                     <li class="{{($language->id==1 ? "active":"")}}">
                                         <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                     </li>
                                 @endforeach
                             </ul>
                             <div id="myTabContent" class="tab-content">
-                                @foreach(\App\Language::all() as $language)
+                                @foreach(\App\Models\Language\Language::all() as $language)
                                     <div class="tab-pane fade {{$language->id==1 ? "active":""}} in" id="{{$language->id}}">
                                         <div class="form-group">
                                             <label for="input1" class="col-sm-2 control-label">Name</label>

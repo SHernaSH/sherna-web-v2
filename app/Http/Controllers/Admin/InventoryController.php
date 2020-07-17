@@ -3,47 +3,71 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Inventory;
-use App\InventoryCategory;
-use App\InventoryItem;
-use App\Language;
-use App\Location;
+use App\Http\Requests\Inventory\StoreRequest;
+use App\Http\Requests\Inventory\UpdateRequest;
+use App\Models\Inventory\InventoryCategory;
+use App\Models\Inventory\InventoryItem;
+use App\Models\Language\Language;
+use App\Models\Locations\Location;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class handling the CRUD operations on Inventory Item Model
+ * Class InventoryController
+ * @package App\Http\Controllers\Admin
+ */
 class InventoryController extends Controller
 {
+    /**
+     * Display a listing of the Inventory Items
+     *
+     * @return View    index page listing all the inventory items paginated
+     */
     public function index()
     {
-        $inventoryItems = InventoryItem::orderBy('name','asc')->paginate(20);
+        $inventoryItems = InventoryItem::orderBy('name', 'asc')->paginate(20);
 
         return view('admin.inventory.index', ['inventoryItems' => $inventoryItems]);
     }
 
+    /**
+     * Show the form for creating a new Inventory Item
+     *
+     * @return View view with the create form for Inventory Item
+     */
     public function create()
     {
         return view('admin.inventory.create');
     }
-
-    public function edit( $id )
+    /**
+     * Show the form for editing the Inventory Item
+     *
+     * @param int $id         id of the Inventory Item that will be edited
+     * @return View           view with edition form
+     */
+    public function edit(int $id)
     {
         $inventoryItem = InventoryItem::where('id', $id)->first();
 
         return view('admin.inventory.edit', ['inventoryItem' => $inventoryItem]);
     }
 
-    public function store( Request $request )
+    /**
+     * Store a newly created Inventory Item in database.
+     * Validate data, assert Inventory Category and Location exist
+     * Save new instances for every language
+     *
+     * @param Request $request          request with data from creation form
+     * @return RedirectResponse         redirect to index page
+     */
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name-1'                  => 'required|string|max:255',
-            'category_id' => 'required',
-            'serial_id'             => '',
-            'inventory_id'          => '',
-            'location_id'           => 'required',
-        ]);
-
         $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
-        $next_id = \DB::table('inventory_items')->max('id') + 1;
+        $next_id = DB::table('inventory_items')->max('id') + 1;
         foreach (Language::all() as $language) {
             $item = new InventoryItem();
             $item->id = $next_id;
@@ -62,16 +86,16 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index');
     }
 
-    public function update( $id, Request $request )
+    /**
+     * Updating the chosen Invnetory Item
+     *
+     * @param int $id           id of the Inventory Item that will be updated
+     * @param UpdateRequest $request  request with all the data from edition form
+     * @return RedirectResponse index view of all the Inventory Items
+     */
+    public function update(int $id, UpdateRequest $request)
     {
 
-        $this->validate($request, [
-            'name-1'                  => 'required|string|max:255',
-            'category_id' => 'required',
-            'serial_id'             => '',
-            'inventory_id'          => '',
-            'location_id'           => 'required',
-        ]);
         $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
         $location = Location::where('id', $request->get('location_id'))->firstOrFail();
         foreach (Language::all() as $language) {
@@ -91,14 +115,25 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index');
     }
 
-    public function destroy( $id )
+    /**
+     * Removing the chosen Inventory Item from the database
+     *
+     * @param int $id           id of the Inventory Item that will be deleted
+     * @return RedirectResponse index view of all the Inventory Items
+     */
+    public function destroy(int $id)
     {
-        foreach (Language::all() as $language) {
-            $inventoryItem = InventoryItem::where('id', $id)->ofLang($language);
-            $inventoryItem->delete();
+        try {
+            foreach (Language::all() as $language) {
+                $inventoryItem = InventoryItem::where('id', $id)->ofLang($language);
+                $inventoryItem->delete();
+                flash()->success('Inventory item successfully deleted');
+
+            }
+        } catch (\Exception $ex) {
+            flash()->error('Deletion of Inventory item was unsuccessful');
 
         }
-        flash()->success('Inventory item successfully deleted');
 
         return redirect()->route('inventory.index');
     }

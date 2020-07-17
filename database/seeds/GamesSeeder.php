@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Games\Game;
 use Illuminate\Database\Seeder;
 
 class GamesSeeder extends Seeder
@@ -11,7 +12,7 @@ class GamesSeeder extends Seeder
      */
     public function run()
     {
-        \App\Game::updateOrInsert([
+        Game::updateOrInsert([
             'id' => 1,
             'console_id' => 1,
             'name' => 'Hra',

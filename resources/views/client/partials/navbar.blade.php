@@ -1,6 +1,6 @@
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
+	<div class="text-center">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 					aria-expanded="false" aria-controls="navbar">
@@ -15,7 +15,7 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-                @foreach(\App\Nav\Page::where('public', true)->get() as $nav)
+                @foreach(\App\Models\Navigation\Page::where('public', true)->orderBy('order')->get() as $nav)
                     @if(isset($nav->special_code))
                         @if($nav->special_code == 'blog')
                             <li class="dropdown">
@@ -71,7 +71,7 @@
                                aria-expanded="false">{{Auth::user()->name}} {{Auth::user()->surname}}</a>
                             <ul class="dropdown-menu">
                                 <li class="{{url()->current() == route('contact.show') ? 'active' : ''}}">
-                                    <a href="{{('Client\ClientController@getReservations')}}">{{trans('navbar.my_reservations')}}</a>
+                                    <a href="{{ route('user.reservations') }}">{{trans('navbar.my_reservations')}}</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('logout')  }}">{{trans('navbar.logout')}}</a>
@@ -95,7 +95,7 @@
 						<span class="flag-icon flag-icon-{{Session::get('lang') =='en' ? 'gb':Session::get('lang')}}"></span>
 					</a>
 					<ul class="dropdown-menu">
-                        @foreach(\App\Language::all() as $lang)
+                        @foreach(\App\Models\Language\Language::all() as $lang)
                             <li>
                                 <a  href="{{route('language', [$lang->code])}}">
                                     <span class="flag-icon flag-icon-{{$lang->code == 'en' ? 'gb' : $lang->code}}"></span>{{$lang->name}}</a>

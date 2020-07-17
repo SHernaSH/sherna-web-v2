@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Inventory\InventoryCategory;
+use App\Models\Inventory\InventoryItem;
 use Illuminate\Database\Seeder;
 
 class InventorySeeder extends Seeder
@@ -11,19 +13,19 @@ class InventorySeeder extends Seeder
      */
     public function run()
     {
-        \App\InventoryCategory::updateOrInsert([
+        InventoryCategory::updateOrInsert([
             'id' => 1,
             'name' => 'Ukazkova kateogria',
             'language_id' => 1
         ]);
 
-        \App\InventoryCategory::updateOrInsert([
+        InventoryCategory::updateOrInsert([
             'id' => 1,
             'name' => 'Example category',
             'language_id' => 2
         ]);
 
-        \App\InventoryItem::updateOrInsert([
+        InventoryItem::updateOrInsert([
             'id' => 1,
             'name' => 'Ukazkovy item',
             'note' => 'Ukazka',
@@ -32,7 +34,7 @@ class InventorySeeder extends Seeder
             'language_id' => 1
         ]);
 
-        \App\InventoryItem::updateOrInsert([
+        InventoryItem::updateOrInsert([
             'id' => 1,
             'name' => 'Example item',
             'note' => 'Example',

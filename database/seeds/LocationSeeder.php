@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Locations\Location;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -13,7 +14,7 @@ class LocationSeeder extends Seeder
     public function run()
     {
         //
-        \App\Location::updateOrInsert([
+        Location::updateOrInsert([
             'id' => 1,
             'name' => 'Blok 4',
             'status_id' => 1,
@@ -22,7 +23,7 @@ class LocationSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Location::updateOrInsert([
+        Location::updateOrInsert([
             'id' => 1,
             'name' => 'Block 4',
             'status_id' => 1,
@@ -31,7 +32,7 @@ class LocationSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Location::updateOrInsert([
+        Location::updateOrInsert([
             'id' => 2,
             'name' => 'Blok 6',
             'status_id' => 2,
@@ -40,7 +41,7 @@ class LocationSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Location::updateOrInsert([
+        Location::updateOrInsert([
             'id' => 2,
             'name' => 'Block 6',
             'status_id' => 2,

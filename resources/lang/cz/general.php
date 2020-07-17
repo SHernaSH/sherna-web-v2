@@ -14,8 +14,9 @@ return [
         'category'   => 'Vytvor novu kategoriu',
     ],
     'empty'   => [
-        'article' => 'Nikdo zatím nevytvořil žádný článek.',
-        'category'=> 'Nikdo zatím nevytvořil žádnu kategoriu.',
+        'article'    => 'Nikdo zatím nevytvořil žádný článek.',
+        'category'   => 'Nikdo zatím nevytvořil žádnou kategorii.',
+        'reservation'=> 'Nikdo zatím nevytvořil žádnou rezervaci.',
     ],
 	'banner'  => [
 		'title' => 'Vítejte na strankách SHerny',
@@ -51,4 +52,7 @@ return [
         'send'            =>  'Odoslat',
         'message'         =>  'Vasa zprava',
     ],
+    'unsuccessful'        =>  'Akcia sa nezdarila',
+    'successful'          =>  'Akcia provedena',
+
 ];

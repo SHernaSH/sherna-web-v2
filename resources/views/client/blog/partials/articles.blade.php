@@ -5,7 +5,9 @@
         <th>Description</th>
         <th>Datum vytvoření</th>
         <th>Datum poslední změny</th>
-        @auth <th></th> @endauth
+        @if(\Auth::check() && \Auth::user()->isAdmin())
+            <th></th>
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -19,7 +21,7 @@
             <td>{{ $article->text->description }}</td>
             <td>{{ $article->created_at->isoFormat('LLL') }}</td>
             <td>{{ $article->updated_at->isoFormat('LLL') }}</td>
-            @auth
+            @if(\Auth::check() && \Auth::user()->isAdmin())
             <td>
                 <a href="{{ route('article.edit', ['article' => $article]) }}"><i class="fa fa-pencil"></i></a>
                 <a href="#" onclick="event.preventDefault(); $('#article-delete-{{ $article->url }}').submit();"><i class="fa fa-trash"></i></a>
@@ -29,12 +31,12 @@
                     @method('DELETE')
                 </form>
             </td>
-            @endauth
+            @endif
         </tr>
     @empty
         <tr>
             <td colspan="5" class="text-center">
-                {{ trans('general.adding.article') }}
+                {{ trans('general.empty.article') }}
             </td>
         </tr>
     @endforelse
@@ -47,7 +49,13 @@
 </table>
 
 @auth
-    <a href="{{ route('article.create') }}" class="btn btn-primary">
-        {{ trans('general.adding.article') }}
-    </a>
+    @if(isset($category))
+        <a href="{{ route('article.category', ['category' => $category]) }}" class="btn btn-primary">
+            {{ trans('general.adding.article') }}
+        </a>
+    @else
+        <a href="{{ route('article.create') }}" class="btn btn-primary">
+            {{ trans('general.adding.article') }}
+        </a>
+    @endif
 @endauth

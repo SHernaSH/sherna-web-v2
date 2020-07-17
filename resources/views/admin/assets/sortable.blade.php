@@ -11,7 +11,7 @@
         }
 
         {{$selector}} tr {
-            cursor: pointer; }
+            cursor: move; }
         {{$selector}} tr.placeholder {
             display: block;
             background: red;

@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Language;
+use App\Models\Language\Language;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -16,14 +17,14 @@ class LanguageMiddleware
      * If language is not set, set it to default from config (cz)
      * otherwise set app language to set language
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $lang = Language::where('code', Session::get('lang'))->first();
-        if(isset($lang)) {
+        if (isset($lang)) {
             App::setLocale($lang->code);
         } else {
             Session::put('lang', Config::get('app.locale'));

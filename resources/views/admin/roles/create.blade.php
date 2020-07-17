@@ -37,7 +37,7 @@
                                     <label for="permissions" class="col-sm-4 control-label">Permissions</label>
                                     <div class="col-sm-8">
                                         <select id="permission" name="permissions[]" multiple style="height: 500px">
-                                            @foreach(\App\Permission::all() as $permission)
+                                            @foreach(\App\Models\Permissions\Permission::all() as $permission)
                                                 <option title="{{$permission->description}}" value="{{$permission->id}}">
                                                     {{$permission->name ?? $permission->controller . '@' . $permission->method}}
                                                 </option>

@@ -13,6 +13,7 @@ class CreateInventoryTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('inventory_categories', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name');
@@ -38,10 +39,10 @@ class CreateInventoryTable extends Migration
             $table->unsignedInteger('language_id')->default('1');
 
 
-            $table->foreign('location_id')->references('id')->on('inventory_categories')
+            $table->foreign('location_id')->references('id')->on('locations')
                 ->onDelete('cascade');
 
-            $table->foreign('category_id')->references('id')->on('locations')
+            $table->foreign('category_id')->references('id')->on('inventory_categories')
                 ->onDelete('cascade');
 
             $table->foreign('language_id')->references('id')->on('languages')
@@ -58,6 +59,8 @@ class CreateInventoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('inventory_items');
+        Schema::dropIfExists('inventory_categories');
+
     }
 }

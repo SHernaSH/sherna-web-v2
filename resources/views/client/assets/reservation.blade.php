@@ -3,10 +3,11 @@
     <script src="{{asset('gentellela/fullcalendar-locale.js')}}"></script>
 
     <script>
-        var myReservationColor           = '{{config('calendar.my-reservation.color')}}';
+        var myReservationColor           = ""//'{{config('calendar.my-reservation.color')}}';
         var myReservationBorderColor     = '{{config('calendar.my-reservation.border-color')}}';
         var myReservationBackgroundColor = '{{config('calendar.my-reservation.background-color')}}';
-        var admin                        = {{\Auth::check() && \Auth::user()->isAdmin()}};
+        var admin                        = {{(\Auth::check() && \Auth::user()->isAdmin()) ? 1 : 0}};
+        var format = "DD.MM.YYYY HH:mm";
         $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
@@ -20,8 +21,8 @@
         });
 
         function createEvent(start, end) {
-            $('.form_datetime').val(start.format('DD.MM.YYYY HH:mm:00'));
-            $('.to_datetime').val(end.format('DD.MM.YYYY HH:mm:00'));
+            $('.form_datetime').val(start.format(format));
+            $('.to_datetime').val(end.format(format));
             $('#location_id').val($('[name="location"]:checked').val());
             $('#note').val('');
             $('#visitors_count').val('1');
@@ -29,13 +30,14 @@
 
         }
 
-        function controlEventTimes(start, end) {
+        function controlEventTimes(start, end, isResize = false) {
             // if (Math.abs(start.diff(end, 'days')) !== 0) {
             //     $('#calendar').fullCalendar('unselect');
             //     alert('Make 2 separate reservations for this operation.');
             //     return false;
             // }
-            if (Math.abs(start.diff(end, 'hours')) > maxeventduration) {
+            var max = isResize ? maxeventduration * 2 : maxeventduration;
+            if (Math.abs(start.diff(end, 'hours')) > max) {
                 $('#calendar').fullCalendar('unselect');
                 App.helpers.alert.info('Maximum duration exceeded', 'Max duration of reservation can be ' + maxeventduration + ' hours.');
                 return false;
@@ -56,8 +58,8 @@
 
         function update(event, revertFunc) {
             $("#updateReservationForm").attr("action", "{{ route('reservation.index') }}/" + event.id);
-            $('#u_from_date').val(event.start.format('DD.MM.YYYY HH:mm:00'));
-            $('#u_to_date').val(event.end.format('DD.MM.YYYY HH:mm:00'));
+            $('#u_from_date').val(event.start.format(format));
+            $('#u_to_date').val(event.end.format(format));
             $('#u_visitors_count').val(event.visitors_count);
             $('#u_note').val(event.note);
             $('#u_location_id').val(event.location_id);
@@ -65,17 +67,21 @@
 
 
 
-        function updateEvent(event, revertFunc) {
+        function updateEvent(event, revertFunc, isResize = false) {
             var start = event.start;
             var end   = event.end;
 
-            var correct = controlEventTimes(start, end);
+            var correct = controlEventTimes(start, end, isResize);
             if (!correct) {
                 revertFunc();
                 return;
             }
-            update(event);
-            $("#updateReservationBtn").click()
+            App.helpers.alert.confirm(App.trans('sure-update'), App.trans('sure-update-text'), 'warning', function () {
+                update(event);
+                $("#updateReservationBtn").click();
+            }, function () {
+                revertFunc();
+            })
         }
 
 
@@ -103,7 +109,8 @@
         }
 
         function initCalendar() {
-            var canCreate=  {{Auth::check() && !Auth::user()->banned ? 'true' : 'false' }};
+            var canCreate=  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned && Auth::user()->reservations()->futureActiveReservations()->count() == 0) ? 'true' : 'false' }};
+            var canEditDuration =  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned)  ? 'true' : 'false' }};
             var calendar = $('#calendar').fullCalendar({
                 header         : {
                     left  : 'prev,next',
@@ -126,7 +133,7 @@
                 defaultDate    : moment(new Date()).format('YYYY-MM-DD'),
                 defaultView    : 'agendaWeek',
                 editable       : canCreate,
-                eventDurationEditable : canCreate,
+                eventDurationEditable : canEditDuration,
                 displayEventTime: true,
                 eventRender: function (event, element, view) {
                     if (event.allDay === 'true') {
@@ -134,11 +141,21 @@
                     } else {
                         event.allDay = false;
                     }
+                    if (event.own) {
+                        // event.textColor       = myReservationColor;
+                        // event.borderColor     = myReservationBorderColor;
+                        // event.backgroundColor = myReservationBackgroundColor;
+                        element.css('background-color', myReservationBackgroundColor)
+                        element.css('border-color', myReservationBorderColor)
+                        element.css('text-color', myReservationColor)
+                    }
                 },
                 selectable: canCreate,
                 selectHelper: true,
                 select         : function (start, end) {
 
+                    start = start.clone().subtract(2, 'h');
+                    end = end.clone().subtract(2, 'h');
                     var correct = controlEventTimes(start, end);
                     if (!correct) {
                         return;
@@ -174,13 +191,15 @@
                     }
                 ],
                 eventClick     : function (event) {
-                    $('#showReservationModal').modal('show');
-                    $('#showReservationModal').on('shown.bs.modal', function (e) {
+                    $('#updateReservation').addClass('hidden');
+                    $('#updateReservation').unbind();
+                    $('#deleteReservation').addClass('hidden');
+                    $('#deleteReservation').unbind();
                         $('#showReservationModalLabel').text(event.title);
-                        $('#start').text(event.start.format("DD.MM.YYYY HH:mm"));
-                        $('#end').text(event.end.format("DD.MM.YYYY HH:mm"));
+                        $('#start').text(event.start.format("DD.MM.YYYY - HH:mm"));
+                        $('#end').text(event.end.format("DD.MM.YYYY - HH:mm"));
 
-                        if (event.editable) {
+                        if (event.edit) {
                             $('#deleteReservation').removeClass('hidden');
                             $("#deleteReservationForm").attr("action", "{{ route('reservation.index') }}/" + event.id);
                             $('#deleteReservation').unbind();
@@ -199,11 +218,12 @@
                                 $('#updateReservationModal').modal('show');
                             });
                         }
-                    });
-                    return true;
-                },
+                    $('#showReservationModal').modal('show');
+
+                }
+                ,
                 eventResize    : function (event, delta, revertFunc) {
-                    updateEvent(event, revertFunc);
+                    updateEvent(event, revertFunc, true);
                 },
                 eventDrop      : function (event, delta, revertFunc) {
                     updateEvent(event, revertFunc);
@@ -213,11 +233,32 @@
                     var future_date_today = moment(now).add(durationforedit, 'm');
                     var future_date       = moment(now).add(reservationarea, 'days');
 
-                    //gmt fix
+                    //gmt fix dragged event and drop is two hours ahead caused by localization
                     var dropStart = dropLocation.start;
                     dropStart     = dropStart.subtract(2, 'h');
+                    var dropEnd = dropLocation.end;
+                    dropEnd     = dropEnd.subtract(2, 'h');
+                    var eventStart = draggedEvent.start.clone().subtract(2, 'h');
+                    var eventEnd = draggedEvent.end.clone().subtract(2, 'h');
 
-                    return (admin && dropStart.isAfter(now.add(10, 'm').format('YYYY-MM-DD HH:mm'))) ||  dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm')) && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
+                    var resize = eventStart.isSame(dropStart);
+
+                    if(eventStart.isBefore(now) && !resize) {
+                        return false;
+                    }
+
+
+                    if(!resize) {
+                        return (admin && dropStart.isAfter(now.add(10, 'm').format('YYYY-MM-DD HH:mm')))
+                            || dropStart.isAfter(future_date_today.format('YYYY-MM-DD HH:mm'))
+                            && dropStart.isBefore(future_date.format('YYYY-MM-DD'));
+                    }
+                    var allowedTimeUpdate = eventEnd.clone().subtract(durationforedit, 'm');
+                    var isInTimeToProlong = now.isAfter(allowedTimeUpdate) || now.isBefore(eventStart);
+                    var isInPast = eventEnd.isBefore(now);
+                    return !isInPast && (admin || isInTimeToProlong) && dropEnd.isAfter(
+                        now.add('{{App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}', 'm')
+                            .format('YYYY-MM-DD HH:mm'));
                 }
             });
 
@@ -240,7 +281,7 @@
     </script>
 
 @endpush
-@include('admin.assets.datetimepicker')
+@include('client.assets.datepicker')
 
 @push('styles')
     <link href="{{asset('assets_client/datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">

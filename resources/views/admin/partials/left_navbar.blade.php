@@ -1,6 +1,6 @@
 <div class="left_col scroll-view">
     <div class="navbar nav_title" style="border: 0;">
-        <a href="Admin\AdminController@index" class="site_title">
+        <a href="{{ route('admin.index') }}" class="site_title">
             <small class="small-icon-head">
                 <img src="{{asset('favicon/ms-icon-310x310.png')}}" alt="SHerna logo"
                      style="height: 100%; padding-bottom: 10px">
@@ -50,29 +50,17 @@
                 </li>
                 <li><a href="{{ route('admin.reservation.index') }}"><i class="fa fa-fw fa-calendar"></i>
                         Reservations</a></li>
-
-                {{--				@if(Auth::user()->isSuperAdmin())--}}
-{{--                					<li><a><i class="fa fa-fw fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>--}}
-{{--                						<ul class="nav child_menu">--}}
                 							<li><a href="{{ route('user.index') }}"><i class="fa fa-fw fa-users"></i>
                 									Users</a></li>
-{{--                							<li><a href="{{ route('user.index') }}"><i--}}
-{{--                											class="fa fa-fw fa-user-secret"></i> Admins</a></li>--}}
-{{--                						</ul>--}}
-{{--                					</li>--}}
-                {{--				@elseif(Auth::user()->badges()->where('system',true)->where('name','OOU_signed')->exists())--}}
-                {{--					<li><a href="{{action('Admin\UsersController@index')}}"><i class="fa fa-fw fa-users"></i> Users</a>--}}
-                {{--					</li>--}}
-                {{--				@endif--}}
-
-                {{--				<li><a href="{{action('Admin\BadgesController@index')}}"><i class="fa fa-fw fa-id-badge"></i> Badges</a>--}}
                 </li>
                 <li><a href="{{ route('location.index') }}"><i class="fa fa-fw fa-map-marker"></i>
                         Locations</a></li>
                 <li><a href="{{ route('role.index') }}"><i class="fa fa-fw fa-drivers-license-o"></i>
                         Roles</a></li>
-                <li><a href="{{ route('permission.index') }}"><i class="fa fa-fw fa-low-vision"></i>
-                        Permissions</a></li>
+                @if(Auth::user()->isSuperAdmin())
+                    <li><a href="{{ route('permission.index') }}"><i class="fa fa-fw fa-low-vision"></i>
+                            Permissions</a></li>
+                @endif
                 <li><a><i class="fa fa-fw fa-cubes"></i> Inventory <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                         						<li>
@@ -99,12 +87,12 @@
 {{--                @endif--}}
 
 
-{{--                @if(Auth::user()->isSuperAdmin())--}}
+                @if(Auth::user()->isSuperAdmin())
                 <li>
-                    {{--						<a href="{{route('log-viewer::logs.list')}}"><i--}}
-                    {{--									class="fa fa-fw fa-history"></i> Logs</a>--}}
+                    						<a href="{{route('log-viewer::logs.list')}}"><i
+                    									class="fa fa-fw fa-history"></i> Logs</a>
                 </li>
-{{--                @endif--}}
+                @endif
             </ul>
         </div>
 

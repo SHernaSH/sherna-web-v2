@@ -3,7 +3,7 @@
 html, body {
   margin: 0;
   height: 100%;
-  padding-top: 50px;
+  padding-top: 30px;
   //
   //&::-webkit-scrollbar-track
   //{
@@ -27,7 +27,7 @@ html, body {
 }
 
 #body-container {
-  //min-height: 100%;
+  min-height: 100%;
   position: relative;
 }
 
@@ -38,6 +38,13 @@ html, body {
 .comment {
     padding: 10px 20px 10px 5px;
     background: #d2ffcf;
+}
+
+@media (min-width: 768px) {
+    #navbar.navbar-collapse.collapse {
+        display: inline-block !important;
+        vertical-align: top;
+    }
 }
 
 footer {
@@ -600,10 +607,12 @@ ul.twPc-Arrange {
 }
 
 .alert {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 9000;
+    text-align: center;
+    margin: 0 65px;
+  //position: absolute;
+  //top: 10px;
+  //right: 10px;
+  //z-index: 9000;
 }
 
 div.speech-container {

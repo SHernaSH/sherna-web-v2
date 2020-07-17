@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Article;
 
+use App\Models\Language\Language;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -15,13 +15,12 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name-1' => ['required', 'min:3', 'max:80'],
-            'name-2' => ['required', 'min:3', 'max:80'],
-            'description-1' => ['required', 'min:5', 'max:255'],
-            'description-2' => ['required', 'min:5', 'max:255'],
-            'content-1' => ['required', 'min:50'],
-            'content-2' => ['required', 'min:50'],
-        ];
+        $rules = [];
+        foreach (Language::all() as $language) {
+            $rules['name-' . $language->id] = ['required', 'min:3', 'max:80'];
+            $rules['description-' . $language->id] = ['required', 'min:5', 'max:255'];
+            $rules['content-' . $language->id] = ['required', 'min:50'];
+        }
+        return $rules;
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
 
     <form action="{{ route('inventory.category.store')}}" class="form-horizontal" method="post">
-        {!! csrf_field() !!}
+        @csrf
         <div class="row">
             <div class="col-md-12">
                 @include('admin.partials.form_errors')
@@ -22,14 +22,14 @@
 
                             <div class="col-md-6">
                                 <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                                    @foreach(\App\Language::all() as $language)
+                                    @foreach(\App\Models\Language\Language::all() as $language)
                                         <li class="{{($language->id==1 ? "active":"")}}">
                                             <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                         </li>
                                     @endforeach
                                 </ul>
                                 <div id="myTabContent" class="tab-content">
-                                    @foreach(\App\Language::all() as $lang)
+                                    @foreach(\App\Models\Language\Language::all() as $lang)
                                         <div class="tab-pane fade {{($lang->id==1 ? "active":"")}} in" id="{{$lang->id}}">
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label" for="content">Name:</label>

@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Articles\Article;
+use App\Models\Articles\ArticleCategory;
+use App\Models\Articles\ArticleCategoryDetail;
+use App\Models\Articles\ArticleText;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +17,7 @@ class ArticlesTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Article::updateOrInsert([
+        Article::updateOrInsert([
             'id' => 1,
             'user_id' => 30542,
             'url' => 'uvod',
@@ -22,7 +26,7 @@ class ArticlesTableSeeder extends Seeder
             'updated_at' => Carbon::now(),
             ]);
 
-        \App\ArticleText::updateOrInsert([
+        ArticleText::updateOrInsert([
             'id' => 1,
             'article_id' => 1,
             'title' => 'Uvod',
@@ -33,7 +37,7 @@ systému v Laravel frameworku</strong>. Toto je úvodní článek, načtený z d
             'updated_at' => Carbon::now(),
             'language_id' => 1,
         ]);
-        \App\ArticleText::updateOrInsert([
+        ArticleText::updateOrInsert([
             'id' => 2,
             'article_id' => 1,
             'title' => 'Welcome',
@@ -45,13 +49,13 @@ systému v Laravel frameworku</strong>. Toto je úvodní článek, načtený z d
             'language_id' => 2,
         ]);
 
-        \App\ArticleCategory::updateOrInsert([
+        ArticleCategory::updateOrInsert([
             'id' => 1,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\ArticleCategoryDetail::updateOrInsert([
+        ArticleCategoryDetail::updateOrInsert([
             'id' => 1,
             'category_id' => 1,
             'name' => 'Hry',
@@ -60,7 +64,7 @@ systému v Laravel frameworku</strong>. Toto je úvodní článek, načtený z d
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\ArticleCategoryDetail::updateOrInsert([
+        ArticleCategoryDetail::updateOrInsert([
             'id' => 2,
             'category_id' => 1,
             'name' => 'Games',
@@ -69,8 +73,8 @@ systému v Laravel frameworku</strong>. Toto je úvodní článek, načtený z d
             'updated_at' => Carbon::now(),
         ]);
 
-        $article = \App\Article::first();
-        $category = \App\ArticleCategory::first();
+        $article = Article::first();
+        $category = ArticleCategory::first();
         $article->categories()->attach($category);
         $article->save();
 //

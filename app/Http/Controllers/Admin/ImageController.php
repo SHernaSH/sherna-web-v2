@@ -7,16 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class handling AJAX calls from Summernote/Tinymce WYSIWYG editors to upload images
+ *
+ * Class ImageController
+ * @package App\Http\Controllers\Admin
+ */
 class ImageController extends Controller
 {
-    public function getImage( $name )
+    /**
+     * Get the image form the storage
+     *
+     * @param string $name   name of the file
+     * @return string         path of the file
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function getImage(string $name)
     {
         $disk = Storage::disk('local');
 
         return $disk->get('/summer_images/' . $name);
     }
 
-    public function saveImage( Request $request )
+    /**
+     * Save the image to the storage
+     *
+     * @param Request $request  request containing the file to be saves
+     * @return string           path to the image from the storage
+     */
+    public function saveImage(Request $request)
     {
         $disk = Storage::disk('local');
         if ($_FILES['file']['name']) {
@@ -36,15 +55,10 @@ class ImageController extends Controller
                     File::makeDirectory($destination);
                 }
                 move_uploaded_file($location, $destination . $filename);
-//                echo 'http://test.yourdomain.al/images/' . $filename;//change this URL
-//                return action('Admin\AdminController@getImage', $filename);
                 return asset(url('/summer_images/' . $filename));
             } else {
                 echo $message = 'Ooops!  Your upload triggered the following error:  ' . $_FILES['file']['error'];
             }
         }
-
-//        return "error";
-
     }
 }

@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\ConsoleType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Consoles\Type\StoreRequest;
+use App\Http\Requests\Consoles\Type\UpdateRequest;
+use App\Models\Consoles\ConsoleType;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class ConsoleTypeController extends Controller
 {
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Console Type.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function create()
     {
@@ -20,16 +25,13 @@ class ConsoleTypeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Console Type in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreRequest $request  request containing data from creation form
+     * @return RedirectResponse return index view of console and console types
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-        ]);
 
         ConsoleType::create($request->all());
         flash()->success('Console type successfully created');
@@ -39,10 +41,10 @@ class ConsoleTypeController extends Controller
 
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified Console Type.
      *
-     * @param  \App\ConsoleType  $consoleType
-     * @return \Illuminate\Http\Response
+     * @param ConsoleType $type  console type to be edited
+     * @return View              return view with edition form
      */
     public function edit(ConsoleType $type)
     {
@@ -51,13 +53,13 @@ class ConsoleTypeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified Console Type in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ConsoleType  $consoleType
-     * @return \Illuminate\Http\Response
+     * @param UpdateRequest $request  request containing all the data from edition form
+     * @param ConsoleType $type Console type to be updated
+     * @return RedirectResponse return index view with consoles and console types
      */
-    public function update(Request $request, ConsoleType $type)
+    public function update(UpdateRequest $request, ConsoleType $type)
     {
 
         $type->update($request->all());
@@ -67,14 +69,19 @@ class ConsoleTypeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Console Type from storage.
      *
-     * @param  \App\ConsoleType  $consoleType
-     * @return \Illuminate\Http\Response
+     * @param ConsoleType $type console type to be removed
+     * @return RedirectResponse return index view with consoles and console types
      */
     public function destroy(ConsoleType $type)
     {
-        $type->delete();
+        try {
+            $type->delete();
+            flash()->success('Console type successfully deleted');
+        } catch (\Exception $ex) {
+            flash()->error('Console type was not deleted');
+        }
         return redirect()->route('console.index');
     }
 }

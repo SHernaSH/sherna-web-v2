@@ -56,7 +56,7 @@ class CreateNavPagesTable extends Migration
 
         });
 
-        Schema::create('nav_subpages_text', function (Blueprint $table) {
+        Schema::create('nav_subpages_texts', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('nav_subpage_id');
             $table->string('title');
@@ -72,7 +72,7 @@ class CreateNavPagesTable extends Migration
 
         });
 
-        Schema::create('nav_pages_text', function (Blueprint $table) {
+        Schema::create('nav_pages_texts', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('nav_page_id');
             $table->string('title');
@@ -95,9 +95,11 @@ class CreateNavPagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nav_pages');
+        Schema::dropIfExists('nav_subpages_texts');
+        Schema::dropIfExists('nav_pages_texts');
         Schema::dropIfExists('nav_subpages');
-        Schema::dropIfExists('nav_subpages_text');
-        Schema::dropIfExists('nav_pages_text');
+        Schema::dropIfExists('nav_pages');
+
+
     }
 }

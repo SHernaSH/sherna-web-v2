@@ -3,11 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Pages\UpdateRequest;
 use App\Http\Services\PageService;
-use App\Nav\Page;
-use App\Nav\SubPage;
+use App\Models\Navigation\Page;
+use App\Models\Navigation\SubPage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
+/**
+ * Class handling the CRUD operations on Page and SubPage Text models
+ *
+ * Class PageController
+ * @package App\Http\Controllers\Admin
+ */
 class PageController extends Controller
 {
 
@@ -17,9 +27,11 @@ class PageController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the standalone pages and their texts, meaning pages that has to be considered special in navigation.
+     * These pages have set special_code in db model
+     * Example is Reservation, Home Page, Inventory..
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function standalone()
     {
@@ -27,12 +39,22 @@ class PageController extends Controller
         return view('admin.pages.index', ['pages' => $pages, 'type' => 'page']);
     }
 
+    /**
+     * Display a listing of the navigation pages and their texts, meaning pages that have no dropdowns
+     *
+     * @return Response
+     */
     public function navigation()
     {
         $pages = Page::where('dropdown', false)->whereNull('special_code')->orderBy('order')->paginate();
         return view('admin.pages.index', ['pages' => $pages, 'type' => 'page']);
     }
 
+    /**
+     * Display a listing of the subnavigation pages and their text, meaning pages that have parent Page
+     *
+     * @return Response
+     */
     public function subnavigation()
     {
         $pages = SubPage::orderBy('order')->paginate();
@@ -40,69 +62,85 @@ class PageController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified Page/Subpage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id       id of the specified Page/Subpage to be edited
+     * @param string $type  type of the page, whether it is Page or Subpage
+     * @return View|RedirectResponse return view of edition form, or redirect bac kto index page if edition is forbidden
      */
     public function edit($id, $type)
     {
-        if($type == 'page') {
+        if ($type == 'page') {
             $page = Page::where('id', $id)->firstOrFail();
-        } else if($type == 'subpage') {
+        } else if ($type == 'subpage') {
             $page = SubPage::where('id', $id)->firstOrFail();
         }
-        if(!isset($page->text)) {
+        if (!isset($page->text)) {
             flash('Editation not allowed')->error();
-           return redirect()->back();
+            return redirect()->back();
         }
+
         return view('admin.pages.edit', ['page' => $page, 'type' => $type]);
 
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified Page/Supbage in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateRequest $request request with all the data from edition form
+     * @param int $id id of the specified Page/Subpage to be updated
+     * @param string $type type of the page, whether it is Page or Subpage
+     * @return View|RedirectResponse return view of edition form, or redirect back to index page if edition is forbidden
      */
-    public function update(Request $request, $id, $type)
+    public function update(UpdateRequest $request, $id, $type)
     {
-        if($type == 'page') {
+        if ($type == 'page') {
             $page = Page::where('id', $id)->firstOrFail();
-        } else if($type == 'subpage') {
+        } else if ($type == 'subpage') {
             $page = SubPage::where('id', $id)->firstOrFail();
         }
         $this->pageService->storeText($request, $page);
+
+        if($this->pageService->isSpecialPage($page)) {
+            return redirect()->route('page.standalone');
+
+        }
 
         return redirect()->route('page.' . ($type == 'page' ? 'navigation' : 'subnavigation'));
 
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Page/Supbage in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id id of the specified Page/Subpage to be deleted
+     * @param string $type type of the page, whether it is Page or Subpage
+     * @return RedirectResponse redirect to index page if edition is forbidden
      */
     public function destroy(int $id, string $type)
     {
-        if($type == 'page') {
+        if ($type == 'page') {
             $this->pageService->deletePage($id);
 
-        } else if($type == 'subpage') {
+        } else if ($type == 'subpage') {
             $this->pageService->deleteSubPage($id);
         }
         return redirect()->back();
 
     }
-
-    public function public(int $id, string $type) {
-        if($type == 'page') {
+    /**
+     * Make the specified Page/Supbage public/private
+     *
+     * @param int $id id of the specified Page/Subpage to be updated
+     * @param string $type type of the page, whether it is Page or Subpage
+     * @return RedirectResponse redirect to index page if edition is forbidden
+     */
+    public function public(int $id, string $type)
+    {
+        if ($type == 'page') {
             $this->pageService->setPagePublic($id);
 
-        } else if($type == 'subpage') {
+        } else if ($type == 'subpage') {
             $this->pageService->setSubpagePublic($id);
         }
         return redirect()->back();

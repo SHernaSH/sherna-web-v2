@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\ArticleCategory;
-use App\ArticleCategoryDetail;
 use App\Http\Controllers\Controller;
 use App\Http\JSON\AutocompleteModel;
-use App\Language;
+use App\Http\Requests\Article\ArticleCategory\StoreRequest;
+use App\Http\Requests\Article\ArticleCategory\UpdateRequest;
+use App\Models\Articles\ArticleCategory;
+use App\Models\Articles\ArticleCategoryDetail;
+use App\Models\Language\Language;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
+/**
+ * Class handling CRUD operations of ArticleCategory Model and autocompletion
+ *
+ * Class ArticleCategoryController
+ * @package App\Http\Controllers\Admin*
+ */
 class ArticleCategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the ArticleCategory.
      *
-     * @return \Illuminate\Http\Response
+     * @return View index page listing all the article categories paginated
      */
     public function index()
     {
@@ -23,9 +35,9 @@ class ArticleCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new ArticleCategory
      *
-     * @return \Illuminate\Http\Response
+     * @return View view with the create form for ArticleCategory
      */
     public function create()
     {
@@ -33,12 +45,15 @@ class ArticleCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created ArticleCategory in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Create a new main entry ArticleCategory, then create the details for all the languages
+     * and associate it with language and the category
+     *
+     * @param StoreRequest $request  request from the create form
+     * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $category = new ArticleCategory();
         $category->save();
@@ -58,8 +73,8 @@ class ArticleCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ArticleCategory  $category
-     * @return \Illuminate\Http\Response
+     * @param ArticleCategory $category  Category which data will be shown in the edit form
+     * @return View                      view with the edit form
      */
     public function edit(ArticleCategory $category)
     {
@@ -67,13 +82,13 @@ class ArticleCategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the ArticleCategory in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ArticleCategory  $articleCategory
-     * @return \Illuminate\Http\Response
+     * @param UpdateRequest $request          request with the data from edit form
+     * @param ArticleCategory $category category which shoudl be updated
+     * @return RedirectResponse         redirect to index page
      */
-    public function update(Request $request, ArticleCategory $category)
+    public function update(UpdateRequest $request, ArticleCategory $category)
     {
         foreach (Language::all() as $language) {
             $detail = $category->detail()->ofLang($language)->get()->first();
@@ -86,16 +101,16 @@ class ArticleCategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the Article Category from storage.
      *
-     * @param  \App\ArticleCategory  $category
-     * @return \Illuminate\Http\Response
+     * @param ArticleCategory $category
+     * @return Response
      */
     public function destroy(ArticleCategory $category)
     {
         try {
             $category->delete();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             flash("Deletion of category was not successful.")->error();
             return redirect()->back();
         }
@@ -104,11 +119,22 @@ class ArticleCategoryController extends Controller
         return redirect()->route('category.index');
     }
 
-    public function auto() {
-        return $this->autocomplete($_GET['term']);
+    /**
+     * Method for AJAX autocomplete of article categories
+     *
+     * @return string JSON object consting of ArticleCategory name
+     */
+    public function auto()
+    {
+        return $this->autocomplete($_GET['term'] ?? '');
     }
 
-    private function autocomplete(string $term) {
+    /**
+     * @param string $term  needle in search
+     * @return string       SON object consting of ArticleCategory name
+     */
+    private function autocomplete(string $term)
+    {
 
         $categories = ArticleCategoryDetail::where('name', 'like', "%$term%")
             ->get()->pluck('name');

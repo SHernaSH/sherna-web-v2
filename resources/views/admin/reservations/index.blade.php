@@ -31,7 +31,7 @@
 						</thead>
 						<tbody>
 						@forelse($reservations as $reservation)
-							<tr class="{{$reservation->end_at->isPast() ? 'success':''}}">
+							<tr class="{{$reservation->end_at->isPast() || isset($reservation->deleted_at) ? 'success':''}}">
 								<th>{{ $reservations->total() - ($loop->index) - ($reservations->perPage() * ($reservations->currentPage() - 1))}}</th>
 								<td>{{ $reservation->user->name }}</td>
 								<td>
@@ -46,7 +46,7 @@
                                 <td>{{ $reservation->start_at->isoFormat('LLL') }}</td>
                                 <td>{{ $reservation->end_at->isoFormat('LLL') }}</td>
 								<td>
-									@if($reservation->deleted_at !=null)
+									@if(isset($reservation->deleted_at))
 										{{ $reservation->deleted_at }}
 									@else
 										-
@@ -57,23 +57,25 @@
                                     <form action="{{ route('admin.reservation.destroy', ['reservation' => $reservation]) }}" class="inline" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <a href="{{ route('admin.reservation.edit',['reservation' => $reservation])}}"
+                                        <a href="{{ route('admin.reservation.edit',['reservation' => $reservation->id])}}"
                                            class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                        <a href=""
-                                           class="btn btn-warning"><i class="fa fa-times"></i></a>
-                                        <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></button>
+                                        @if(!isset($reservation->deleted_at) && !$reservation->end_at->isPast())
+                                            <a href=""
+                                               class="btn btn-warning"><i class="fa fa-times"></i></a>
+                                            <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></button>
+                                        @endif
                                     </form>
 								</td>
 							</tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="7">No reservations yet</td>
+                                <td class="text-center" colspan="9">No reservations yet</td>
                             </tr>
 						@endforelse
 						</tbody>
                     @if($reservations->hasPages())
                         <tr>
-                            <td class="text-center" colspan="7">{{ $reservations->links() }}</td>
+                            <td class="text-center" colspan="9">{{ $reservations->links() }}</td>
                         </tr>
                     @endif
                     </table>

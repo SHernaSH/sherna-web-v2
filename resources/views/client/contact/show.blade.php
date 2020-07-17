@@ -6,6 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-xs-12">
+            @include('client.partials.form_errors')
             <h1>{{ trans('general.navbar.contact') }}</h1>
 
             <form action="{{ route('contact.send') }}" method="POST">
@@ -13,7 +14,7 @@
                         <div class="row">
                             <div class="form-group col-md-8">
                                 <label for="email">{{ trans('general.contact.email') }}</label>
-                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" placeholder="example@email.com" required />
+                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}" placeholder="example@email.com" required />
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="year">{{ trans('general.contact.year') }}</label>

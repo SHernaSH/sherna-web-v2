@@ -19,16 +19,16 @@
                 </div>
                 <div class="x_content">
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <li class="{{($language->id==$status->language->id ? "active":"")}}">
                                     <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <div class="tab-content row">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 @php
-                                    $stat = \App\LocationStatus::where('id', $status->id)->ofLang($language)->first();
+                                    $stat = \App\Models\Locations\LocationStatus::where('id', $status->id)->ofLang($language)->first();
                                 @endphp
                                 <div class="tab-pane col-md-6 fade {{($language->id==$status->language->id ? "active":"")}} in" id="{{$language->id}}">
                                     <div class="form-group">

@@ -13,6 +13,7 @@ class CreateConsolesTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('console_types', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
@@ -40,7 +41,8 @@ class CreateConsolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('console_types');
         Schema::dropIfExists('consoles');
+        Schema::dropIfExists('console_types');
+
     }
 }

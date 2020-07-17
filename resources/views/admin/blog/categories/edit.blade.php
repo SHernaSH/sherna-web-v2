@@ -22,16 +22,16 @@
                     <div class="x_content">
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <li class="{{($language->id==$category->detail->language->id ? "active":"")}}">
                                     <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <div id="myTabContent" class="tab-content">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 @php
-                                    $text = $category->detail->ofLang($language)->first();
+                                    $text = $category->detail()->ofLang($language)->first();
                                 @endphp
                                 <div class="tab-pane fade {{$language->id==$category->detail->language->id ? "active":""}} in" id="{{$language->id}}">
                                     <div class="form-group">

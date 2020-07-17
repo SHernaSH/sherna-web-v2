@@ -1,26 +1,24 @@
-
-@foreach(\App\Location::all() as $location)
-    <div class="row" id="location">
-        <h2 data-toggle="collapse" data-parent="#inventory-items" class="collapsed"
-        href="#collapse{{$location->id}}" aria-expanded="true"
-        aria-controls="collapse{{$location->id}}">
+@foreach(\App\Models\Locations\Location::all() as $location)
+    <div class="col-md-12  toCollapse">
+        <h2 data-toggle="collapse"
+            href="#collapse-{{$location->id}}" aria-expanded="false"
+            aria-controls="collapse-{{$location->id}}">
             {{$location->name}}
-            <i class="fa fa-chevron-circle-down cursor"></i>
+            <i class="fa fa-chevron-circle-up cursor"></i>
         </h2>
-        <div class="collapse in" id="collapse{{$location->id}}">
-            <div class="col-md-12 inventory-items" id="inventory-items">
+        <div class="collapse in" id="collapse-{{$location->id}}">
                 <h2>
                     {{trans('general.content.games')}}
                 </h2>
                 <hr>
                 @foreach($location->consoles as $console)
-                    <h3 data-toggle="collapse" data-parent="#inventory-items" class="collapsed"
+                    <h3 data-toggle="collapse"
                         href="#collapse{{$console->id}}-{{$location->id}}" aria-expanded="true"
                         aria-controls="collapse{{$console->id}}">
                         {{$console->name}}
-                        <i class="fa fa-chevron-circle-down cursor"></i>
+                        <i class="fa fa-chevron-circle-up cursor"></i>
                     </h3>
-                    <div class="collapse" id="collapse{{$console->id}}-{{$location->id}}">
+                    <div class="collapse in" id="collapse{{$console->id}}-{{$location->id}}">
                             @foreach($console->games as $game)
                             <div class="game-item">
                                                 <span class="game-name">
@@ -56,25 +54,29 @@
             @endforeach
 
 
-        @foreach(\App\InventoryCategory::get() as $category)
+        @foreach(\App\Models\Inventory\InventoryCategory::get() as $category)
             <div class="row">
-                <div class="col-md-12 inventory-items" id="inventory-items">
-                    <h2>
+                <div class="col-md-12">
+                    <h2 data-toggle="collapse"
+                        href="#collapseC{{$category->id}}-{{$location->id}}" aria-expanded="false"
+                        aria-controls="collapseC{{$category->id}}-{{$location->id}}">
                         {{$category->name}}
+                        <i class="fa fa-chevron-circle-up cursor"></i>
                     </h2>
-
                     <hr>
-                    <ul>
-                        @foreach($category->items as $categoryItem)
-                            <li>
-                                {{$categoryItem->name}}
-                            </li>
-                        @endforeach
-                    </ul>
+                    <div class="collapse in" id="collapseC{{$category->id}}-{{$location->id}}">
+{{--                    <hr>--}}
+                        <ul>
+                            @foreach($category->items as $categoryItem)
+                                <li>
+                                    {{$categoryItem->name}}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
     @endforeach
-            </div>
         </div>
     </div>
 @endforeach

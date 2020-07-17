@@ -7,31 +7,38 @@
     <script src="{{asset('assets_admin/js/datetimepicker/js/bootstrap-datetimepicker.js')}}"></script>
     @include('assets.datepicker_locale')
     <script type="text/javascript">
-        function initDatePickers() {
-            var edit = {{ \App\Setting::where('name', 'Reservation Area')->first()->value}};
-        }
+            var edit = {{ \App\Models\Settings\Setting::where('name', 'Time for Edit')->first()->value}};
             var formDate = $(".form_datetime").datetimepicker({
-                language      : '{{Session::get('lang')}}',
-                format        : "dd.mm.yyyy - hh:ii",
-                autoclose     : true,
-                startDate     : moment().add(edit, 'm').format('YYYY-MM-DD HH:mm'),
-                endDate       : moment().add(reservationarea, 'd').format('YYYY-MM-DD HH:mm'),
-                todayBtn      : true,
+                language: '{{Session::get('lang')}}',
+                format: "dd.mm.yyyy hh:ii",
+                autoclose: true,
+                startDate: moment().add(edit + 1, 'm').format('YYYY-MM-DD HH:mm'),
+                endDate: moment().add(reservationarea, 'd').format('YYYY-MM-DD HH:mm'),
+                todayBtn: true,
                 todayHighlight: false,
+                fontAwesome   : true,
                 pickerPosition: "bottom-left",
-                minuteStep    : 15
+                minuteStep: 15
             });
 
-
             var toDate = $(".to_datetime").datetimepicker({
-                language      : '{{Session::get('lang')}}',
-                format        : "dd.mm.yyyy - hh:ii",
-                autoclose     : true,
-                startDate     : moment().add(edit * 2, 'm').format('YYYY-MM-DD HH:mm'),
-                todayBtn      : true,
+                language: '{{Session::get('lang')}}',
+                format: "dd.mm.yyyy hh:ii",
+                autoclose: true,
+                startDate: moment().add(edit * 2, 'm').format('YYYY-MM-DD HH:mm'),
+                todayBtn: true,
                 todayHighlight: false,
+                fontAwesome   : true,
                 pickerPosition: "bottom-right",
-                minuteStep    : 15
+                minuteStep: 15
+            });
+
+            $(".form_datetime").datetimepicker().on('changeDate', function (ev) {
+                //alert(ev.date.valueOf());
+                $(".to_datetime").datetimepicker('setStartDate', moment(ev.date.valueOf()).format('YYYY-MM-DD HH:mm'));
+                $(".to_datetime").datetimepicker('setEndDate', moment(ev.date.valueOf()).add(maxeventduration, 'h')
+                    .format('YYYY-MM-DD HH:mm'))
+                $(".form_datetime").datetimepicker('hide');
             });
 
     </script>

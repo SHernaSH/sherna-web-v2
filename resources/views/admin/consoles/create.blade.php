@@ -31,7 +31,7 @@
                                     <label for="input2" class="col-sm-4 control-label">Console type</label>
                                     <div class="col-sm-8">
                                         <select name="console_type_id" id="input2" class="form-control">
-                                            @foreach(\App\ConsoleType::get() as $consoleType)
+                                            @foreach(\App\Models\Consoles\ConsoleType::get() as $consoleType)
                                                 <option value="{{$consoleType->id}}">{{$consoleType->name}}</option>
                                             @endforeach
                                         </select>
@@ -41,7 +41,7 @@
                                     <label for="input2" class="col-sm-4 control-label">Location</label>
                                     <div class="col-sm-8">
                                         <select name="location_id" id="input2" class="form-control">
-                                            @foreach(\App\Location::get() as $location)
+                                            @foreach(\App\Models\Locations\Location::get() as $location)
                                                 <option value="{{$location->id}}">{{$location->name}}</option>
                                             @endforeach
                                         </select>

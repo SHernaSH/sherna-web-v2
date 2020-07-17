@@ -3,40 +3,56 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Navigation\Page\StoreRequest;
+use App\Http\Requests\Navigation\Page\UpdateRequest;
 use App\Http\Scopes\LanguageScope;
 use App\Http\Services\PageService;
-use App\Language;
-use App\Nav\Page;
-use App\Nav\PageText;
-use App\Nav\SubPage;
-use App\Nav\SubPageText;
+use App\Models\Language\Language;
+use App\Models\Navigation\Page;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
+/**
+ * Class handling CRUD operations on Page Model using PageService
+ *
+ * Subpages are stored in Session untill the whole Page is saved, after that they are saved too
+ *
+ * Class NavigationController
+ * @package App\Http\Controllers\Admin
+ */
 class NavigationController extends Controller
 {
 
 
+    /**
+     * Constructor initializing and associating page service
+     *
+     * NavigationController constructor.
+     * @param PageService $pageService
+     */
     public function __construct(PageService $pageService)
     {
         $this->pageService = $pageService;
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the navigation Pages
      *
-     * @return \Illuminate\Http\Response
+     * @return View view with paginated pages
      */
     public function index()
     {
-        $pages = Page::orderBy('order')->paginate();
+        $pages = Page::where('url', '!=', 'home')->orderBy('order')->paginate();
         return view('admin.navigation.index', ['navigations' => $pages]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Page.
+     * To keep the data in Session after reloading the page, new Session flag is created and used
      *
-     * @return \Illuminate\Http\Response
+     * @return View view with the create form for Page
      */
     public function create()
     {
@@ -51,22 +67,23 @@ class NavigationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Page in storage.
+     * Stroing the subpages from Session.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreRequest $request  request with all the data from creation form
+     * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $this->pageService->storeWholePage($request);
         return redirect()->route('navigation.index');
     }
 
     /**
-     * Display the specified resource.
+     * Making the specified navigation Page public/private
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id           id of the specified navigation Page
+     * @return RedirectResponse redirect to index page
      */
     public function public(int $id)
     {
@@ -76,40 +93,42 @@ class NavigationController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified navigation Page.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Subpages are stored in Sessions, reflashing to keep the data for one more redirect if the page_id is same
+     *
+     * @param int $id   id of the specified navigation Page to be edited
+     * @return View|RedirectResponse     view with the edition form or redirect back to index page if edition forbidden
      */
     public function edit($id)
     {
         $page = Page::where('id', $id)->firstOrFail();
-        if($this->pageService->isSpecialPage($page)) {
+        if ($this->pageService->isSpecialPage($page)) {
             flash('Edition not allowed.')->error();
             return redirect()->back();
         }
 
-            foreach (Language::all() as $lang) {
+        foreach (Language::all() as $lang) {
             $subpagesOfLang = $page->subpages()->ofLang($lang)->get();
-            if(!Session::exists('subpages-' . $lang->id)) {
+            if (!Session::exists('subpages-' . $lang->id)) {
                 Session::flash('subpages-' . $lang->id, $subpagesOfLang);
                 Session::flash('page_id', $page->id);
             }
         }
-        if(Session::get('page_id') == $page->id) {
+        if (Session::get('page_id') == $page->id) {
             Session::reflash();
         }
         return view('admin.navigation.edit', ['navigation' => $page]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified navigation Page in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateRequest $request  request with all the data from edition form
+     * @param int $id           id of the specified navigation Page to be updated
+     * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $this->pageService->storeWholePage($request, $id);
 
@@ -117,14 +136,14 @@ class NavigationController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Navigatio Page from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id             id of the specified navigation Page to be deleted
+     * @return RedirectResponse   redirect to index page
      */
     public function destroy($id)
     {
-        if($this->pageService->deletePage($id)) {
+        if ($this->pageService->deletePage($id)) {
             flash('Page was successfully deleted.')->success();
         } else {
             flash('Page deletion was unsuccessful.')->error();
@@ -134,7 +153,12 @@ class NavigationController extends Controller
         return redirect()->route('navigation.index');
     }
 
-    public function reorder() {
+    /**
+     * Handling the AJAX call from reordering the navpages.
+     * Changing the order of all affected pages
+     */
+    public function reorder()
+    {
         $url = $_POST['url'];
         $newIndex = $_POST['newIndex'];
         $pages = Page::withoutGlobalScope(LanguageScope::class)->where('url', $url)->get();
@@ -142,16 +166,23 @@ class NavigationController extends Controller
         flash('Navigations were successfully reordered')->success();
     }
 
-    private function reorderNavigation($pages, $newIndex) {
+    /**
+     * Changing the order of all the affected pages
+     *
+     * @param $pages Page[]  all the pages
+     * @param $newIndex int  new value of index
+     */
+    private function reorderNavigation($pages, int $newIndex)
+    {
         $oldIndex = $pages[0]->order;
         foreach ($pages as $page) {
             $page->order = $newIndex;
             $page->save();
         }
         foreach (Page::withoutGlobalScope(LanguageScope::class)->where('url', '!=', $pages[0]->url)->get() as $page) {
-            if($page->order < $oldIndex && $page->order >= $newIndex) {
+            if ($page->order < $oldIndex && $page->order >= $newIndex) {
                 $page->order += 1;
-            } else if($page->order > $oldIndex && $page->order <= $newIndex) {
+            } else if ($page->order > $oldIndex && $page->order <= $newIndex) {
                 $page->order -= 1;
             }
             $page->save();

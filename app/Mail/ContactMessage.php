@@ -3,10 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class encapsulating email message from contact form
+ *
+ * Class ContactMessage
+ * @package App\Mail
+ */
 class ContactMessage extends Mailable
 {
     use Queueable, SerializesModels;
@@ -28,8 +33,8 @@ class ContactMessage extends Mailable
     /**
      * Vytvoř novou instanci emailové zprávy.
      *
-     * @param  string $user
-     * @param  string $message
+     * @param string $user
+     * @param string $message
      * @return void
      */
     public function __construct($user, $message)

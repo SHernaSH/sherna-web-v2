@@ -16496,7 +16496,7 @@ html,
 body {
   margin: 0;
   height: 100%;
-  padding-top: 50px;
+  padding-top: 30px;
 }
 #body-container {
   min-height: 100%;
@@ -16508,6 +16508,12 @@ body {
 .comment {
   padding: 10px 20px 10px 5px;
   background: #d2ffcf;
+}
+@media (min-width: 768px) {
+  #navbar.navbar-collapse.collapse {
+    display: inline-block !important;
+    vertical-align: top;
+  }
 }
 footer {
   background-color: #65d26e;
@@ -16917,10 +16923,8 @@ ul.twPc-Arrange {
   z-index: 1055;
 }
 .alert {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 9000;
+  text-align: center;
+  margin: 0 65px;
 }
 div.speech-container {
   top: 20px;

@@ -29,7 +29,14 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="tags">Categories:</label>
                             <div class="col-sm-10">
-                                <input name="tags" value="{{ old('tags') }}" id="tags"/>
+                                <input name="tags" value="{{ old('tags', $category) }}" id="tags"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="comments">Enable comments:</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" id="comments" name="comments" class="js-switch" />
                             </div>
                         </div>
 
@@ -41,14 +48,14 @@
                         </div>
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <li class="{{($language->id==1 ? "active":"")}}">
                                     <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <div id="myTabContent" class="tab-content">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <div class="tab-pane fade {{$language->id==1 ? "active":""}} in" id="{{$language->id}}">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="name-{{$language->id}}">Name:</label>
@@ -59,7 +66,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="description-{{$language->id}}">Description:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="description-{{$language->id}}" name="description-{{$language->id}}" class="form-control" value="{{ old('title-' . $language->id) }}">
+                                            <input type="text" id="description-{{$language->id}}" name="description-{{$language->id}}" class="form-control" value="{{ old('description-' . $language->id) }}">
                                         </div>
                                     </div>
                                     <div class="form-group">

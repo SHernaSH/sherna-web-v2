@@ -3,17 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Language;
-use App\Location;
-use App\LocationStatus;
+use App\Http\Requests\Locations\StoreRequest;
+use App\Http\Requests\Locations\UpdateRequest;
+use App\Models\Language\Language;
+use App\Models\Locations\Location;
+use App\Models\Locations\LocationStatus;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
+/**
+ * Class handling the CRUD operations on Location Model
+ *
+ * Class LocationController
+ * @package App\Http\Controllers\Admin
+ */
 class LocationController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the Location and Locations Statuses.
      *
-     * @return \Illuminate\Http\Response
+     * @return View view with paginated locations and location statuses
      */
     public function index()
     {
@@ -24,9 +37,9 @@ class LocationController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Location.
      *
-     * @return \Illuminate\Http\Response
+     * @return View view with the create form for Location
      */
     public function create()
     {
@@ -35,14 +48,14 @@ class LocationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Location in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreRequest $request  request with all the data from creation form
+     * @return RedirectResponse redirect to index page
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $next_id = \DB::table('locations')->max('id') + 1;
+        $next_id = DB::table('locations')->max('id') + 1;
         $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
         $uid = $request->input('location_id');
         $reader = $request->input('reader_uid');
@@ -57,28 +70,15 @@ class LocationController extends Controller
             $loc->save();
         }
 
+        flash('Location was successfully created')->success();
         return redirect()->route('location.index');
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified Location.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(int $id)
-    {
-        $location = Location::where('id', $id)->firstOrFail();
-
-        return view('location.show', ['location' => $location]);
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param int $id   id of the specified Location to be edited
+     * @return View     view with the edition form
      */
     public function edit(int $id)
     {
@@ -88,16 +88,16 @@ class LocationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified Location in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateRequest $request  request with all the data from edition form
+     * @param int $id           id of the specified Location to be updated
+     * @return RedirectResponse redirect to index page
      */
-    public function update(Request $request, int $id)
+    public function update(UpdateRequest $request, int $id)
     {
         $status = LocationStatus::where('id', $request->input('status'))->firstOrFail();
-        $uid = $request->input('location_id');
+        $uid = $request->input('location_uid');
         $reader = $request->input('reader_uid');
         foreach (Language::all() as $lang) {
             $location = Location::where('id', $id)->ofLang($lang)->firstOrFail();
@@ -113,10 +113,10 @@ class LocationController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Location from database
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param int $id           id of the specified Location to be deleted
+     * @return RedirectResponse redirect to index page
      */
     public function destroy(int $id)
     {
@@ -124,7 +124,7 @@ class LocationController extends Controller
             try {
                 $location = Location::where('id', $id)->ofLang($lang)->firstOrFail();
                 $location->delete();
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 flash("Deletion was unsuccessful.")->error();
                 return redirect()->back();
             }

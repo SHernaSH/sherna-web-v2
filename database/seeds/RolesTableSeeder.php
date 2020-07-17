@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Roles\Role;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Role::updateOrInsert([
+        Role::updateOrInsert([
             'id' => 1,
             'name' => 'guest',
             'description' => 'Role for not logged in users',
@@ -21,7 +22,7 @@ class RolesTableSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Role::updateOrInsert([
+        Role::updateOrInsert([
             'id' => 2,
             'name' => 'user',
             'description' => 'Role for logged in users',
@@ -29,7 +30,7 @@ class RolesTableSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Role::updateOrInsert([
+        Role::updateOrInsert([
             'id' => 3,
             'name' => 'user_vr',
             'description' => 'Role for not logged in users that can use VR',
@@ -37,7 +38,7 @@ class RolesTableSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Role::updateOrInsert([
+        Role::updateOrInsert([
             'id' => 4,
             'name' => 'admin',
             'description' => 'Role for admins',
@@ -45,7 +46,7 @@ class RolesTableSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\Role::updateOrInsert([
+        Role::updateOrInsert([
             'id' => 5,
             'name' => 'super_admin',
             'description' => 'Role for super admins',

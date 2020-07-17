@@ -12,7 +12,7 @@ class ReservationsTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Reservation::updateOrInsert([
+        \App\Models\Reservations\Reservation::updateOrInsert([
             'id' => 1,
             'user_id' => 30542,
             'location_id' => 1,

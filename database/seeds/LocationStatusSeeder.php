@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Locations\LocationStatus;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +13,7 @@ class LocationStatusSeeder extends Seeder
      */
     public function run()
     {
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 1,
             'name' => 'Otvorene',
             'opened' => true,
@@ -21,7 +22,7 @@ class LocationStatusSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 1,
             'name' => 'Open',
             'opened' => true,
@@ -30,7 +31,7 @@ class LocationStatusSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 2,
             'name' => 'Zatvorene',
             'language_id' => 1,
@@ -38,7 +39,7 @@ class LocationStatusSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 2,
             'name' => 'Closed',
             'language_id' => 2,
@@ -46,7 +47,7 @@ class LocationStatusSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 3,
             'name' => 'Na kluc',
             'language_id' => 1,
@@ -54,7 +55,7 @@ class LocationStatusSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        \App\LocationStatus::updateOrInsert([
+        LocationStatus::updateOrInsert([
             'id' => 3,
             'name' => 'Key',
             'language_id' => 2,

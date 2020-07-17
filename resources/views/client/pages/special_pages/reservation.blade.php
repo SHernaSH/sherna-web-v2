@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-xs-12">
             <div class="row">
-                @foreach(\App\Location::get() as $location)
+                @foreach(\App\Models\Locations\Location::get() as $location)
                     <div class="col-md-6 col-xs-6 text-center">
                         <p class="location_radio">
                                 <input id="location{{$location->id}}" type="radio" name="location"
@@ -25,12 +25,15 @@
             @if(Auth::check())
                 @if(!Auth::user()->isAdmin() && Auth::user()->reservations()->futureActiveReservations()->count() > 0)
                     <span class="text-danger"><b>{{trans('general.future_reservations')}}</b></span>
+                @elseif(Auth::user()->banned)
+                    <span class="text-danger"><b>{{trans('general.ban')}}</b></span>
                 @else
                     <a href="#" data-toggle="modal" data-target="#createReservationModal"
                        class="btn btn-default">{{trans('reservation-modal.title')}}</a>
                 @endif
-{{--            @else--}}
-{{--                <a href="{{action('Client\ClientController@getAuthorize')}}"--}}
+            @else
+                <span class="text-danger"><b>{{ trans('reservations.login') }}</b></span>
+{{--                <a href="{{ route('login') }}"--}}
 {{--                   class="btn btn-default">{{trans('reservation-modal.title')}}</a>--}}
             @endif
         </div>
@@ -83,7 +86,7 @@
                                            type="text">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="to_date" autocomplete="off"
+                                    <label for="to_date"
                                            class="control-label">{{trans('reservation-modal.to_date')}}
                                         <span
                                             class="text-danger">*</span></label>
@@ -96,7 +99,7 @@
                                 <label for="location_id"
                                        class="control-label">{{trans('reservations.location')}}</label>
                                 <select name="location_id" id="location_id" class="form-control">
-                                    @foreach(\App\Location::opened()->get() as $location)
+                                    @foreach(\App\Models\Locations\Location::opened()->get() as $location)
                                         <option value="{{$location->id}}" {{old('location')==$location->id ? 'selected':''}}>{{$location->name}}</option>
                                     @endforeach
                                 </select>
@@ -246,10 +249,10 @@
 
             </div>
             <div class="modal-footer">
-                <form id="deleteReservationForm" style="display: inline" class="form-inline">
+                <form id="deleteReservationForm" style="display: inline" class="form-inline" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button id="deleteReservation" type="button"
+                    <button id="deleteReservation" type="submit"
                             class="btn btn-danger hidden">{{trans('reservation-modal.delete')}}</button>
                 </form>
                 <button type="button" id="updateReservation"  class="btn btn-info hidden"

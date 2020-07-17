@@ -31,23 +31,31 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="url">Make public:</label>
+                            <label class="col-sm-2 control-label" for="comments">Enable comments:</label>
                             <div class="col-sm-10">
-                                <input type="checkbox" {{$article->public ? "checked" : ""}} class="js-switch" />
+                                <input type="checkbox" {{$article->comments_enabled ? "checked" : ""}} id="comments" name="comments" class="js-switch" />
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="public">Make public:</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" {{$article->public ? "checked" : ""}} name="public" id="public" class="js-switch" />
+                            </div>
+                        </div>
+
+
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <li class="{{($language->id==$article->text->language->id ? "active":"")}}">
                                     <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <div id="myTabContent" class="tab-content">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 @php
-                                    $text = $article->text->ofLang($language)->first();
+                                    $text = $article->text()->ofLang($language)->first();
                                 @endphp
                                 <div class="tab-pane fade {{$language->id==$article->text->language->id ? "active":""}} in" id="{{$language->id}}">
                                     <div class="form-group">

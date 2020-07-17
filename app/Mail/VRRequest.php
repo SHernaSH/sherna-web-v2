@@ -2,12 +2,16 @@
 
 namespace App\Mail;
 
-use App\Reservation;
+use App\Models\Reservations\Reservation;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class encapsulating email message send when reservation is created requesting VR
+ * Class VRRequest
+ * @package App\Mail
+ */
 class VRRequest extends Mailable
 {
     use Queueable, SerializesModels;

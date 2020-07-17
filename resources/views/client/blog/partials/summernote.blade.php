@@ -25,7 +25,7 @@
             }
         });
 
-        @foreach(\App\Language::all() as $lang)
+        @foreach(\App\Models\Language\Language::all() as $lang)
         if ($(".input-info[data-langID='{{$lang->id}}']").val() != '') {
             $(".summernote_modal[data-langID='{{$lang->id}}']").summernote('code', $(".input-info[data-langID='{{$lang->id}}']").val());
         }

@@ -3,23 +3,39 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Services\UserService;
-use App\Role;
-use App\User;
+use App\Models\Roles\Role;
+use \App\Models\Users\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
+/**
+ * Class handling viewing, editing and updating of the User Role model
+ * with filtering the data
+ *
+ * Class UserController
+ * @package App\Http\Controllers\Admin
+ */
 class UserController extends Controller
 {
 
+    /**
+     * UserController constructor initializing the UserService
+     * @param UserService $userService
+     */
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of all the users paginated.
      *
-     * @return \Illuminate\Http\Response
+     * @return View view showing all the users without filters
      */
     public function index()
     {
@@ -33,63 +49,80 @@ class UserController extends Controller
         return view('admin.users.index', ['users' => $users, 'filters' => $filters]);
     }
 
-    public function indexFilter() {
+    /**
+     * Display a listing of the users paginated, filtered by specified filters.
+     * Possible filters: name, surname, email, role
+     *
+     * @return View view showing all the users with specified filters
+     */
+    public function indexFilter(Request $request)
+    {
         $filters = [
-            'name' => request()->get('name'),
-            'surname' => request()->get('surname'),
-            'email' => request()->get('email'),
-            'role_id' => request()->get('role_id')
+            'name' => $request->get('name'),
+            'surname' => $request->get('surname'),
+            'email' => $request->get('email'),
+            'role_id' => $request->get('role_id')
         ];
 
         $users = $this->userService->getUsersFiltered($filters);
         return view('admin.users.index', ['users' => $users, 'filters' => $filters]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        return view('admin.users.edit', ['user' => $user]);
-    }
-
 
     /**
-     * Remove the specified resource from storage.
+     * (Un)Ban the specified User
      *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @param User $user         specified User to be (un)banned
+     * @return RedirectResponse  redirect back to index page - with or without filters
      */
     public function ban(User $user)
     {
-        if($this->userService->changeBanStatus($user)) {
+        if ($this->userService->changeBanStatus($user)) {
             flash('User was ' . ($user->banned ? 'banned.' : 'unbanned'))->success();
         } else {
             flash('Action was not completed.')->error();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index');
     }
 
-    public function updateRole(User $user) {
-        $role = Role::find(request()->get('role'));
-        if($this->userService->changeUserRole($user, $role)) {
+    /**
+     * Change the role of the specified User
+     *
+     * @param User $user specified User to be updated
+     * @param UpdateRequest $request
+     * @return RedirectResponse  redirect back to index page - with or without filters
+     */
+    public function updateRole(User $user, UpdateRequest $request)
+    {
+        $role = Role::find($request->get('role'));
+        if ($this->userService->changeUserRole($user, $role)) {
             flash('User role was successfully changed.')->success();
         } else {
             flash('Action was not completed.')->error();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index');
     }
 
-    public function auto() {
-        return $this->autocomplete($_GET['term']);
+    /**
+     * Return the json data for autocomplete of users by specified search term
+     *
+     * @return JsonResponse  users meeting the search criteria as json
+     */
+    public function auto()
+    {
+        return $this->autocomplete($_GET['term'] ?? '');
     }
 
-    private function autocomplete(string $term) {
+    /**
+     * Return the json data for autocomplete of users by specified search term
+     *
+     * @param string $term  needle search term
+     * @return JsonResponse
+     */
+    private function autocomplete(string $term)
+    {
 
         $categories = User::where('name', 'like', "%$term%")
             ->orWhere('id', 'like', "%$term%")

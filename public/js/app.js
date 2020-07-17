@@ -1649,7 +1649,7 @@ return a=K(a),this[a+"s"]()}function $c(a){return function(){return this._data[a
         return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), 0);
       }
       var parts = date && date.toString().match(this.nonpunctuation) || [],
-        date = new Date(0, 0, 0, 0, 0, 0, 0),
+        date = new Date(),
         parsed = {},
         setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P', 'z', 'Z'],
         setters_map = {
@@ -1889,7 +1889,7 @@ return a=K(a),this[a+"s"]()}function $c(a){return function(){return this._data[a
                 '</tr>' +
       '</thead>',
     contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
-    footTemplate: '<tfoot>' + 
+    footTemplate: '<tfoot>' +
                     '<tr><th colspan="7" class="today"></th></tr>' +
                     '<tr><th colspan="7" class="clear"></th></tr>' +
                   '</tfoot>'
@@ -2779,20 +2779,36 @@ $(document).on('click', '.btn-delete', function (ev) {
 	})
 });
 
-$('#inventory-items h3').click(function (ev) {
-	var target = $(ev.target);
+$('.toCollapse h2').click(function (ev) {
+    var target = $(ev.target);
+    if (!target.is('h2')) {
+        target = target.closest('h2');
+    }
 
-	if (!target.is('h3')) {
-		target = target.closest('h3');
-	}
+    if (target.hasClass('collapsed')) {
+        target.find('.cursor').removeClass('fa-chevron-circle-down');
+        target.find('.cursor').addClass('fa-chevron-circle-up');
+    } else {
+        target.find('.cursor').removeClass('fa-chevron-circle-up');
+        target.find('.cursor').addClass('fa-chevron-circle-down');
+    }
 
-	if (target.hasClass('collapsed')) {
-		target.find('.cursor').removeClass('fa-chevron-circle-down');
-		target.find('.cursor').addClass('fa-chevron-circle-up');
-	} else {
-		target.find('.cursor').removeClass('fa-chevron-circle-up');
-		target.find('.cursor').addClass('fa-chevron-circle-down');
-	}
 });
 
-(function (window, document, undefined) {"use strict";App.lang = {"sk":{"ok":"OK","cancel":"Zru\u0161i\u0165","modalProblemOnServer":{"title":"Nie\u010do sa rozbilo ...","text":"Nastala chyba na na\u0161ich serveroch, podpora bola kontaktovan\u00e1. Pros\u00edm sk\u00faste to za moment znova."},"not-filled":"Nevyplnen\u00e9 \u00fadaje","fill-start-date":"Pros\u00edm vypl\u0148te \u010das za\u010diatku rezerv\u00e1cie.","fill-to-date":"Pros\u00edm vypl\u0148te \u010das konca rezerv\u00e1cie.","sure-delete":"Naozaj zmaza\u0165?","sure-delete-text":"Naozaj si prajete zmaza\u0165 t\u00fato rezerv\u00e1ciu?","reservation-title":"Rezerv\u00e1cia pre: ","flashes":{"error":{"text":"Vyskytol sa probl\u00e9m. Pros\u00edm sk\u00faste to nesk\u00f4r."},"success_created":"Rezerv\u00e1cia \u00faspe\u0161ne vytvoren\u00e1","success_deleted":"Rezerv\u00e1cia \u00faspe\u0161ne zmazan\u00e1","success_renew":"Rezerv\u00e1cia \u00faspe\u0161ne pred\u013a\u017een\u00e1"}},"cs":{"ok":"OK","cancel":"Zru\u0161i\u0165","modalProblemOnServer":{"title":"N\u011bco se rozbilo...","text":"Nastala chyba na na\u0161ich servrech, podpora byla kontaktov\u00e1na. Zkuste to za moment znova, pros\u00edm."},"not-filled":"Nevyplnen\u00e9 \u00fadaje","fill-start-date":"Pros\u00edm vypl\u0148te \u010das za\u010d\u00e1tku rezervace.","fill-to-date":"Pros\u00edm vypl\u0148te \u010das konce rezervace.","sure-delete":"Opravdu smazat?","sure-delete-text":"Opravdu si p\u0159ejete smazat tuto rezervaci?","reservation-title":"Rezervace pro: ","flashes":{"error":{"text":"Vyskytl se probl\u00e9m. Pros\u00edm zkuste to pozd\u011bji."},"success_created":"Rezervace \u00fasp\u011b\u0161ne vytvo\u0159en\u00e1","success_deleted":"Rezervace \u00fasp\u011b\u0161ne smazan\u00e1","success_renew":"Rezervace \u00fasp\u011b\u0161ne prodlou\u017een\u00e1"}},"en":{"ok":"OK","cancel":"Cancel","modalProblemOnServer":{"title":"Something broke ...","text":"An error has occurred on our servers, support has been contacted. Please try again, please."},"not-filled":"Not filled data","fill-start-date":"Please fill in the time of booking.","fill-to-date":"Please fill in the end time of the reservation.","reservation-title":"Reservation for: ","sure-delete":"Really delete?","sure-delete-text":"Are you sure you want to delete this reservation?","flashes":{"error":{"text":"There was a problem. Please try again later."},"success_created":"Reservation created successfully","success_deleted":"Reservation deleted successfully","success_renew":"Reservation renewed successfully"}}}})(window, document);
+$('.toCollapse h3').click(function (ev) {
+    var target = $(ev.target);
+    if (!target.is('h3')) {
+        target = target.closest('h3');
+    }
+
+    if (target.hasClass('collapsed')) {
+        target.find('.cursor').removeClass('fa-chevron-circle-down');
+        target.find('.cursor').addClass('fa-chevron-circle-up');
+    } else {
+        target.find('.cursor').removeClass('fa-chevron-circle-up');
+        target.find('.cursor').addClass('fa-chevron-circle-down');
+    }
+
+});
+
+(function (window, document, undefined) {"use strict";App.lang = {"sk":{"ok":"OK","cancel":"Zru\u0161i\u0165","modalProblemOnServer":{"title":"Nie\u010do sa rozbilo ...","text":"Nastala chyba na na\u0161ich serveroch, podpora bola kontaktovan\u00e1. Pros\u00edm sk\u00faste to za moment znova."},"not-filled":"Nevyplnen\u00e9 \u00fadaje","fill-start-date":"Pros\u00edm vypl\u0148te \u010das za\u010diatku rezerv\u00e1cie.","fill-to-date":"Pros\u00edm vypl\u0148te \u010das konca rezerv\u00e1cie.","sure-delete":"Naozaj zmaza\u0165?","sure-delete-text":"Naozaj si prajete zmaza\u0165 t\u00fato rezerv\u00e1ciu?","reservation-title":"Rezerv\u00e1cia pre: ","flashes":{"error":{"text":"Vyskytol sa probl\u00e9m. Pros\u00edm sk\u00faste to nesk\u00f4r."},"success_created":"Rezerv\u00e1cia \u00faspe\u0161ne vytvoren\u00e1","success_deleted":"Rezerv\u00e1cia \u00faspe\u0161ne zmazan\u00e1","success_renew":"Rezerv\u00e1cia \u00faspe\u0161ne pred\u013a\u017een\u00e1"}},"cs":{"ok":"OK","cancel":"Zru\u0161i\u0165","modalProblemOnServer":{"title":"N\u011bco se rozbilo...","text":"Nastala chyba na na\u0161ich servrech, podpora byla kontaktov\u00e1na. Zkuste to za moment znova, pros\u00edm."},"not-filled":"Nevyplnen\u00e9 \u00fadaje","fill-start-date":"Pros\u00edm vypl\u0148te \u010das za\u010d\u00e1tku rezervace.","fill-to-date":"Pros\u00edm vypl\u0148te \u010das konce rezervace.","sure-delete":"Opravdu smazat?","sure-delete-text":"Opravdu si p\u0159ejete smazat tuto rezervaci?","sure-update":"Opravdu zmenit?","sure-update-text":"Opravdu si p\u0159ejete zmenit tuto rezervaci?","reservation-title":"Rezervace pro: ","flashes":{"error":{"text":"Vyskytl se probl\u00e9m. Pros\u00edm zkuste to pozd\u011bji."},"success_created":"Rezervace \u00fasp\u011b\u0161ne vytvo\u0159en\u00e1","success_deleted":"Rezervace \u00fasp\u011b\u0161ne smazan\u00e1","success_renew":"Rezervace \u00fasp\u011b\u0161ne prodlou\u017een\u00e1"}},"en":{"ok":"OK","cancel":"Cancel","modalProblemOnServer":{"title":"Something broke ...","text":"An error has occurred on our servers, support has been contacted. Please try again, please."},"not-filled":"Not filled data","fill-start-date":"Please fill in the time of booking.","fill-to-date":"Please fill in the end time of the reservation.","reservation-title":"Reservation for: ","sure-delete":"Really delete?","sure-delete-text":"Are you sure you want to delete this reservation?","sure-update":"Really update?","sure-update-text":"Are you sure you want to update this reservation?","flashes":{"error":{"text":"There was a problem. Please try again later."},"success_created":"Reservation created successfully","success_deleted":"Reservation deleted successfully","success_renew":"Reservation renewed successfully"}}}})(window, document);

@@ -65,9 +65,9 @@
 
 <div id="body-container">
 	<div id="flashes">
-		@include('client.partials.flash')
 	</div>
 	<div id="js-flashes"></div>
+    @include('flash::message')
 
 	@include('client.partials.navbar')
 
@@ -81,13 +81,13 @@
 
 <script type="text/javascript">
     @if( Auth::check() && Auth::user()->isAdmin() )
-        var reservationarea              =  "9999999";
-        var durationforedit              =  "9999999";
-        var maxeventduration             =  "9999999";
+        var reservationarea              =  "99999";
+        var durationforedit              =  "99999";
+        var maxeventduration             =  "99999";
     @else
-        var reservationarea              =  "{{\App\Setting::where('name', 'Reservation Area')->first()->value}}";
-        var durationforedit              = "{{\App\Setting::where('name', 'Time for edit')->first()->value}}";
-        var maxeventduration             = "{{\App\Setting::where('name', 'Maximal Duration')->first()->value}}";
+        var reservationarea              =  "{{\App\Models\Settings\Setting::where('name', 'Reservation Area')->first()->value}}";
+        var durationforedit              = "{{\App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}";
+        var maxeventduration             = "{{\App\Models\Settings\Setting::where('name', 'Maximal Duration')->first()->value}}";
     @endif
 </script>
 

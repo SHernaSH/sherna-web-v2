@@ -22,16 +22,16 @@
                     <div class="x_content">
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 <li class="{{($language->id==$location->language->id ? "active":"")}}">
                                     <a href="#{{$language->id}}" data-toggle="tab">{{$language->name}}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <div class="tab-content row">
-                            @foreach(\App\Language::all() as $language)
+                            @foreach(\App\Models\Language\Language::all() as $language)
                                 @php
-                                    $loc = \App\Location::where('id', $location->id)->ofLang($language)->first();
+                                    $loc = \App\Models\Locations\Location::where('id', $location->id)->ofLang($language)->first();
                                 @endphp
                                 <div class="tab-pane col-md-6 fade {{($language->id==$location->language->id ? "active":"")}} in" id="{{$language->id}}">
                                     <div class="form-group">
@@ -61,7 +61,7 @@
                                     <label for="status" class="col-sm-4 control-label">Locations status</label>
                                     <div class="col-sm-8">
                                         <select name="status" id="status" class="form-control">
-                                            @foreach(\App\LocationStatus::all() as $status)
+                                            @foreach(\App\Models\Locations\LocationStatus::all() as $status)
                                                 <option value="{{$status->id}}" {{ $status->id == $location->status->id ? 'selected' : ''}}>
                                                     {{$status->name}}
                                                 </option>

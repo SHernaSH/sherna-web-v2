@@ -2,7 +2,7 @@
 
 @section('content')
 	<div class="row">
-		@foreach(\App\Location::get() as $location)
+		@foreach(\App\Models\Locations\Location::get() as $location)
 			<div class="col-md-4">
 				<div class="x_panel">
 					<div class="x_title">
@@ -16,7 +16,7 @@
 
 						<?php
 
-						$actualReservation = App\Reservation::where('location_id', $location->id)
+						$actualReservation = \App\Models\Reservations\Reservation::where('location_id', $location->id)
 							->where('start_at', '<=', date('Y-m-d H:i:s'))
 							->where('end_at', '>=', date('Y-m-d H:i:s'))->first();
 						?>

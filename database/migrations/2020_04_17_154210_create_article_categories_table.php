@@ -13,6 +13,7 @@ class CreateArticleCategoriesTable extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('article_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
@@ -22,7 +23,7 @@ class CreateArticleCategoriesTable extends Migration
         Schema::create('article_categories_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('category_id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
             $table->unsignedInteger('language_id')->default('1');
 
@@ -58,6 +59,9 @@ class CreateArticleCategoriesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('article_category');
+        Schema::dropIfExists('article_categories_details');
         Schema::dropIfExists('article_categories');
+
     }
 }
