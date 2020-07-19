@@ -2351,59 +2351,6 @@
         "description": "Easy flash notifications"
     },
     {
-        "name": "laravel-notification-channels/facebook-poster",
-        "version": "3.0.0",
-        "version_normalized": "3.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel-notification-channels/facebook-poster.git",
-            "reference": "3666d989cb7839d64c66ee27d5fec687895aecd7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel-notification-channels/facebook-poster/zipball/3666d989cb7839d64c66ee27d5fec687895aecd7",
-            "reference": "3666d989cb7839d64c66ee27d5fec687895aecd7",
-            "shasum": ""
-        },
-        "require": {
-            "facebook/graph-sdk": "^5.7",
-            "illuminate/notifications": "^7.0",
-            "illuminate/support": "^7.0",
-            "php": "^7.2.5"
-        },
-        "require-dev": {
-            "mockery/mockery": "^1.3.1",
-            "orchestra/testbench": "~5.0",
-            "phpunit/phpunit": "~8.0"
-        },
-        "time": "2020-03-03T22:03:27+00:00",
-        "type": "library",
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "NotificationChannels\\FacebookPoster\\FacebookPosterServiceProvider"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "NotificationChannels\\FacebookPoster\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Ahmed Ashraf",
-                "email": "ahmed29329@gmail.com"
-            }
-        ],
-        "description": "Use notification to create posts on Facebook"
-    },
-    {
         "name": "laravel/framework",
         "version": "v7.20.0",
         "version_normalized": "7.20.0.0",
@@ -7978,64 +7925,6 @@
         ],
         "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
         "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles"
-    },
-    {
-        "name": "toolkito/larasap",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alihesari/laravel-social-auto-posting.git",
-            "reference": "10eff7059fb2b248b4219fa229d1afe79f3aba7a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alihesari/laravel-social-auto-posting/zipball/10eff7059fb2b248b4219fa229d1afe79f3aba7a",
-            "reference": "10eff7059fb2b248b4219fa229d1afe79f3aba7a",
-            "shasum": ""
-        },
-        "require": {
-            "facebook/graph-sdk": "^5.6.1",
-            "php": "~7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.8"
-        },
-        "time": "2020-06-21T07:09:13+00:00",
-        "type": "library",
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "Toolkito\\Larasap\\LarasapServiceProvider"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Toolkito\\Larasap\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Ali Hesari",
-                "email": "alihesari.com@gmail.com",
-                "homepage": "https://alihesari.com",
-                "role": "Developer"
-            }
-        ],
-        "description": "Laravel social auto posting (Larasap) lets you automatically post all your content to social networks such as Telegram Channel and Twitter.",
-        "keywords": [
-            "facebook",
-            "laravel",
-            "social network",
-            "telegram",
-            "twitter"
-        ]
     },
     {
         "name": "vlucas/phpdotenv",

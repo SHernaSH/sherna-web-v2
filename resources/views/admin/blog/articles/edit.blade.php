@@ -44,6 +44,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="public">Share to Facebook:</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" id="public" name="public" class="js-switch" />
+                            </div>
+                        </div>
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
                             @foreach(\App\Models\Language\Language::all() as $language)
