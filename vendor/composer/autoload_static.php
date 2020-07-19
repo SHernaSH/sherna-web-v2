@@ -19,17 +19,16 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
+        '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '9cdd7b9056abc3081735233ba9dd9c7f' => __DIR__ . '/..' . '/facade/flare-client-php/src/helpers.php',
-        'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
         'b6ec61354e97f32c0ae683041c78392a' => __DIR__ . '/..' . '/scrivo/highlight.php/HighlightUtilities/functions.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         '5323a5cb5bb1bab9b2f24566beed262a' => __DIR__ . '/..' . '/arcanedev/support/helpers.php',
@@ -39,6 +38,7 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         '601bf5295f4f86b2c9aa6885006f8ce5' => __DIR__ . '/..' . '/werneckbh/qr-code/src/helpers/constants.php',
         '550b6372332081faf3fe4980a1884cf2' => __DIR__ . '/..' . '/werneckbh/qr-code/src/helpers/functions.php',
         '24be6d98d7c305f36699ba4e34b6df3c' => __DIR__ . '/..' . '/arcanedev/log-viewer/helpers.php',
+        'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
         'e23faeee409e941dc9b4c80386209c39' => __DIR__ . '/..' . '/laracasts/flash/src/Laracasts/Flash/functions.php',
     );
 
@@ -62,7 +62,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         ),
         'T' => 
         array (
-            'Toolkito\\Larasap\\' => 17,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'Tests\\' => 6,
         ),
@@ -127,7 +126,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'N' => 
         array (
             'NunoMaduro\\Collision\\' => 21,
-            'NotificationChannels\\FacebookPoster\\' => 36,
         ),
         'M' => 
         array (
@@ -228,10 +226,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
-        ),
-        'Toolkito\\Larasap\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/toolkito/larasap/src',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (
@@ -416,10 +410,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
-        ),
-        'NotificationChannels\\FacebookPoster\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src',
         ),
         'Mpociot\\LaravelTestFactoryHelper\\' => 
         array (
@@ -719,6 +709,7 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'App\\Http\\Requests\\Settings\\UpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Settings/UpdateRequest.php',
         'App\\Http\\Requests\\Users\\UpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Users/UpdateRequest.php',
         'App\\Http\\Scopes\\LanguageScope' => __DIR__ . '/../..' . '/app/Http/Scopes/LanguageScope.php',
+        'App\\Http\\Services\\FacebookPostingService' => __DIR__ . '/../..' . '/app/Http/Services/FacebookPostingService.php',
         'App\\Http\\Services\\ICS' => __DIR__ . '/../..' . '/app/Http/Services/ICS.php',
         'App\\Http\\Services\\PageService' => __DIR__ . '/../..' . '/app/Http/Services/PageService.php',
         'App\\Http\\Services\\ReservationService' => __DIR__ . '/../..' . '/app/Http/Services/ReservationService.php',
@@ -756,6 +747,7 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
+        'App\\Providers\\FacebookServiceProvider' => __DIR__ . '/../..' . '/app/Providers/FacebookServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'Arcanedev\\LogViewer\\Commands\\CheckCommand' => __DIR__ . '/..' . '/arcanedev/log-viewer/src/Commands/CheckCommand.php',
         'Arcanedev\\LogViewer\\Commands\\ClearCommand' => __DIR__ . '/..' . '/arcanedev/log-viewer/src/Commands/ClearCommand.php',
@@ -3875,13 +3867,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'Mpociot\\LaravelTestFactoryHelper\\Types\\EnumType' => __DIR__ . '/..' . '/mpociot/laravel-test-factory-helper/src/Types/EnumType.php',
         'NavPagesSeeder' => __DIR__ . '/../..' . '/database/seeds/NavPagesSeeder.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-        'NotificationChannels\\FacebookPoster\\Attachments\\Attachment' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/Attachments/Attachment.php',
-        'NotificationChannels\\FacebookPoster\\Attachments\\Image' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/Attachments/Image.php',
-        'NotificationChannels\\FacebookPoster\\Attachments\\Video' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/Attachments/Video.php',
-        'NotificationChannels\\FacebookPoster\\Exceptions\\InvalidPostContent' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/Exceptions/InvalidPostContent.php',
-        'NotificationChannels\\FacebookPoster\\FacebookPosterChannel' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/FacebookPosterChannel.php',
-        'NotificationChannels\\FacebookPoster\\FacebookPosterPost' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/FacebookPosterPost.php',
-        'NotificationChannels\\FacebookPoster\\FacebookPosterServiceProvider' => __DIR__ . '/..' . '/laravel-notification-channels/facebook-poster/src/FacebookPosterServiceProvider.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/CollisionServiceProvider.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\Commands\\TestCommand' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/Commands/TestCommand.php',
         'NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php',
@@ -6052,23 +6037,6 @@ class ComposerStaticInit9e22e695d03c2eee546ed2bf0c829a5a
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Property\\Property' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Property/Property.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
-        'Toolkito\\Larasap\\Facebook\\Api' => __DIR__ . '/..' . '/toolkito/larasap/src/Facebook/Api.php',
-        'Toolkito\\Larasap\\LarasapServiceProvider' => __DIR__ . '/..' . '/toolkito/larasap/src/LarasapServiceProvider.php',
-        'Toolkito\\Larasap\\SendTo' => __DIR__ . '/..' . '/toolkito/larasap/src/SendTo.php',
-        'Toolkito\\Larasap\\Telegram\\Api' => __DIR__ . '/..' . '/toolkito/larasap/src/Telegram/Api.php',
-        'Toolkito\\Larasap\\Twitter\\Api' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/Api.php',
-        'Toolkito\\Larasap\\Twitter\\TwitterException' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/Api.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthConsumer' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthDataStore' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthException' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthRequest' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthServer' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthSignatureMethod' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthSignatureMethod_HMAC_SHA1' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthSignatureMethod_PLAINTEXT' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthSignatureMethod_RSA_SHA1' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthToken' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
-        'Toolkito\\Larasap\\Twitter\\Twitter_OAuthUtil' => __DIR__ . '/..' . '/toolkito/larasap/src/Twitter/OAuth.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',

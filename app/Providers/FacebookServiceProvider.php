@@ -2,29 +2,28 @@
 
 namespace App\Providers;
 
+use App\Http\Services\FacebookPostingService;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class FacebookServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        //
+        $this->app->singleton(FacebookPostingService::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
     public function boot()
     {
-        if(!$this->app->environment('local')) {
-            \URL::forceScheme('https');
-        }
+        //
     }
 }

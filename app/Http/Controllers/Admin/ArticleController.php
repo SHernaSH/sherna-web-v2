@@ -5,18 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Article\StoreRequest;
 use App\Http\Requests\Article\UpdateRequest;
+use App\Http\Services\FacebookPostingService;
 use App\Models\Articles\Article;
 use App\Models\Articles\ArticleCategory;
 use App\Models\Articles\ArticleCategoryDetail;
 use App\Models\Articles\ArticleText;
 use App\Models\Language\Language;
+use App\Providers\FacebookServiceProvider;
 use Exception;
+use Facebook\Exceptions\FacebookSDKException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Toolkito\Larasap\SendTo;
 
 /**
  * Class handling CRUD operations on Article Model,
@@ -27,6 +31,16 @@ use Illuminate\View\View;
  */
 class ArticleController extends Controller
 {
+    /**
+     * @var FacebookServiceProvider
+     */
+    private $fb;
+
+    public function __construct(FacebookPostingService $fb)
+    {
+        $this->fb = $fb;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -76,7 +90,17 @@ class ArticleController extends Controller
                 $this->saveArticleText($request, $article, $lang);
             }
             DB::commit();
+
+            if($request->get('publish')) {
+                $lang = Language::whereCode('en')->first();
+                $art = $article->text()->ofLang($lang)->first();
+                $this->fb->postWithLink('New article ' . $art->title . ' has been released. What is it about? '
+                    .$art->description, route('blog.show', ['article' => $article->url]));
+            }
+
             flash('Article successfully created')->success();
+        } catch (FacebookSDKException $ex) {
+            flash('Article was not shared on Facebook')->error();
         } catch (\Exception $e) {
             DB::rollBack();
             flash('Article creation was unsuccessful')->error();
@@ -131,7 +155,16 @@ class ArticleController extends Controller
             }
             $article->save();
             DB::commit();
+
+            if($request->get('publish')) {
+                $lang = Language::whereCode('en')->first();
+                $art = $article->text()->ofLang($lang)->first();
+                $this->fb->postWithLink('Article ' . $art->title . ' has been updated. What is it about? '
+                    .$art->description, route('blog.show', ['article' => $article->url]));
+            }
             flash('Article successfully updated')->success();
+        } catch (FacebookSDKException $ex) {
+            flash('Article was not shared on Facebook')->error();
         } catch (\Exception $ex) {
             DB::rollBack();
             flash('Article update was unsuccessful')->error();
