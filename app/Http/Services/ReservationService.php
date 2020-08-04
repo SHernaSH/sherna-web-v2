@@ -150,7 +150,7 @@ class ReservationService
      * @param Reservation $reservation
      * @return bool
      */
-    private function overlap(Reservation $reservation)
+    public function overlap(Reservation $reservation)
     {
         $start = $reservation->start_at;
         $end = $reservation->end_at;
@@ -185,9 +185,12 @@ class ReservationService
         if (is_string($validation)) {
             return $validation;
         }
+        if(str_contains($reservation->note, "Reservation for an event")) {
+            return trans('reservations.event_update');
+        }
         if ($reservation->getOriginal('start_at')->isPast()) {
             if ($reservation->start_at != $reservation->getOriginal('start_at')) {
-                return trans('reservations.change_start');
+                return trans('reservations.changebZ_start');
             }
             if ($reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
                 return trans('reservations.late_update');

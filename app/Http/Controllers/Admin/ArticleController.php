@@ -91,7 +91,7 @@ class ArticleController extends Controller
             }
             DB::commit();
 
-            if($request->get('publish')) {
+            if($article->public && $request->get('publish')) {
                 $lang = Language::whereCode('en')->first();
                 $art = $article->text()->ofLang($lang)->first();
                 $this->fb->postWithLink('New article ' . $art->title . ' has been released. What is it about? '
@@ -156,7 +156,7 @@ class ArticleController extends Controller
             $article->save();
             DB::commit();
 
-            if($request->get('publish')) {
+            if($article->public && $request->get('publish')) {
                 $lang = Language::whereCode('en')->first();
                 $art = $article->text()->ofLang($lang)->first();
                 $this->fb->postWithLink('Article ' . $art->title . ' has been updated. What is it about? '

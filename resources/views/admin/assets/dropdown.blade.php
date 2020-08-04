@@ -3,7 +3,7 @@
         var changeCheckbox = document.querySelector('.js-check-change');
 
         changeCheckbox.onchange = function() {
-            var checkBox = document.getElementById("dropdown");
+            var checkBox = changeCheckbox;
             // Get the output text
             var is_dropdowns = document.getElementsByClassName("is_dropdown");
             var is_not_dropdowns = document.getElementsByClassName("not_dropdown");

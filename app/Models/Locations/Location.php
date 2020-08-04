@@ -5,6 +5,7 @@ namespace App\Models\Locations;
 use App\Http\Scopes\LanguageScope;
 use App\Http\Traits\CompositePrimaryKeyTrait;
 use App\Models\Consoles\Console;
+use App\Models\Events\Event;
 use App\Models\Extensions\LanguageModel;
 use App\Models\Reservations\Reservation;
 use Iatstuti\Database\Support\CascadeSoftDeletes;
@@ -93,6 +94,17 @@ class Location extends LanguageModel
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'location_id', 'id')
+            ->withoutGlobalScope(LanguageScope::class);
+    }
+
+    /**
+     * All the events that are situated in this location
+     *
+     * @return HasMany all the reservations that are situated in this location
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'location_id', 'id')
             ->withoutGlobalScope(LanguageScope::class);
     }
 
