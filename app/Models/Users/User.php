@@ -2,9 +2,11 @@
 
 namespace App\Models\Users;
 
+use App\Models\Events\Event;
 use App\Models\Reservations\Reservation;
 use App\Models\Roles\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -59,8 +61,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'uid', 'name', 'surname', 'email', 'image', 'role',
-        'banned'
+        'id', 'name', 'surname', 'email', 'image', 'role',
+        'banned', 'points'
     ];
 
     /**
@@ -137,6 +139,16 @@ class User extends Authenticatable
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    /**
+     * All the permissions this role contains
+     *
+     * @return BelongsToMany All the permissions this role contains
+     */
+    public function users()
+    {
+        return $this->belongsToMany(Event::class);
     }
 
 }

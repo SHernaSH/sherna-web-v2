@@ -32,6 +32,7 @@ return [
     'change_location'     => 'You cannot change the location once the start time has passed',
     'early_update'        => 'Too early to prolong the reservation',
     'late_update'         => 'Too late to update the reservation',
-    'login'               => 'To create a reservation, you must be logged in first!'
+    'login'               => 'To create a reservation, you must be logged in first!',
+    'event_update'        => 'Cannot update reservation for an event'
 
 ];

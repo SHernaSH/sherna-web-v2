@@ -32,7 +32,9 @@ return [
     'change_location'     => 'Nemužeš zmenit miestnost po začátku rezervace',
     'early_update'        => 'Nemužeš prodlouzit rezervaci tak skoro',
     'late_update'         => 'Nemužeš zmenit rezervaci po konci rezervace',
-    'login'               => 'Aby si mohl vytvaret rezervace, musis sa nejdrive prihlasit!'
+    'login'               => 'Aby si mohl vytvaret rezervace, musis sa nejdrive prihlasit!',
+    'event_update'        => 'Nelze upravit rezervaci pro udalost!'
+
 
 
 ];

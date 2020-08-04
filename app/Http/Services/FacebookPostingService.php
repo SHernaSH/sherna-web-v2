@@ -12,6 +12,9 @@ class FacebookPostingService
 
     public function __construct()
     {
+        if(env('APP_ENV') == null) {
+            return;
+        }
         $config = config('services.facebook');
         $this->fb = new Facebook($config);
     }

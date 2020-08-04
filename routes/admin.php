@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/auto', 'Admin\UserController@auto')
                 ->name('user.auto');
 
+            Route::get('/auto/tags', 'Admin\UserController@autoTags')
+                ->name('user.auto.tags');
+
             Route::get('/index', 'Admin\UserController@index')
                 ->name('user.index');
 
@@ -132,6 +135,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('/reservation', 'Admin\ReservationController', [
             'as' => 'admin', 'except' => [ 'show' ]
         ]);
+
+        Route::get('/event/download/{event}', 'Admin\EventController@download')->name('admin.event.download');
+
+        Route::resource('/event', 'Admin\EventController', [
+            'as' => 'admin'
+        ]);
+
 
     });
 

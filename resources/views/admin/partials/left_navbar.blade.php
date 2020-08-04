@@ -50,9 +50,10 @@
                 </li>
                 <li><a href="{{ route('admin.reservation.index') }}"><i class="fa fa-fw fa-calendar"></i>
                         Reservations</a></li>
-                							<li><a href="{{ route('user.index') }}"><i class="fa fa-fw fa-users"></i>
+                <li><a href="{{ route('admin.event.index') }}"><i class="fa fa-fw fa-calendar-check-o"></i>
+                        Events</a></li>
+                <li><a href="{{ route('user.index') }}"><i class="fa fa-fw fa-users"></i>
                 									Users</a></li>
-                </li>
                 <li><a href="{{ route('location.index') }}"><i class="fa fa-fw fa-map-marker"></i>
                         Locations</a></li>
                 <li><a href="{{ route('role.index') }}"><i class="fa fa-fw fa-drivers-license-o"></i>

@@ -48,6 +48,10 @@ Route::group([], function () {
     //TODO ADD API CALL
 
 
+    Route::group(['prefix' => 'event', 'middleware' => 'auth'], function () {
+        Route::get('/{salt}', 'Client\EventController')->name('event');
+    });
+
     Route::group(['prefix' => 'blog'], function () {
         Route::get('/', 'Client\BlogController@index')->name('blog');
         Route::get('/categories', 'Client\BlogController@categories')->name('blog.categories');
