@@ -19,9 +19,9 @@ class UserReservationController
 
     public function getReservations()
     {
-        $reservations = Auth::user()->reservations()->withTrashed()->orderBy('start_at', 'desc')->paginate(10);
-
-        return view('client.user.reservations', ['reservations' => $reservations]);
+        $user = Auth::user();
+        $reservations = $user->reservations()->withTrashed()->orderBy('start_at', 'desc')->paginate(10);
+        return view('client.user.reservations', ['reservations' => $reservations, 'user' => $user]);
     }
     public function getReservationICS( Reservation $reservation )
     {

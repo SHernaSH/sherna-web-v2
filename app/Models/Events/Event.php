@@ -38,6 +38,7 @@ class Event extends Model
             $path .= $item->salt . '.svg';
 
             file_put_contents( $path,$item->QRCode());
+            return true;
         });
 
         static::deleting(function ($item) {

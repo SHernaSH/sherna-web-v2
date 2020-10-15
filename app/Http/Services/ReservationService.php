@@ -12,10 +12,15 @@ use App\Models\Settings\Setting;
 use \App\Models\Users\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservationService
 {
+
+    public function __construct(UpgradeService $upgradeService)
+    {
+        $this->upgradeService = $upgradeService;
+    }
 
     /**
      * Get all the future or active reservations paginated
@@ -52,6 +57,16 @@ class ReservationService
         $reservation = $this->createReservation($request, $userToReservate ?? $user );
         $validation = $this->validate($user, $reservation);
         if (!is_string($validation)) {
+            if(!$user->isAdmin()) {
+                $diff = ceil($reservation->duration() - Setting::where('name', 'Maximal Duration')->first()->value);
+                $extra = $reservation->user->reservations()->futureActiveReservations()->count() > 0;
+                if($extra) {
+                    return $diff > 0 ? $this->upgradeService->useExtraHoursAndReservation($reservation, $diff, $user)
+                        :  $this->upgradeService->useExtraReservation($reservation, $user);
+                } else if($diff > 0) {
+                    return $this->upgradeService->useExtraHours($reservation, $diff, $user);
+                }
+            }
             $reservation->save();
         } else {
             return $validation;
@@ -70,8 +85,23 @@ class ReservationService
     public function updateReservation(UpdateRequest $request, Reservation $reservation, User $user)
     {
         $this->update($request, $reservation);
-        $validation = $this->validate($user, $reservation, true);
+        $isInTimeForEdit = Carbon::now()->addMinutes(1 + Setting::where('name', 'Time for edit')->first()->value)
+            ->isAfter($reservation->getOriginal('end_at'));
+//        $isAfter = Carbon::now()->isBetween($reservation->start_at, $reservation->end_at);
+        $update = $isInTimeForEdit;
+        $validation = $this->validate($user, $reservation, $update);
         if (!is_string($validation)) {
+            if(!$user->isAdmin()) {
+                if($update) {
+                    $diff = ceil($reservation->end_at->floatDiffInHours($reservation->getOriginal('end_at'))
+                        - Setting::where('name', 'Maximal Duration')->first()->value);
+                } else {
+                    $diff = ceil($reservation->duration() - Setting::where('name', 'Maximal Duration')->first()->value);
+                }
+                if ($diff > 0) {
+                    return $this->upgradeService->useExtraHours($reservation, $diff, $reservation->user);
+                }
+            }
             $reservation->save();
         } else {
             return $validation;
@@ -88,9 +118,29 @@ class ReservationService
      */
     public function deleteReservation(Reservation $reservation, User $user)
     {
+        $maxDuration = Setting::where('name', 'Maximal Duration')->first()->value;
         if (($user->role->hasPermissionByName('Reservation Manager')
-                || $user->id == $reservation->user->id) && $reservation->end_at->isAfter(Carbon::now())) {
-            $reservation->delete();
+                || $user->id == $reservation->user->id) && !$reservation->end_at->isPast()) {
+            DB::beginTransaction();
+            try {
+                if($reservation->extra) {
+                    $this->upgradeService->addExtra($reservation->user, true);
+                }
+                $hours = $reservation->extra_hours;
+                if($hours > 0) {
+                    if($hours == $maxDuration) {
+                        $this->upgradeService->addMaxHours($reservation->user, true);
+                    } else {
+                        $this->upgradeService->addHour($hours, $reservation->user, true);
+                    }
+                }
+                $reservation->delete();
+                DB::commit();
+            } catch (\Exception $ex) {
+                DB::rollBack();
+//                flash()->error('Settings update was unsuccessful');
+                return false;
+            }
         } else {
             return false;
         }
@@ -185,12 +235,12 @@ class ReservationService
         if (is_string($validation)) {
             return $validation;
         }
-        if(str_contains($reservation->note, "Reservation for an event")) {
+        if(str_contains($reservation->note ?? "", "Reservation for an event")) {
             return trans('reservations.event_update');
         }
         if ($reservation->getOriginal('start_at')->isPast()) {
             if ($reservation->start_at != $reservation->getOriginal('start_at')) {
-                return trans('reservations.changebZ_start');
+                return trans('reservations.change_start');
             }
             if ($reservation->getOriginal('end_at')->isBefore(Carbon::now())) {
                 return trans('reservations.late_update');
@@ -210,8 +260,10 @@ class ReservationService
     private function validateForUser($user, Reservation $reservation, $update = false)
     {
         $maxDuration = Setting::where('name', 'Maximal Duration')->first()->value;
-        $maxReservations = $update ? 1 : 0;
-        if ($user->reservations()->futureActiveReservations()->count() > $maxReservations) {
+        $maxDuration += $user->extraHours();
+        $maxReservations = $reservation->exists ? 1 : 0;
+        $maxReservations += $user->extraReservation() ? 1 : 0;
+        if (!$reservation->exists && $user->reservations()->futureActiveReservations()->count() > $maxReservations) {
             return trans('reservations.too_many');
         } else if (!$update && $reservation->duration() > $maxDuration) {
             return trans('reservations.too_long');

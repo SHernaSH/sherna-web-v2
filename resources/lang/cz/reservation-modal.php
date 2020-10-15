@@ -23,7 +23,10 @@ return [
 	'from_time'      => 'Čas od',
 	'to_date'        => 'Datum do',
 	'to_time'        => 'Čas do',
-	'failed'         => [
+    'duration'       => 'Trvani',
+    'hours'          => 'hodin',
+
+    'failed'         => [
 		'title'    => 'To přece nemůžeš.',
 		'parallel' => [
 			'text' => 'Nemůžeš být na dvou místech najednou.',

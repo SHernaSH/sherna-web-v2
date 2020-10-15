@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 text-center">
             @if(Auth::check())
-                @if(!Auth::user()->isAdmin() && Auth::user()->reservations()->futureActiveReservations()->count() > 0)
+                @if(!Auth::user()->canCreate())
                     <span class="text-danger"><b>{{trans('general.future_reservations')}}</b></span>
                 @elseif(Auth::user()->banned)
                     <span class="text-danger"><b>{{trans('general.ban')}}</b></span>
@@ -245,6 +245,10 @@
                 </p>
                 <p>
                     <strong>{{trans('reservation-modal.to_date')}}:</strong> <span id="end"></span>
+                </p>
+                <p>
+                    <strong>{{trans('reservation-modal.duration')}}:</strong> <span id="duration"></span>
+                    <span>{{trans('reservation-modal.hours')}}</span>
                 </p>
 
             </div>

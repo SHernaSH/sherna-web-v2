@@ -23,6 +23,8 @@ return [
     'from_time'      => 'Time from',
     'to_date'        => 'Date to',
     'to_time'        => 'Time to',
+    'duration'       => 'Duration',
+    'hours'          => 'Hours',
 	'failed'         => [
 		'title'    => 'You can not do that.',
 		'parallel' => [
