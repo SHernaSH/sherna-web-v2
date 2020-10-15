@@ -87,7 +87,12 @@
     @else
         var reservationarea              =  "{{\App\Models\Settings\Setting::where('name', 'Reservation Area')->first()->value}}";
         var durationforedit              = "{{\App\Models\Settings\Setting::where('name', 'Time for edit')->first()->value}}";
-        var maxeventduration             = "{{\App\Models\Settings\Setting::where('name', 'Maximal Duration')->first()->value}}";
+        @auth
+            var maxeventduration             = "{{\App\Models\Settings\Setting::where('name', 'Maximal Duration')->first()->value + Auth::user()->extraHours() }}";
+        @endauth
+        @guest
+            var maxeventduration             = "{{\App\Models\Settings\Setting::where('name', 'Maximal Duration')->first()->value }}";
+        @endguest
     @endif
 </script>
 

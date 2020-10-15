@@ -31,6 +31,8 @@ Route::group([], function () {
             ->name('user.ics');
         Route::delete('/reservations/{reservation}', 'Client\UserReservationController@delete')
             ->name('user.reservations.delete');
+        Route::get('/upgrade/{type}', 'Client\UserUpgradeController')
+            ->name('user.upgrade');
     });
 
     Route::group(['prefix' => 'comment', 'middleware' => 'auth'], function () {

@@ -146,9 +146,25 @@ class User extends Authenticatable
      *
      * @return BelongsToMany All the permissions this role contains
      */
-    public function users()
+    public function events()
     {
         return $this->belongsToMany(Event::class);
     }
 
+    public function extraHours() {
+        return $this->upgrades ? $this->upgrades->overflow : 0;
+    }
+
+    public function extraReservation() {
+        return $this->upgrades ? $this->upgrades->double : false;
+    }
+
+    public function canCreate() {
+        $limit = $this->extraReservation() ? 1 : 0;
+        return $this->isAdmin() || $this->reservations()->futureActiveReservations()->count() <= $limit;
+    }
+
+    public function upgrades() {
+        return $this->hasOne(Upgrade::class);
+    }
 }

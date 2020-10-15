@@ -17,7 +17,7 @@ class UpdateRequest extends FormRequest
         return [
             'location_id' => ['required', 'exists:locations,id'],
             'visitors_count' => ['required', 'integer' ,'min:1'],
-            'from_date' => ['required', 'date', 'after:now'],
+            'from_date' => ['required', 'date'],
             'to_date' => ['required', 'date', 'after:from_date'],
         ];
     }
