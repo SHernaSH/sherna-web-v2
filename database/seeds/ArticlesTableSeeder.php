@@ -4,9 +4,8 @@ use App\Models\Articles\Article;
 use App\Models\Articles\ArticleCategory;
 use App\Models\Articles\ArticleCategoryDetail;
 use App\Models\Articles\ArticleText;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class ArticlesTableSeeder extends Seeder
 {

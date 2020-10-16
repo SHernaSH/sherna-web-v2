@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\JSON\AutocompleteModel;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Services\UserService;
 use App\Models\Roles\Role;
@@ -118,6 +119,16 @@ class UserController extends Controller
     /**
      * Return the json data for autocomplete of users by specified search term
      *
+     * @return string
+     */
+    public function autoTags()
+    {
+        return $this->autocompleteTags($_GET['term'] ?? '');
+    }
+
+    /**
+     * Return the json data for autocomplete of users by specified search term
+     *
      * @param string $term  needle search term
      * @return JsonResponse
      */
@@ -129,5 +140,22 @@ class UserController extends Controller
             ->select('name', 'id')->get();
 
         return response()->json($categories);
+    }
+
+    /**
+     * @param string $term  needle in search
+     * @return string       SON object consting of ArticleCategory name
+     */
+    private function autocompleteTags(string $term)
+    {
+
+        $users = User::where('name', 'like', "%$term%")->orWhere('id', 'like', "%$term%")
+            ->get();
+        $res = '';
+        foreach ($users as $user) {
+            $jsonModel = new AutocompleteModel($user->id, $user->name);
+            $res .= $jsonModel->getJSON();
+        }
+        return "[$res]";
     }
 }

@@ -8,8 +8,13 @@
 
 return [
 	'your_reservations'   => 'Your reservations',
-	'your_badges'         => 'Your badges',
-	'active_reservations' => 'Active reservations',
+    'your_points'         => 'Your points',
+    'your_badges'         => 'Your badges',
+    'add_hour'            => 'One extra hours for reservation',
+    'add_max_hours'       => 'Eight extra hours for reservation',
+    'add_extra'           => 'One extra active reservation (max 1)',
+    'activate'            => 'Use',
+    'active_reservations' => 'Active reservations',
 	'location'            => 'Location',
 	'reservation_for'     => 'Reservation for: ',
 	'canceled'            => 'Canceled',
@@ -32,6 +37,15 @@ return [
     'change_location'     => 'You cannot change the location once the start time has passed',
     'early_update'        => 'Too early to prolong the reservation',
     'late_update'         => 'Too late to update the reservation',
-    'login'               => 'To create a reservation, you must be logged in first!'
+    'login'               => 'To create a reservation, you must be logged in first!',
+    'event_update'        => 'Cannot update reservation for an event',
+    'too_overflow'        => 'Cannot have more than max hours of overtime',
+    'too_double'          => 'Cannot have more than one extra reservation',
+    'not_enough'          => 'You do not have enough points for that',
+    'over_limit_hour'     => 'You have gained points for extra hours due to limit',
+    'over_limit_extra'    => 'You have gained points for extra reservation due to limit',
+    'added_extra'         => 'An extra reservation successfully added',
+    'added_hour'          => 'Extra hours successfully added',
+    'added_hours'         => 'Eight extra hours successfully added',
 
 ];

@@ -40,10 +40,16 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="public">Make public:</label>
                             <div class="col-sm-10">
-                                <input type="checkbox" {{$article->public ? "checked" : ""}} name="public" id="public" class="js-switch" />
+                                <input type="checkbox" {{$article->public ? "checked" : ""}} name="public" id="public" class="js-switch js-check-change" />
                             </div>
                         </div>
 
+                        <div class="form-group is_dropdown {{!$article->public ? "d-none" : ""}}">
+                            <label class="col-sm-2 control-label" for="publish">Share to Facebook:</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" id="publish" name="publish" class="js-switch" />
+                            </div>
+                        </div>
 
                         <ul class="nav nav-tabs" style="margin-bottom: 3%">
                             @foreach(\App\Models\Language\Language::all() as $language)
@@ -93,5 +99,9 @@
 @include('admin.assets.jq_ui')
 @include('admin.assets.summernote')
 @include('admin.assets.switchery')
-@include('admin.assets.tags')
+@include('admin.assets.tags', [
+    'route' => route('article.auto'), 'interactive' => 'true', 'defaultText' => 'Add a category', 'delimeter' => ' '
+])
+@include('admin.assets.dropdown')
+
 

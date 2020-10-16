@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Locations\LocationStatus;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class LocationStatusSeeder extends Seeder
 {

@@ -8,7 +8,9 @@
             @foreach(\App\Models\Language\Language::all() as $language)
                 <input type="hidden" name="name-{{ $language->id }}" value="{{ $name[$language->id] }}">
             @endforeach
-{{--            <div class="form-group">--}}
+            <input type="hidden" name="is_public" value="{{$is_public}}">
+
+            {{--            <div class="form-group">--}}
 {{--                <label for="sub_order">Order</label>--}}
 {{--                <input type="number" min="1" name="sub_order" id="sub_order" class="form-control" value="{{ old('sub_order', $subpages[0]->order) }}"/>--}}
 {{--            </div>--}}

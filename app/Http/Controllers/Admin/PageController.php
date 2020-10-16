@@ -99,7 +99,11 @@ class PageController extends Controller
         } else if ($type == 'subpage') {
             $page = SubPage::where('id', $id)->firstOrFail();
         }
-        $this->pageService->storeText($request, $page);
+        if($this->pageService->storeText($request, $page)) {
+            flash('Page was updated successfully')->success();
+        } else {
+            flash('Page update was unsuccessful')->error();
+        }
 
         if($this->pageService->isSpecialPage($page)) {
             return redirect()->route('page.standalone');
@@ -119,11 +123,17 @@ class PageController extends Controller
      */
     public function destroy(int $id, string $type)
     {
+        $res = false;
         if ($type == 'page') {
-            $this->pageService->deletePage($id);
+            $res = $this->pageService->deletePage($id);
 
         } else if ($type == 'subpage') {
-            $this->pageService->deleteSubPage($id);
+            $res = $this->pageService->deleteSubPage($id);
+        }
+        if($res) {
+            flash('Page deleted successfully')->success();
+        } else {
+            flash('Page deletion was unsuccessful')->error();
         }
         return redirect()->back();
 
@@ -137,11 +147,17 @@ class PageController extends Controller
      */
     public function public(int $id, string $type)
     {
+        $res = false;
         if ($type == 'page') {
-            $this->pageService->setPagePublic($id);
+            $res = $this->pageService->setPagePublic($id);
 
         } else if ($type == 'subpage') {
-            $this->pageService->setSubpagePublic($id);
+            $res = $this->pageService->setSubpagePublic($id);
+        }
+        if($res) {
+            flash('Public status was changed successfully')->success();
+        } else {
+            flash('Action unsuccessful')->error();
         }
         return redirect()->back();
     }

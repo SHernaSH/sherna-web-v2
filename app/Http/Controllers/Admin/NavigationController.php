@@ -11,6 +11,7 @@ use App\Models\Language\Language;
 use App\Models\Navigation\Page;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
@@ -75,7 +76,11 @@ class NavigationController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $this->pageService->storeWholePage($request);
+        if($this->pageService->storeWholePage($request)) {
+            flash('Page was created successfully')->success();
+        } else {
+            flash('Page creation was unsuccessful')->error();
+        }
         return redirect()->route('navigation.index');
     }
 
@@ -87,7 +92,11 @@ class NavigationController extends Controller
      */
     public function public(int $id)
     {
-        $this->pageService->setPagePublic($id);
+        if($this->pageService->setPagePublic($id)) {
+            flash('Page public status changes succesfully')->success();
+        } else {
+            flash('Action unsuccessful')->error();
+        }
 
         return redirect()->route('navigation.index');
     }
@@ -162,8 +171,11 @@ class NavigationController extends Controller
         $url = $_POST['url'];
         $newIndex = $_POST['newIndex'];
         $pages = Page::withoutGlobalScope(LanguageScope::class)->where('url', $url)->get();
-        $this->reorderNavigation($pages, $newIndex + 1);
-        flash('Navigations were successfully reordered')->success();
+        if($this->reorderNavigation($pages, $newIndex + 1)) {
+            flash('Navigations were successfully reordered')->success();
+        } else {
+            flash('Navigation reorder was unsuccessful')->error();
+        }
     }
 
     /**
@@ -175,17 +187,27 @@ class NavigationController extends Controller
     private function reorderNavigation($pages, int $newIndex)
     {
         $oldIndex = $pages[0]->order;
-        foreach ($pages as $page) {
-            $page->order = $newIndex;
-            $page->save();
-        }
-        foreach (Page::withoutGlobalScope(LanguageScope::class)->where('url', '!=', $pages[0]->url)->get() as $page) {
-            if ($page->order < $oldIndex && $page->order >= $newIndex) {
-                $page->order += 1;
-            } else if ($page->order > $oldIndex && $page->order <= $newIndex) {
-                $page->order -= 1;
+        DB::beginTransaction();
+
+        try {
+            foreach ($pages as $page) {
+                $page->order = $newIndex;
+                $page->save();
             }
-            $page->save();
+            foreach (Page::withoutGlobalScope(LanguageScope::class)->where('url', '!=', $pages[0]->url)->get() as $page) {
+                if ($page->order < $oldIndex && $page->order >= $newIndex) {
+                    $page->order += 1;
+                } else if ($page->order > $oldIndex && $page->order <= $newIndex) {
+                    $page->order -= 1;
+                }
+                $page->save();
+            }
+
+            DB::commit();
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return false;
         }
     }
 

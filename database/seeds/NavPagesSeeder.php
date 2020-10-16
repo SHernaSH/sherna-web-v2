@@ -168,6 +168,7 @@ class NavPagesSeeder extends Seeder
             'name'   => 'Clenove',
             'nav_page_id' => 1,
             'language_id' => 1,
+            'special_code' => 'members',
             'order' => 1,
             'public' => true,
         ]);
@@ -177,7 +178,8 @@ class NavPagesSeeder extends Seeder
             'name'   => 'Members',
             'nav_page_id' => 1,
             'language_id' => 2,
-            'order' => 2,
+            'special_code' => 'members',
+            'order' => 1,
             'public' => true,
         ]);
         \App\Models\Navigation\SubPageText::updateOrInsert([

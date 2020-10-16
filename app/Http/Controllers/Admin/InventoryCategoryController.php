@@ -65,15 +65,23 @@ class InventoryCategoryController extends Controller
     public function store(StoreRequest $request)
     {
         $next_id = DB::table('inventory_categories')->max('id') + 1;
-        foreach (Language::all() as $language) {
-            $category = new InventoryCategory();
-            $category->id = $next_id;
-            $category->name = $request->get('name-' . $language->id);
-            $category->language()->associate($language);
-            $category->save();
-        }
+        DB::beginTransaction();
 
-        flash()->success('Inventory category successfully created');
+        try {
+            foreach (Language::all() as $language) {
+                $category = new InventoryCategory();
+                $category->id = $next_id;
+                $category->name = $request->get('name-' . $language->id);
+                $category->language()->associate($language);
+                $category->save();
+            }
+
+            DB::commit();
+            flash()->success('Inventory category successfully created');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Inventory category creation unsuccessful');
+        }
 
         return redirect()->route('inventory.category.index');
     }
@@ -87,13 +95,20 @@ class InventoryCategoryController extends Controller
      */
     public function update(int $id, UpdateRequest $request)
     {
-        foreach (Language::all() as $language) {
-            $category = InventoryCategory::where('id', $id)->ofLang($language)->first();
-            $category->name = $request->get('name-' . $language->id);
-            $category->save();
-        }
+        DB::beginTransaction();
+        try {
+            foreach (Language::all() as $language) {
+                $category = InventoryCategory::where('id', $id)->ofLang($language)->first();
+                $category->name = $request->get('name-' . $language->id);
+                $category->save();
+            }
 
-        flash()->success('Inventory category successfully updated');
+            DB::commit();;
+            flash()->success('Inventory category successfully updated');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Inventory category update unsuccessful');
+        }
 
         return redirect()->route('inventory.category.index');
 

@@ -33,12 +33,12 @@
 						@foreach($docs as $doc)
 							<tr>
 								<td>
-									<a href="/docs/{{$doc->getFilename()}}" target="_blank"
+									<a href="/docs/{{$doc->getRelativePathName()}}" target="_blank"
 									   rel="noopener"><u>{{$doc->getFilename()}}</u></a>
 								</td>
 								<td>
 									<a class="btn btn-danger btn-confirm"
-									   href="{{ route('document.delete', ['path' => $doc->getFilename()])}}">Delete</a>
+									   href="{{ route('document.delete', ['path' => str_replace('/', '*', $doc->getRelativePathName())])}}">Delete</a>
 								</td>
 							</tr>
 						@endforeach

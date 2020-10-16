@@ -62,9 +62,12 @@ class GameController extends Controller
      */
     public function store(StoreRequest $request)
     {
-
-        Game::create($request->all());
-        flash()->success('Game successfully created');
+        try {
+            Game::create($request->all());
+            flash()->success('Game successfully created');
+        } catch (\Exception $ex) {
+            flash()->error('Game creation unsuccessful');
+        }
 
         return redirect()->route('game.index');
 
@@ -80,8 +83,12 @@ class GameController extends Controller
      */
     public function update(Game $game, UpdateRequest $request)
     {
-        $game->update($request->all());
-        flash()->success('Game successfully updated');
+        try {
+            $game->update($request->all());
+            flash()->success('Game successfully updated');
+        } catch (\Exception $ex) {
+            flash()->error('Game update unsuccessful');
+        }
 
         return redirect()->route('game.index');
     }

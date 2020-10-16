@@ -31,5 +31,26 @@ class SettingSeeder extends Seeder
             'value' => 8.0,
             'unit' => 'hours',
         ]);
+
+        \App\Models\Settings\Setting::updateOrInsert([
+            'id' => 4,
+            'name' => 'Points for one hour',
+            'value' => 100.0,
+            'unit' => 'points',
+
+        ]);
+        \App\Models\Settings\Setting::updateOrInsert([
+            'id' => 5,
+            'name' => 'Points for max hours',
+            'value' => 700.0,
+            'unit' => 'points',
+
+        ]);
+        \App\Models\Settings\Setting::updateOrInsert([
+            'id' => 6,
+            'name' => 'Points for extra reservation',
+            'value' => 1000.0,
+            'unit' => 'points',
+        ]);
     }
 }

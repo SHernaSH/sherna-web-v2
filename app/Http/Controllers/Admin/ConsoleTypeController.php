@@ -32,9 +32,12 @@ class ConsoleTypeController extends Controller
      */
     public function store(StoreRequest $request)
     {
-
-        ConsoleType::create($request->all());
-        flash()->success('Console type successfully created');
+        try {
+            ConsoleType::create($request->all());
+            flash()->success('Console type successfully created');
+        }  catch (\Exception $ex) {
+            flash()->error('Console type creation unsuccessful');
+        }
 
         return redirect()->route('console.index');
     }
@@ -61,9 +64,12 @@ class ConsoleTypeController extends Controller
      */
     public function update(UpdateRequest $request, ConsoleType $type)
     {
-
-        $type->update($request->all());
-        flash()->success('Console type successfully updated');
+        try {
+            $type->update($request->all());
+            flash()->success('Console type successfully updated');
+        }  catch (\Exception $ex) {
+            flash()->error('Console type update unsuccessful');
+        }
 
         return redirect()->route('console.index');
     }

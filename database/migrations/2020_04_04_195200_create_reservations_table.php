@@ -22,6 +22,8 @@ class CreateReservationsTable extends Migration
             $table->dateTime('start_at');
             $table->dateTime('end_at');
             $table->dateTime('entered_at')->nullable();
+            $table->boolean('extra')->default(false);
+            $table->unsignedInteger('extra_hours')->default(0);
             $table->boolean('vr')->default(false);
             $table->string('note')->nullable();
 //            $table->dateTime('cancelled_at')->nullable();

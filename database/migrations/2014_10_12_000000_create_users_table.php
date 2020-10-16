@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
 //            $table->integer('block_number')->nullable();
             $table->boolean('banned')->default(false);
             $table->text('image')->nullable();
-
+            $table->unsignedInteger('points')->default(0);
             $table->timestamps();
 
             $table->unsignedBigInteger('role_id')->index()->default(1);

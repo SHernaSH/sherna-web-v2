@@ -46,9 +46,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="url">Make public:</label>
+                            <label class="col-sm-2 control-label" for="public">Make public:</label>
                             <div class="col-sm-10">
-                                <input type="checkbox" class="js-switch" />
+                                <input type="checkbox" name="public" id="public" {{old('is_public') || old('public') ? 'checked' : ''}} class="js-switch" />
                             </div>
                         </div>
 

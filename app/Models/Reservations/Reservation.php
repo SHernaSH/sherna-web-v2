@@ -70,7 +70,7 @@ class Reservation extends Model
         static::saving(function ($item) {
             if ($item->vr) {
 //                $item->user->notify(new OnKeyReservation($item->user, $item));
-                Mail::to(env('MAIL_TO'))->send(new VRRequest($item->user, $item));
+                Mail::to(env('MAIL_TO') ?: "aa@localhost")->send(new VRRequest($item->user, $item));
             }
 
             if (Str::contains(strtolower($item->location->name), 'key') ||
@@ -109,7 +109,7 @@ class Reservation extends Model
     public function duration()
     {
 
-        return $this->start_at->floatDiffInHours($this->end_at, false);
+        return $this->end_at->floatDiffInHours($this->start_at);
     }
 
     public function isActive() {

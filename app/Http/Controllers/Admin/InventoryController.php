@@ -60,28 +60,36 @@ class InventoryController extends Controller
      * Validate data, assert Inventory Category and Location exist
      * Save new instances for every language
      *
-     * @param Request $request          request with data from creation form
+     * @param StoreRequest $request     request with data from creation form
      * @return RedirectResponse         redirect to index page
      */
     public function store(StoreRequest $request)
     {
-        $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
-        $location = Location::where('id', $request->get('location_id'))->firstOrFail();
-        $next_id = DB::table('inventory_items')->max('id') + 1;
-        foreach (Language::all() as $language) {
-            $item = new InventoryItem();
-            $item->id = $next_id;
-            $item->name = $request->get('name-' . $language->id);
-            $item->serial_id = $request->get('serial_id');
-            $item->inventory_id = $request->get('inventory_id');
-            $item->note = $request->get('note');
-            $item->language()->associate($language);
-            $item->category()->associate($category);
-            $item->location()->associate($location);
-            $item->save();
-        }
+        DB::beginTransaction();
 
-        flash()->success('Inventory item successfully created');
+        try {
+            $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
+            $location = Location::where('id', $request->get('location_id'))->firstOrFail();
+            $next_id = DB::table('inventory_items')->max('id') + 1;
+            foreach (Language::all() as $language) {
+                $item = new InventoryItem();
+                $item->id = $next_id;
+                $item->name = $request->get('name-' . $language->id);
+                $item->serial_id = $request->get('serial_id');
+                $item->inventory_id = $request->get('inventory_id');
+                $item->note = $request->get('note');
+                $item->language()->associate($language);
+                $item->category()->associate($category);
+                $item->location()->associate($location);
+                $item->save();
+            }
+
+            DB::commit();
+            flash()->success('Inventory item successfully created');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Inventory item creation was unsuccessful');
+        }
 
         return redirect()->route('inventory.index');
     }
@@ -95,22 +103,28 @@ class InventoryController extends Controller
      */
     public function update(int $id, UpdateRequest $request)
     {
+        DB::beginTransaction();
 
-        $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
-        $location = Location::where('id', $request->get('location_id'))->firstOrFail();
-        foreach (Language::all() as $language) {
-            $item = InventoryItem::where('id', $id)->ofLang($language)->firstOrFail();
-            $item->name = $request->get('name-' . $language->id);
-            $item->serial_id = $request->get('serial_id');
-            $item->inventory_id = $request->get('inventory_id');
-            $item->note = $request->get('note');
-            $item->category()->associate($category);
-            $item->location()->associate($location);
-            $item->save();
+        try {
+            $category = InventoryCategory::where('id', $request->get('category_id'))->firstOrFail();
+            $location = Location::where('id', $request->get('location_id'))->firstOrFail();
+            foreach (Language::all() as $language) {
+                $item = InventoryItem::where('id', $id)->ofLang($language)->firstOrFail();
+                $item->name = $request->get('name-' . $language->id);
+                $item->serial_id = $request->get('serial_id');
+                $item->inventory_id = $request->get('inventory_id');
+                $item->note = $request->get('note');
+                $item->category()->associate($category);
+                $item->location()->associate($location);
+                $item->save();
+            }
+
+            DB::commit();
+            flash()->success('Inventory item successfully updated');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Inventory item update was unsuccessful');
         }
-
-
-        flash()->success('Inventory item successfully updated');
 
         return redirect()->route('inventory.index');
     }

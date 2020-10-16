@@ -25,6 +25,10 @@ use Illuminate\Support\Facades\Session;
 class SubpageController extends Controller
 {
 
+    private function forget($bag) {
+        Session::forget($bag);
+    }
+
     /**
      * Make the subpage public/not public, depending on the previous state
      *
@@ -32,6 +36,8 @@ class SubpageController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function public(string $url) {
+        $this->forget('errors');
+
         foreach (Language::all() as $language) {
             foreach (Session::get('subpages-' . $language->id, collect()) as $sub) {
                 if ($sub->url == $url) {
@@ -39,6 +45,7 @@ class SubpageController extends Controller
                 }
             }
         }
+        Session::reflash();
         return redirect()->back()->with(['is_dropdown' => true])->withInput();
     }
 
@@ -50,10 +57,13 @@ class SubpageController extends Controller
      */
     public function create()
     {
+        $this->forget('errors');
+
         Session::reflash();
         return view('admin.navigation.subpages.create', [
             'url' => \request()->get('url'),
             'order' => \request()->get('order'),
+            'is_public' => \request()->get('public'),
             'name' => [1 => \request()->get('name-1'), 2 => \request()->get('name-2')]
         ])->render();
     }
@@ -66,7 +76,15 @@ class SubpageController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $next_order = DB::table('nav_subpages')->max('order') + 1;
+        $this->forget('errors');
+
+        $next_order = 0;
+
+        $actives = Session::get('subpages-1', collect());
+        foreach($actives as $ac) {
+            $next_order = max($ac->order, $next_order);
+        }
+        $next_order++;
 
         foreach (Language::all() as $lang) {
             $subpages = Session::get('subpages-' . $lang->id, collect());
@@ -89,7 +107,7 @@ class SubpageController extends Controller
         }
         Session::reflash();
         return redirect()->back()->with(['is_dropdown' => true])
-            ->withInput($request->only('url', 'order', 'name-1', 'name-2'));
+            ->withInput($request->only('url', 'order', 'is_public', 'name-1', 'name-2'));
 
     }
 
@@ -102,6 +120,8 @@ class SubpageController extends Controller
      */
     public function edit(string $url)
     {
+        $this->forget('errors');
+
         $subpages = collect();
         foreach (Language::all() as $language) {
             foreach (Session::get('subpages-' . $language->id) as &$sub) {
@@ -115,6 +135,7 @@ class SubpageController extends Controller
         return view('admin.navigation.subpages.edit', ['subpages' => $subpages,
             'url' => \request()->get('url'),
             'order' => \request()->get('order'),
+            'is_public' => \request()->get('public'),
             'name' => [1 => \request()->get('name-1'), 2 => \request()->get('name-2')]])
             ->render();
 
@@ -129,6 +150,8 @@ class SubpageController extends Controller
      */
     public function update(UpdateRequest $request, string $url)
     {
+        $this->forget('errors');
+
         foreach (Language::all() as $language) {
             foreach (Session::get('subpages-' . $language->id, collect()) as &$sub) {
                 if ($sub->url == $url) {
@@ -143,7 +166,7 @@ class SubpageController extends Controller
         Session::reflash();
         //return to the previous page with the old input
         return redirect()->back()->with(['is_dropdown' => true])
-            ->withInput($request->only('url', 'order', 'name-1', 'name-2'));
+            ->withInput($request->only('url', 'order', 'is_public', 'name-1', 'name-2'));
     }
 
     /**
@@ -153,6 +176,8 @@ class SubpageController extends Controller
      */
     public function destroy(string $url)
     {
+        $this->forget('errors');
+
         foreach (Language::all() as $language) {
             $subs = Session::get('subpages-' . $language->id);
             if (($index = array_search($url, $subs->pluck('url')->toArray())) !== false) {

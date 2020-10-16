@@ -30,4 +30,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'facebook' => [
+        'app_id' => env('FACEBOOK_APP_ID'),
+        'app_secret' => env('FACEBOOK_APP_SECRET'),
+        'default_access_token' => env('FACEBOOK_ACCESS_TOKEN'),
+        'default_graph_version' => env('FACEBOOK_API'),
+        'page_id' => env('FACEBOOK_PAGE_ID')
+    ],
+
 ];

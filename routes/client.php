@@ -31,6 +31,8 @@ Route::group(['middleware' => 'roles'], function () {
             ->name('user.ics');
         Route::delete('/reservations/{reservation}', 'Client\UserReservationController@delete')
             ->name('user.reservations.delete');
+        Route::get('/upgrade/{type}', 'Client\UserUpgradeController')
+            ->name('user.upgrade');
     });
 
     Route::group(['prefix' => 'comment', 'middleware' => 'auth'], function () {
@@ -44,6 +46,12 @@ Route::group(['middleware' => 'roles'], function () {
     Route::group(['prefix' => 'contact'], function () {
         Route::get('/', 'Client\ContactController@show')->name('contact.show');
         Route::post('/', 'Client\ContactController@send')->name('contact.send');
+    });
+    //TODO ADD API CALL
+
+
+    Route::group(['prefix' => 'event', 'middleware' => 'auth'], function () {
+        Route::get('/{salt}', 'Client\EventController')->name('event');
     });
 
     Route::group(['prefix' => 'blog'], function () {

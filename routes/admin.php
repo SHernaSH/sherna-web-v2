@@ -45,6 +45,9 @@ Route::group(['middleware' => ['auth' ,'roles']],function () {
             Route::get('/auto', 'Admin\UserController@auto')
                 ->name('user.auto');
 
+            Route::get('/auto/tags', 'Admin\UserController@autoTags')
+                ->name('user.auto.tags');
+
             Route::get('/index', 'Admin\UserController@index')
                 ->name('user.index');
 
@@ -124,6 +127,26 @@ Route::group(['middleware' => ['auth' ,'roles']],function () {
              'store', 'create', 'edit', 'update', 'destroy',
         ]]);
 
+        Route::group(['prefix' => 'members'], function () {
+            Route::get('/{member}/public', 'Admin\MemberController@public')
+                ->name('member.public');
+            Route::post('/reorder', 'Admin\MemberController@reorder')
+                ->name('member.reorder');
+        });
+        Route::resource('/member', 'Admin\MemberController', [
+            'except' => [ 'show' ]
+        ]);
+
+        Route::group(['prefix' => 'actives'], function () {
+            Route::get('/{active}/public', 'Admin\SubmemberController@public')
+                ->name('active.public');
+            Route::post('/reorder', 'Admin\SubmemberController@reorder')
+                ->name('active.reorder');
+        });
+        Route::resource('/active', 'Admin\SubmemberController', ['only' => [
+            'store', 'create', 'edit', 'update', 'destroy',
+        ]]);
+
         Route::group(['prefix' => 'settings'], function () {
             Route::get('/', 'Admin\SettingController@index')->name('settings.index');
             Route::put('/', 'Admin\SettingController@update')->name('settings.update');
@@ -132,6 +155,13 @@ Route::group(['middleware' => ['auth' ,'roles']],function () {
         Route::resource('/reservation', 'Admin\ReservationController', [
             'as' => 'admin', 'except' => [ 'show' ]
         ]);
+
+        Route::get('/event/download/{event}', 'Admin\EventController@download')->name('admin.event.download');
+
+        Route::resource('/event', 'Admin\EventController', [
+            'as' => 'admin'
+        ]);
+
 
     });
 

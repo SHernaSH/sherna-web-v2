@@ -5,17 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Article\StoreRequest;
 use App\Http\Requests\Article\UpdateRequest;
+use App\Http\Services\FacebookPostingService;
 use App\Models\Articles\Article;
 use App\Models\Articles\ArticleCategory;
 use App\Models\Articles\ArticleCategoryDetail;
 use App\Models\Articles\ArticleText;
 use App\Models\Language\Language;
+use App\Providers\FacebookServiceProvider;
 use Exception;
+use Facebook\Exceptions\FacebookSDKException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Toolkito\Larasap\SendTo;
 
 /**
  * Class handling CRUD operations on Article Model,
@@ -26,6 +31,16 @@ use Illuminate\View\View;
  */
 class ArticleController extends Controller
 {
+    /**
+     * @var FacebookServiceProvider
+     */
+    private $fb;
+
+    public function __construct(FacebookPostingService $fb)
+    {
+        $this->fb = $fb;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -67,12 +82,29 @@ class ArticleController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $article = $this->saveArticle($request);
-        foreach (Language::all() as $lang) {
-            $this->saveArticleText($request, $article, $lang);
-        }
+        DB::beginTransaction();
 
-        flash('Article successfully created')->success();
+        try {
+            $article = $this->saveArticle($request);
+            foreach (Language::all() as $lang) {
+                $this->saveArticleText($request, $article, $lang);
+            }
+            DB::commit();
+
+            if($article->public && $request->get('publish')) {
+                $lang = Language::whereCode('en')->first();
+                $art = $article->text()->ofLang($lang)->first();
+                $this->fb->postWithLink('New article ' . $art->title . ' has been released. What is it about? '
+                    .$art->description, route('blog.show', ['article' => $article->url]));
+            }
+
+            flash('Article successfully created')->success();
+        } catch (FacebookSDKException $ex) {
+            flash('Article was not shared on Facebook')->error();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash('Article creation was unsuccessful')->error();
+        }
         return redirect()->route('article.index');
     }
 
@@ -104,22 +136,39 @@ class ArticleController extends Controller
     {
         //First get the difference between existing categories and the categories that the updated article should
         //contain
-        $categories = $this->getCategories($request->get('tags', '') ?? '');
-        $originalCategories = $article->categories()->pluck('id')->toArray();
-        $article->categories()->detach(array_diff($originalCategories, $categories));
-        $article->categories()->attach(array_diff($categories, $originalCategories));
-        $article->public = $request->get('public') ? 1 : 0;
+        DB::beginTransaction();
+
+        try {
+            $categories = $this->getCategories($request->get('tags', '') ?? '');
+            $originalCategories = $article->categories()->pluck('id')->toArray();
+            $article->categories()->detach(array_diff($originalCategories, $categories));
+            $article->categories()->attach(array_diff($categories, $originalCategories));
+            $article->public = $request->get('public') ? 1 : 0;
 //        $article->comments_enabled = $request->get('comments') ? 1 : 0;
 
-        foreach (Language::all() as $lang) {
-            $text = $article->text()->ofLang($lang)->first();
-            $text->title = $request->input('name-' . $lang->id);
-            $text->description = $request->input('description-' . $lang->id);
-            $text->content = $request->input('content-' . $lang->id);
-            $text->save();
+            foreach (Language::all() as $lang) {
+                $text = $article->text()->ofLang($lang)->first();
+                $text->title = $request->input('name-' . $lang->id);
+                $text->description = $request->input('description-' . $lang->id);
+                $text->content = $request->input('content-' . $lang->id);
+                $text->save();
+            }
+            $article->save();
+            DB::commit();
+
+            if($article->public && $request->get('publish')) {
+                $lang = Language::whereCode('en')->first();
+                $art = $article->text()->ofLang($lang)->first();
+                $this->fb->postWithLink('Article ' . $art->title . ' has been updated. What is it about? '
+                    .$art->description, route('blog.show', ['article' => $article->url]));
+            }
+            flash('Article successfully updated')->success();
+        } catch (FacebookSDKException $ex) {
+            flash('Article was not shared on Facebook')->error();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash('Article update was unsuccessful')->error();
         }
-        $article->save();
-        flash('Article successfully updated')->success();
         return redirect()->route('article.index');
 
     }

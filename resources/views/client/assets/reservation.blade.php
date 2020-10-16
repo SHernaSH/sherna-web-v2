@@ -39,7 +39,11 @@
             var max = isResize ? maxeventduration * 2 : maxeventduration;
             if (Math.abs(start.diff(end, 'hours')) > max) {
                 $('#calendar').fullCalendar('unselect');
-                App.helpers.alert.info('Maximum duration exceeded', 'Max duration of reservation can be ' + maxeventduration + ' hours.');
+                @if(\Session::get('lang') == 'cz')
+                    App.helpers.alert.info('Maximalna doba rezervace prekrocena', 'Maximalna doba rezervace je ' + maxeventduration + ' hodin.');
+                @else
+                    App.helpers.alert.info('Maximum duration exceeded', 'Max duration of reservation can be ' + maxeventduration + ' hours.');
+                @endif
                 return false;
             }
             return true;
@@ -109,7 +113,7 @@
         }
 
         function initCalendar() {
-            var canCreate=  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned && Auth::user()->reservations()->futureActiveReservations()->count() == 0) ? 'true' : 'false' }};
+            var canCreate=  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned && Auth::user()->canCreate()) ? 'true' : 'false' }};
             var canEditDuration =  {{Auth::check() && (Auth::user()->isAdmin() || !Auth::user()->banned)  ? 'true' : 'false' }};
             var calendar = $('#calendar').fullCalendar({
                 header         : {
@@ -154,8 +158,8 @@
                 selectHelper: true,
                 select         : function (start, end) {
 
-                    start = start.clone().subtract(2, 'h');
-                    end = end.clone().subtract(2, 'h');
+                    start = start.clone();//.subtract(2, 'h');
+                    end = end.clone();//.subtract(2, 'h');
                     var correct = controlEventTimes(start, end);
                     if (!correct) {
                         return;
@@ -170,7 +174,12 @@
                     }
                     else {
                         $('#calendar').fullCalendar('unselect');
-                        App.helpers.alert.info("You cannot reserve here", "This date/time is not opened for reservations.");
+                        @if(\Session::get('lang') == 'cz')
+                            App.helpers.alert.info("V tomto case neni rezervace mozna", "Tento datum a cas nie je otvoreny pre rezervacie.");
+                        @else
+                            App.helpers.alert.info("You cannot reserve here", "This date/time is not opened for reservations.");
+                        @endif
+
                     }
                 },
                 eventLimit     : true, // allow "more" link when too many events
@@ -198,6 +207,7 @@
                         $('#showReservationModalLabel').text(event.title);
                         $('#start').text(event.start.format("DD.MM.YYYY - HH:mm"));
                         $('#end').text(event.end.format("DD.MM.YYYY - HH:mm"));
+                        $('#duration').text(event.duration);
 
                         if (event.edit) {
                             $('#deleteReservation').removeClass('hidden');
@@ -211,12 +221,22 @@
                             });
 
                             //TODO ADD CHECK IF SHOULD BE EDITABLE, is in past, etc
-                            $('#updateReservation').removeClass('hidden');
-                            $('#updateReservation').unbind();
-                            $('#updateReservation').bind('click', function (ev) {
-                                update(event, null);
-                                $('#updateReservationModal').modal('show');
-                            });
+                            var eventStart = event.start.clone().subtract(2, 'h');
+                            var eventEnd = event.end.clone().subtract(2, 'h');
+                            var allowedTimeUpdate = eventEnd.clone().subtract(durationforedit, 'm');
+
+                            var now               = moment();
+                            var isInTimeToProlong = now.isAfter(allowedTimeUpdate) || now.isBefore(eventStart);
+                            var isInPast = eventEnd.isBefore(now);
+                            var allowEdit = !isInPast && (admin || isInTimeToProlong);
+                            if(allowEdit) {
+                                $('#updateReservation').removeClass('hidden');
+                                $('#updateReservation').unbind();
+                                $('#updateReservation').bind('click', function (ev) {
+                                    update(event, null);
+                                    $('#updateReservationModal').modal('show');
+                                });
+                            }
                         }
                     $('#showReservationModal').modal('show');
 

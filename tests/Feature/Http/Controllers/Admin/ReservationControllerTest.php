@@ -70,8 +70,8 @@ class ReservationControllerTest extends TestCase
         $response->assertViewIs('admin.reservations.edit');
         $response->assertViewHas('reservation');
         $response->assertSee($reservation->user->id);
-        $response->assertSee($reservation->start_at->format('d.m.Y h:i'));
-        $response->assertSee($reservation->end_at->format('d.m.Y h:i'));
+        $response->assertSee($reservation->start_at->format('d.m.Y H:i'));
+        $response->assertSee($reservation->end_at->format('d.m.Y H:i'));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Navigation\Subpage;
 
 use App\Models\Language\Language;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Session;
 
 class UpdateRequest extends FormRequest
 {
@@ -23,5 +24,13 @@ class UpdateRequest extends FormRequest
             $rules['sub_text_content-' . $language->id] = ['required', 'min:50'];
         }
         return $rules;
+    }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (count($validator->invalid()) > 0) {
+                Session::reflash();
+            }
+        });
     }
 }

@@ -62,8 +62,12 @@ class ConsoleController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Console::create($request->all());
-        flash()->success('Console successfully created');
+        try {
+            Console::create($request->all());
+            flash()->success('Console successfully created');
+        } catch (\Exception $ex) {
+            flash()->error('Console creation unsuccessful');
+        }
 
         return redirect()->route('console.index');
     }
@@ -77,8 +81,13 @@ class ConsoleController extends Controller
      */
     public function update(Console $console, UpdateRequest $request)
     {
-        $console->update($request->all());
-        flash()->success('Console successfully updated');
+        try {
+            $console->update($request->all());
+            flash()->success('Console successfully updated');
+
+        } catch (\Exception $ex) {
+            flash()->error('Console update unsuccessful');
+        }
 
         return redirect()->route('console.index');
     }

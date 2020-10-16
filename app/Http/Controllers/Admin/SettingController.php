@@ -8,6 +8,7 @@ use App\Models\Settings\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -38,11 +39,20 @@ class SettingController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        foreach (Setting::all() as $setting) {
-            $setting->value = $request->get('value-' . $setting->id);
-            $setting->save();
+        DB::beginTransaction();
+
+        try {
+            foreach (Setting::all() as $setting) {
+                $setting->value = $request->get('value-' . $setting->id);
+                $setting->save();
+            }
+
+            DB::commit();
+            flash('Settings successfully updated')->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash()->error('Settings update was unsuccessful');
         }
-        flash('Settings successfully updated')->success();
 
         return redirect()->route('settings.index');
     }
