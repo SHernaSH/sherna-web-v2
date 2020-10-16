@@ -54,6 +54,8 @@
                         Events</a></li>
                 <li><a href="{{ route('user.index') }}"><i class="fa fa-fw fa-users"></i>
                 									Users</a></li>
+                <li><a href="{{ route('member.index') }}"><i class="fa fa-fw fa-users"></i>
+                        Members</a></li>
                 <li><a href="{{ route('location.index') }}"><i class="fa fa-fw fa-map-marker"></i>
                         Locations</a></li>
                 <li><a href="{{ route('role.index') }}"><i class="fa fa-fw fa-drivers-license-o"></i>

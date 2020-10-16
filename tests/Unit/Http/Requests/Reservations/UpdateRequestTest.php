@@ -43,7 +43,6 @@ class UpdateRequestTest extends TestCase
             'from_date' => [
                 'required',
                 'date',
-                'after:now',
             ],
             'to_date' => [
                 'required',

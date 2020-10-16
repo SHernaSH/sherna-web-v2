@@ -7,6 +7,8 @@
         @foreach(\App\Models\Language\Language::all() as $language)
             <input type="hidden" name="name-{{ $language->id }}" value="{{ $name[$language->id] }}">
         @endforeach
+        <input type="hidden" name="is_public" value="{{$is_public}}">
+
         <div class="form-group">
             <label for="sub_url">Url</label>
             <input type="text" name="sub_url" id="sub_url" class="form-control" value="{{ old('sub_url') }}"/>

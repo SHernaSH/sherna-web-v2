@@ -54,6 +54,9 @@ class PagesController extends Controller
             abort(404);
         }
         $text = $subpage->text;
+        if(isset($subpage->special_code)) {
+            $text->special_code = $subpage->special_code;
+        }
         return view('client.pages.show', ['page' => $text]);
 
 

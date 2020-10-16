@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class ReservationsTableSeeder extends Seeder
 {

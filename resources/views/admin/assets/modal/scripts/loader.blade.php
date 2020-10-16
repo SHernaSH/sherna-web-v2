@@ -18,7 +18,8 @@
                 data: {
                     'url' : document.getElementById('url').value,
                     'name-1' : document.getElementById('name-1').value,
-                    'name-2' : document.getElementById('name-2').value
+                    'name-2' : document.getElementById('name-2').value,
+                    'public' : document.getElementById('public').value
                 },
                 dataType: 'html'
             })

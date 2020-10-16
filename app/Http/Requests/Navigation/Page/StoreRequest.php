@@ -4,6 +4,7 @@ namespace App\Http\Requests\Navigation\Page;
 
 use App\Models\Language\Language;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Session;
 
 class StoreRequest extends FormRequest
 {
@@ -19,8 +20,16 @@ class StoreRequest extends FormRequest
         ];
         foreach (Language::all() as $language) {
             $rules['name-' . $language->id] = ['required', 'string', 'min:3', 'max:80'];
-            $rules['content-' . $language->id] = ['required_without:dropdown', 'min:50'];
+            $rules['content-' . $language->id] = ['required_without:dropdown', 'nullable', 'min:50'];
         }
         return $rules;
+    }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (count($validator->invalid()) > 0) {
+                Session::reflash();
+            }
+        });
     }
 }

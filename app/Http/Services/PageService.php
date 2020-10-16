@@ -114,7 +114,7 @@ class PageService
                 $page->public = !$page->public;
                 $page->save();
                 foreach ($page->subpages()->ofLang($language)->get() as $subpage) {
-                    $this->changeSubpagePublic($subpage);
+                    $this->changeSubpagePublic($subpage, $page);
                 }
             }
 
@@ -210,10 +210,10 @@ class PageService
         return true;
     }
 
-    private function changeSubpagePublic(Subpage $page)
+    private function changeSubpagePublic(Subpage $subpage, Page $page = null)
     {
-        $page->public = !$page->public;
-        $page->save();
+        $subpage->public =  $page == null ? !$subpage->public : $page->public;
+        $subpage->save();
     }
 
     private function setNewPage($request, $id, Language $lang)
@@ -238,7 +238,6 @@ class PageService
     {
         $subpages = Session::get('subpages-' . $lang->id);
         $origSubpages = $page->subpages()->ofLang($lang)->get();
-        $r = $origSubpages->diff($origSubpages);
         foreach ($origSubpages->diff($subpages) as $toDelete) {
             $toDelete->delete();
         }
