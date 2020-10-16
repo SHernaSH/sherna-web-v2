@@ -62,6 +62,5 @@ class CreateArticleCategoriesTable extends Migration
         Schema::dropIfExists('article_category');
         Schema::dropIfExists('article_categories_details');
         Schema::dropIfExists('article_categories');
-
     }
 }

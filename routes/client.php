@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group([], function () {
+Route::group(['middleware' => 'roles'], function () {
     Route::get('', 'Client\PagesController@home')->name('index');
 
     Route::get('pages/{page}/{subpage?}', 'Client\PagesController@show')->name("pages.show");
