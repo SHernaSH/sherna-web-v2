@@ -22,8 +22,8 @@ class RolesAuth
         if (auth()->user()) {
             $role = Role::findOrFail(auth()->user()->role_id);
         } else {
-            $role = Role::where('name', 'guest')->first();
-            //$role = Role::where('name', 'super_admin')->first();
+            //$role = Role::where('name', 'guest')->first();
+            $role = Role::where('name', 'super_admin')->first();
         }
         $permissions = $role->permissions;
         // get requested action
