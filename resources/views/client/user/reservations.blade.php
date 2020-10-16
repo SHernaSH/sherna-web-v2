@@ -15,7 +15,7 @@
             content: '-{{ \App\Models\Settings\Setting::where('name', 'Points for one hour')->first()->value }}';
         }
         .activate.hours:hover:after {
-            content: '-{{ \App\Models\Settings\Setting::where('name', 'Points for eight hours')->first()->value }}';
+            content: '-{{ \App\Models\Settings\Setting::where('name', 'Points for max hours')->first()->value }}';
 
         }
 

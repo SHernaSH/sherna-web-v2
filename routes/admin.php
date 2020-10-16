@@ -127,6 +127,26 @@ Route::middleware('auth')->group(function () {
              'store', 'create', 'edit', 'update', 'destroy',
         ]]);
 
+        Route::group(['prefix' => 'members'], function () {
+            Route::get('/{member}/public', 'Admin\MemberController@public')
+                ->name('member.public');
+            Route::post('/reorder', 'Admin\MemberController@reorder')
+                ->name('member.reorder');
+        });
+        Route::resource('/member', 'Admin\MemberController', [
+            'except' => [ 'show' ]
+        ]);
+
+        Route::group(['prefix' => 'actives'], function () {
+            Route::get('/{active}/public', 'Admin\SubmemberController@public')
+                ->name('active.public');
+            Route::post('/reorder', 'Admin\SubmemberController@reorder')
+                ->name('active.reorder');
+        });
+        Route::resource('/active', 'Admin\SubmemberController', ['only' => [
+            'store', 'create', 'edit', 'update', 'destroy',
+        ]]);
+
         Route::group(['prefix' => 'settings'], function () {
             Route::get('/', 'Admin\SettingController@index')->name('settings.index');
             Route::put('/', 'Admin\SettingController@update')->name('settings.update');

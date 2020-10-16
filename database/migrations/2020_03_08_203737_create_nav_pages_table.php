@@ -42,6 +42,8 @@ class CreateNavPagesTable extends Migration
             $table->boolean('public')->default(false);
             $table->string('url');
             $table->string('name');
+            $table->string('special_code')->nullable();
+
             $table->timestamps();
             $table->unsignedInteger('language_id')->default('1');
 
