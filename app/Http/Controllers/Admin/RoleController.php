@@ -10,6 +10,7 @@ use App\Models\Roles\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -52,6 +53,9 @@ class RoleController extends Controller
         $role = new Role();
         $role->name = $request->get('name');
         $role->description = $request->get('description');
+        if($request->get('parent_id')) {
+            $role->parent_id = $request->get('parent_id');
+        }
         $role->save();
 
         $role->permissions()->attach($request->get('permissions'));
@@ -83,18 +87,30 @@ class RoleController extends Controller
      */
     public function update(UpdateRequest $request, Role $role)
     {
-        $role->name = $request->get('name');
-        $role->description = $request->get('description');
+        DB::beginTransaction();
+        try {
+            $role->name = $request->get('name');
+            $role->description = $request->get('description');
+            if($request->get('parent_id')) {
+                $role->parent_id = $request->get('parent_id');
+            }
 
-        $ids = $request->get('permissions', []);
-        $newPermissions = Permission::whereIn('id', $ids)->pluck('id')->toArray();
-        $rolePermissions = $role->permissions()->pluck('id')->toArray();
-        $role->permissions()->detach(array_diff($rolePermissions, $newPermissions));
-        $role->permissions()->attach(array_diff($newPermissions, $rolePermissions));
-        $role->update();
+            $ids = $request->get('permissions', []);
+            $newPermissions = Permission::whereIn('id', $ids)->pluck('id')->toArray();
+            $rolePermissions = $role->permissions()->pluck('id')->toArray();
+            $toDelete = array_diff($rolePermissions, $newPermissions);
+            $toAdd = array_diff($newPermissions, $rolePermissions);
+            $role->permissions()->detach($toDelete);
+            $role->permissions()->attach($toAdd);
+            $role->update();
 
-        flash('Role successfully updated')->success();
+            DB::commit();
+            flash('Role successfully updated')->success();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            flash('Role update was not successful')->error();
 
+        }
         return redirect()->route('role.index');
     }
 
@@ -106,9 +122,17 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        DB::beginTransaction();
         try {
+            foreach ($role->roles as $inher) {
+                $inher->parent_id = null;
+                $inher->update();
+            }
             $role->delete();
+            DB::commit();
+            flash('Deletion of role was successful')->success();
         } catch (\Exception $ex) {
+            DB::rollBack();
             flash('Deletion of role was unsuccessful')->error();
         }
 

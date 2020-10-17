@@ -42,6 +42,14 @@ class Role extends Model
         'name',
     ];
 
+    public function parent() {
+        return $this->belongsTo(Role::class, 'parent_id');
+    }
+
+    public function roles() {
+        return $this->hasMany(Role::class, 'parent_id');
+    }
+
     /**
      * Users with this role
      *
@@ -58,9 +66,10 @@ class Role extends Model
      * @param Permission $permission specified permission
      * @return bool true if the role contains the permission, false otherwise
      */
-    public function hasPermission(Permission $permission)
+    public function hasPermission(Permission $permission, $withoutParent = false)
     {
-        return $this->permissions()->where('id', $permission->id)->exists();
+        return $this->permissions()->where('id', $permission->id)->exists()
+            || (!$withoutParent && $this->parent_id && $this->parent->permissions()->where('id', $permission->id)->exists());
     }
 
     /**
@@ -81,6 +90,7 @@ class Role extends Model
      */
     public function hasPermissionByName(string $name)
     {
-        return $this->permissions()->where('name', $name)->exists();
+        return $this->permissions()->where('name', $name)->exists()
+            || ($this->parent_id && $this->parent->permissions()->where('name', $name)->exists());
     }
 }

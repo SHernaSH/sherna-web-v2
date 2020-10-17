@@ -16,7 +16,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['string', 'min:3', 'max:80'],
-            'description' => ['string', 'min:5', 'max:255'],
+            'description' => ['nullable', 'string', 'min:5', 'max:255'],
         ];
     }
 }

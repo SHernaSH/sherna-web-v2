@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-
-use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \URL::forceScheme('https');
-        Builder::defaultStringLength(191);
+        if(!$this->app->environment('local')) {
+            \URL::forceScheme('https');
+        }
     }
 }
