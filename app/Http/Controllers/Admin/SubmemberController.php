@@ -152,14 +152,14 @@ class SubmemberController extends Controller
                 $active->email = $request->get('sub_email');
                 $active->room = $request->get('sub_room');
                 $active->public = $request->get('sub_public', false) ? 1 : 0;
+                if($request->file('file')) {
+                    $request->file('file')->move(public_path('docs/members/'),
+                        $request->file('file')->getClientOriginalName());
+                    $active->img = $request->file('file')->getClientOriginalName();
+                }
             }
         }
-        if($request->file('file')) {
-                File::delete(public_path('docs/members/' . $active->img));
-                $request->file('file')->move(public_path('docs/members/'),
-                    $request->file('file')->getClientOriginalName());
-                $active->img = $request->file('file')->getClientOriginalName();
-        }
+
         Session::reflash();
         $this->forget('_old_input');
         //return to the previous page with the old input
