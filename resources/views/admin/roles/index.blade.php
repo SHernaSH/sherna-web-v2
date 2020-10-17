@@ -18,6 +18,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
+                            <th>Inherited from</th>
                             <th>Created at</th>
                             <th>Updated at</th>
                             <th></th>
@@ -28,6 +29,7 @@
                             <tr>
                                 <td>{{ $role->name }}</td>
                                 <td>{{ $role->description }}</td>
+                                <td>{{ $role->parent_id ? $role->parent->name : 'No parent' }}</td>
                                 <td>{{ $role->created_at->isoFormat('LLL') }}</td>
                                 <td>{{ $role->updated_at->isoFormat('LLL') }}</td>
                                 <td>

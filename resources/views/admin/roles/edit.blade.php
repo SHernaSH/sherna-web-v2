@@ -35,11 +35,24 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="parent_id" class="col-sm-4 control-label">Parent role to inherit permissions</label>
+                                    <div class="col-sm-8">
+                                        <select name="parent_id" id="parent_id" class="form-control">
+                                            @if($role->parent_id == null)
+                                                <option selected value> -- select a role to inherit -- </option>
+                                            @endif
+                                            @foreach(\App\Models\Roles\Role::where('id', '!=', $role->id)->get() as $inher)
+                                                <option {{ $role->parent_id == $inher->id ? 'selected' : ''}} value="{{ $inher->id }}">{{ $inher->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="permissions" class="col-sm-4 control-label">Permissions</label>
                                     <div class="col-sm-8">
                                         <select id="permission" name="permissions[]" multiple style="height: 500px">
                                             @foreach(\App\Models\Permissions\Permission::all() as $permission)
-                                                <option value="{{$permission->id}}" title="{{$permission->description}}" {{ $role->hasPermission($permission) ? 'selected' : ''}}>
+                                                <option value="{{$permission->id}}" title="{{$permission->description}}" {{ $role->hasPermission($permission, true) ? 'selected' : ''}}>
                                                     {{$permission->name ?? $permission->controller . '@' . $permission->method}}
                                                 </option>
                                             @endforeach

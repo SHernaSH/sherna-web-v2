@@ -31,6 +31,7 @@ class RolesTableSeeder extends Seeder
 
         Role::updateOrInsert([
             'id' => 3,
+            'parent_id' => 2,
             'name' => 'user_vr',
             'description' => 'Role for not logged in users that can use VR',
             'created_at' => Carbon::now(),

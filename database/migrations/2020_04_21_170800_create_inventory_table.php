@@ -61,5 +61,6 @@ class CreateInventoryTable extends Migration
     {
         Schema::dropIfExists('inventory_items');
         Schema::dropIfExists('inventory_categories');
+
     }
 }

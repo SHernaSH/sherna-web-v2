@@ -34,6 +34,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="parent_id" class="col-sm-4 control-label">Parent role to inherit permissions</label>
+                                    <div class="col-sm-8">
+                                        <select name="parent_id" id="parent_id" class="form-control" >
+                                            <option selected value> -- select a role to inherit -- </option>
+                                            @foreach(\App\Models\Roles\Role::all() as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="permissions" class="col-sm-4 control-label">Permissions</label>
                                     <div class="col-sm-8">
                                         <select id="permission" name="permissions[]" multiple style="height: 500px">
