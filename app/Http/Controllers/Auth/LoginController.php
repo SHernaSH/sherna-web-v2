@@ -29,30 +29,20 @@ class LoginController extends Controller
      *
      * @return RedirectResponse redirect to login page of Silicon Hill
      */
-    public function login($type)
+    public function login()
     {
         /**
          * Create a new instance of the URI class with the current URI, stripping the query string
          */
-        if($type == 'admin') {
-            Auth::loginUsingId(User::where('id', env('SUPER_ADMINS'))->first()->id);
-//            Auth::attempt(['id' => '30542', 'email' => 'admin@localhost']);
-        } else if($type == 'user') {
-            $check = User::find(2);
-            if (!$check) {
-                $user = new User();
-                $user->id = 2;
-                $user->name = 'user';
-                $user->surname = 'user';
-                $user->email = 'user@localhost';
-                $user->role_id = 2;
-                $user->save();
-            }
-            Auth::loginUsingId(2);
-//            Auth::attempt(['id' => '2', 'email' => 'user@localhost']);
+//        Auth::attempt(['uid' => '30542', 'email' => 'admin@localhost']);
+        $callBack = url()->previous();
+        $_SESSION['callback'] = $callBack;
+        list($currentUri, $service) = $this->getISService($callBack);
 
-        }
-        return redirect()->back();
+        $url = $service->getAuthorizationUri();
+
+        return redirect()->to($url->getAbsoluteUri());
+        \Illuminate\Support\Facades\Log::alert();
     }
 
     /**

@@ -3,7 +3,7 @@
 
 @section('content')
 
-	<form action="{{route('permission.edit',$permission->id)}}" class="" method="post">
+	<form action="{{route('permission.update',$permission->id)}}" class="" method="post">
         @csrf
         @method('PUT')
 
