@@ -85,9 +85,18 @@
                             </ul>
                         </li>
 				@else
-					<li>
-						<a href="{{ route('login') }}">{{trans('general.navbar.login')}}</a>
-					</li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Login</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('login', ['type' => 'admin']) }}">{{trans('general.navbar.login')}} as Admin</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('login', ['type' => 'user']) }}">{{trans('general.navbar.login')}} as User</a>
+                                </li>
+                            </ul>
+                        </li>
 				@endauth
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
