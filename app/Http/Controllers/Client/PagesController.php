@@ -69,9 +69,9 @@ class PagesController extends Controller
      */
     public function home()
     {
-        if (env('APP_ENV') == 'local' && !Auth::check())
+        //if (env('APP_ENV') == 'local' && !Auth::check())
 //            Auth::loginUsingId(User::first()->id);
-        Auth::loginUsingId(User::where('id', env('SUPER_ADMINS'))->first()->id);
+        //Auth::loginUsingId(User::where('id', env('SUPER_ADMINS'))->first()->id);
 
         $page = Page::where('special_code', 'home')->firstOrfail();
         return view('client.index', ['page' => $page->text]);
