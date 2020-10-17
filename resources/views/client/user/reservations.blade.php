@@ -44,7 +44,7 @@
             <div class="col-md-12 col-xs-12">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2>{{trans('reservations.your_points')}}</h2>
+                        <h2>{{trans('reservations.your_points')}}: {{ $user->points }}</h2>
                     </div>
                 </div>
 
